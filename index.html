@@ -15,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #020208;
+            background: #000002;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -26,7 +26,7 @@
             perspective: 1200px;
         }
 
-        /* Ambient Space Canvas */
+        /* Real Canvas Layer */
         canvas#spaceCanvas {
             position: absolute;
             top: 0;
@@ -34,94 +34,10 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-        }
-
-        /* Floating Space Elements Layer */
-        #spaceItemsContainer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .space-obj {
-            position: absolute;
-            pointer-events: auto;
             cursor: pointer;
-            will-change: transform;
-            transition: transform 0.2s ease;
         }
 
-        .space-obj:active {
-            transform: scale(1.3) !important;
-        }
-
-        /* Sun & Glow Effect */
-        .sun {
-            top: 8%;
-            left: 8%;
-            font-size: 4rem;
-            animation: sunGlow 4s ease-in-out infinite alternate, floatSlow 12s ease-in-out infinite alternate;
-            filter: drop-shadow(0 0 25px #ffaa00) drop-shadow(0 0 50px #ff5500);
-        }
-
-        @keyframes sunGlow {
-            0% { filter: drop-shadow(0 0 20px #ffaa00) drop-shadow(0 0 40px #ff5500); transform: scale(1); }
-            100% { filter: drop-shadow(0 0 35px #ffdd00) drop-shadow(0 0 70px #ff3300); transform: scale(1.08); }
-        }
-
-        /* Planets */
-        .earth {
-            top: 68%;
-            left: 10%;
-            font-size: 3.2rem;
-            animation: floatSlow 10s ease-in-out infinite alternate;
-        }
-
-        .mars {
-            top: 18%;
-            right: 12%;
-            font-size: 2.8rem;
-            animation: floatSlow 14s ease-in-out infinite alternate-reverse;
-        }
-
-        .moon {
-            top: 75%;
-            right: 15%;
-            font-size: 2.5rem;
-            animation: floatSlow 9s ease-in-out infinite alternate;
-        }
-
-        /* Orbiting Rocket & Satellite */
-        .rocket {
-            font-size: 3rem;
-            animation: flyRocket 22s linear infinite;
-        }
-
-        .satellite {
-            font-size: 2.5rem;
-            animation: orbitSat 28s linear infinite;
-        }
-
-        @keyframes flyRocket {
-            0% { transform: translate(-100px, 80vh) rotate(45deg); }
-            100% { transform: translate(110vw, -100px) rotate(45deg); }
-        }
-
-        @keyframes orbitSat {
-            0% { transform: translate(110vw, 30vh) rotate(-15deg); }
-            100% { transform: translate(-100px, 60vh) rotate(-15deg); }
-        }
-
-        @keyframes floatSlow {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-18px) rotate(10deg); }
-        }
-
-        /* Click Burst Particles Container */
+        /* Particle Explosions */
         #particleContainer {
             position: absolute;
             top: 0;
@@ -133,15 +49,15 @@
             overflow: hidden;
         }
 
-        .edu-item {
+        .particle {
             position: absolute;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             will-change: transform, opacity;
             pointer-events: none;
-            animation: eduFly 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            animation: particleFly 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
         }
 
-        @keyframes eduFly {
+        @keyframes particleFly {
             0% { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 1; }
             70% { opacity: 1; }
             100% { transform: translate(var(--tx), var(--ty)) scale(1.3) rotate(var(--rot)); opacity: 0; }
@@ -156,7 +72,7 @@
             padding: 20px 10px;
         }
 
-        /* Multi-color Animated Title */
+        /* Animated Title */
         h1 {
             font-size: clamp(1.6rem, 6vw, 2.6rem);
             font-weight: 900;
@@ -209,14 +125,14 @@
         }
 
         .box {
-            background: rgba(10, 12, 30, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
+            background: rgba(5, 7, 20, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(139, 92, 246, 0.35);
             border-radius: 20px;
             padding: 22px 10px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
             transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             cursor: pointer;
             position: relative;
@@ -259,17 +175,6 @@
 <body>
 
     <canvas id="spaceCanvas"></canvas>
-    
-    <!-- Floating Space Interactive Elements -->
-    <div id="spaceItemsContainer">
-        <div class="space-obj sun" onclick="triggerSpaceObject(event, '☀️')">☀️</div>
-        <div class="space-obj earth" onclick="triggerSpaceObject(event, '🌍')">🌍</div>
-        <div class="space-obj mars" onclick="triggerSpaceObject(event, '🔴')">🔴</div>
-        <div class="space-obj moon" onclick="triggerSpaceObject(event, '🌙')">🌙</div>
-        <div class="space-obj rocket" onclick="triggerSpaceObject(event, '🚀')">🚀</div>
-        <div class="space-obj satellite" onclick="triggerSpaceObject(event, '🛰️')">🛰️</div>
-    </div>
-
     <div id="particleContainer"></div>
 
     <div class="container">
@@ -301,78 +206,58 @@
         let audioCtx;
 
         function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new AudioCtx();
-            }
+            if (!audioCtx) audioCtx = new AudioCtx();
         }
 
-        // Ta-Daaa Sound
         function playTadaSound() {
             const sound = document.getElementById('tadaSound');
             if (sound) {
                 sound.currentTime = 0;
-                sound.play().catch(e => console.log("Audio block:", e));
+                sound.play().catch(e => console.log("Audio play blocked:", e));
             }
         }
 
-        // Card Pop Sound
         function playPopSound() {
             initAudio();
             if (!audioCtx) return;
-
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-
             osc.type = 'triangle';
             const now = audioCtx.currentTime;
-
             osc.frequency.setValueAtTime(150, now);
             osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
-
             gain.gain.setValueAtTime(0.35, now);
             gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-
             osc.start(now);
             osc.stop(now + 0.1);
         }
 
-        // Sci-Fi Space Beep Sound for Planets/Rockets
         function playSpaceSound() {
             initAudio();
             if (!audioCtx) return;
-
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-
             osc.type = 'sine';
             const now = audioCtx.currentTime;
-
-            osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.2);
-
-            gain.gain.setValueAtTime(0.2, now);
+            osc.frequency.setValueAtTime(250, now);
+            osc.frequency.exponentialRampToValueAtTime(1400, now + 0.22);
+            gain.gain.setValueAtTime(0.25, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-
             osc.start(now);
             osc.stop(now + 0.25);
         }
 
-        // Burst Particles
         function burstParticles(centerX, centerY, icons) {
             const container = document.getElementById('particleContainer');
-            const count = 12;
-
+            const count = 14;
             for (let i = 0; i < count; i++) {
                 const el = document.createElement('div');
-                el.className = 'edu-item';
+                el.className = 'particle';
                 el.innerText = icons[Math.floor(Math.random() * icons.length)];
-
                 const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5);
                 const distance = Math.random() * 110 + 60;
                 const tx = Math.cos(angle) * distance;
@@ -386,31 +271,15 @@
                 el.style.setProperty('--rot', `${rot}deg`);
 
                 container.appendChild(el);
-
                 setTimeout(() => el.remove(), 1200);
             }
         }
 
-        // Handle Clicking Sun, Planets, Rocket & Satellite
-        function triggerSpaceObject(e, emoji) {
-            e.stopPropagation();
-            playSpaceSound();
-
-            const rect = e.currentTarget.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-
-            burstParticles(centerX, centerY, [emoji, '⭐', '✨', '💫']);
-        }
-
-        // Title Double Spin Handler
         function triggerTitleEffect() {
             const title = document.getElementById('mainTitle');
             if (title.classList.contains('double-spin')) return;
-
             playTadaSound();
             title.classList.add('double-spin');
-
             const rect = title.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
@@ -424,13 +293,10 @@
             }, 1100);
         }
 
-        // Card Click Handler
         function triggerCardEffect(e) {
             e.stopPropagation();
             const card = e.currentTarget;
-
             playPopSound();
-
             card.classList.remove('card-bounce');
             void card.offsetWidth;
             card.classList.add('card-bounce');
@@ -438,7 +304,6 @@
 
         // Countdown Logic
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
-
         function updateCountdown() {
             const now = new Date().getTime();
             const difference = examDate - now;
@@ -461,47 +326,100 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Canvas Stars & Nebula Background
-        const spaceCanvas = document.getElementById('spaceCanvas');
-        const ctx = spaceCanvas.getContext('2d');
-        let stars = [];
+        // High Resolution Photorealistic Canvas Space Simulation
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
 
-        function resizeSpace() {
-            spaceCanvas.width = window.innerWidth;
-            spaceCanvas.height = window.innerHeight;
-            stars = [];
+        // Assets
+        const sources = {
+            sun: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.png',
+            earth: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Earth_Western_Hemisphere_transparent_background.png/600px-Earth_Western_Hemisphere_transparent_background.png',
+            mars: 'https://upload.wikimedia.org/wikipedia/commons/3/36/3D_Mars.png',
+            moon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.png/600px-FullMoon2010.png',
+            rocket: 'https://pngimg.com/uploads/rocket/rocket_PNG13.png',
+            sat: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Hubble_Space_Telescope_in_orbit.png/600px-Hubble_Space_Telescope_in_orbit.png'
+        };
 
-            const count = Math.floor((spaceCanvas.width * spaceCanvas.height) / 3000);
-            for (let i = 0; i < count; i++) {
-                stars.push({
-                    x: Math.random() * spaceCanvas.width,
-                    y: Math.random() * spaceCanvas.height,
-                    radius: Math.random() * 1.5,
-                    alpha: Math.random(),
-                    speed: Math.random() * 0.02 + 0.005
-                });
-            }
+        const images = {};
+        let loadedCount = 0;
+        const totalImages = Object.keys(sources).length;
+
+        for (let key in sources) {
+            images[key] = new Image();
+            images[key].crossOrigin = "Anonymous";
+            images[key].src = sources[key];
+            images[key].onload = () => {
+                loadedCount++;
+            };
         }
 
-        function animateSpace() {
-            ctx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
+        let stars = [];
+        let spaceObjects = [];
 
-            // Deep Space Nebula Glow
+        function resizeSpace() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            stars = [];
+            const count = Math.floor((canvas.width * canvas.height) / 2500);
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.6,
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.015 + 0.005
+                });
+            }
+
+            initObjects();
+        }
+
+        function initObjects() {
+            spaceObjects = [
+                { id: 'sun', x: canvas.width * 0.12, y: canvas.height * 0.18, size: 140, rot: 0, rotSpeed: 0.001, pulse: 0 },
+                { id: 'earth', x: canvas.width * 0.15, y: canvas.height * 0.78, size: 90, rot: 0, rotSpeed: 0.003, dy: 0.2, yDirection: 1 },
+                { id: 'mars', x: canvas.width * 0.85, y: canvas.height * 0.22, size: 70, rot: 0, rotSpeed: -0.002, dy: 0.15, yDirection: -1 },
+                { id: 'moon', x: canvas.width * 0.82, y: canvas.height * 0.80, size: 55, rot: 0, rotSpeed: 0.001, dy: 0.25, yDirection: 1 },
+                { 
+                    id: 'rocket', 
+                    x: -100, 
+                    y: canvas.height * 0.85, 
+                    size: 80, 
+                    vx: (canvas.width + 200) / 700, 
+                    vy: -canvas.height / 700, 
+                    angle: -Math.PI / 4 
+                },
+                { 
+                    id: 'sat', 
+                    x: canvas.width + 100, 
+                    y: canvas.height * 0.3, 
+                    size: 75, 
+                    vx: -(canvas.width + 200) / 1000, 
+                    vy: canvas.height * 0.2 / 1000, 
+                    angle: 0.1 
+                }
+            ];
+        }
+
+        function drawSpace() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Deep Space Gradient
             const nebula = ctx.createRadialGradient(
-                spaceCanvas.width * 0.5, spaceCanvas.height * 0.5, 10,
-                spaceCanvas.width * 0.5, spaceCanvas.height * 0.5, spaceCanvas.width
+                canvas.width * 0.5, canvas.height * 0.5, 10,
+                canvas.width * 0.5, canvas.height * 0.5, canvas.width
             );
-            nebula.addColorStop(0, '#0c0721');
-            nebula.addColorStop(0.5, '#050414');
-            nebula.addColorStop(1, '#020208');
+            nebula.addColorStop(0, '#060818');
+            nebula.addColorStop(0.6, '#02030d');
+            nebula.addColorStop(1, '#000002');
             ctx.fillStyle = nebula;
-            ctx.fillRect(0, 0, spaceCanvas.width, spaceCanvas.height);
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Twinkling Stars
+            // Stars
             stars.forEach(s => {
                 s.alpha += s.speed;
                 if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
-
                 ctx.save();
                 ctx.globalAlpha = Math.abs(s.alpha);
                 ctx.fillStyle = '#ffffff';
@@ -511,12 +429,77 @@
                 ctx.restore();
             });
 
-            requestAnimationFrame(animateSpace);
+            // Draw Real Space Assets
+            spaceObjects.forEach(obj => {
+                const img = images[obj.id];
+                if (!img || !img.complete) return;
+
+                ctx.save();
+
+                // Object Physics
+                obj.rot += obj.rotSpeed || 0;
+                if (obj.dy) {
+                    obj.y += obj.dy * obj.yDirection;
+                    if (obj.y > canvas.height * 0.85 || obj.y < canvas.height * 0.15) obj.yDirection *= -1;
+                }
+
+                if (obj.id === 'rocket' || obj.id === 'sat') {
+                    obj.x += obj.vx;
+                    obj.y += obj.vy;
+                    if (obj.id === 'rocket' && obj.x > canvas.width + 150) {
+                        obj.x = -150;
+                        obj.y = canvas.height * 0.85;
+                    }
+                    if (obj.id === 'sat' && obj.x < -150) {
+                        obj.x = canvas.width + 150;
+                        obj.y = canvas.height * 0.3;
+                    }
+                }
+
+                ctx.translate(obj.x, obj.y);
+                ctx.rotate(obj.angle || obj.rot);
+
+                // Realistic Sun Flare Effect
+                if (obj.id === 'sun') {
+                    obj.pulse += 0.02;
+                    const glowSize = obj.size * 0.8 + Math.sin(obj.pulse) * 8;
+                    const sunGlow = ctx.createRadialGradient(0, 0, obj.size * 0.3, 0, 0, glowSize);
+                    sunGlow.addColorStop(0, 'rgba(255, 180, 0, 0.8)');
+                    sunGlow.addColorStop(0.5, 'rgba(255, 80, 0, 0.3)');
+                    sunGlow.addColorStop(1, 'rgba(255, 0, 0, 0)');
+                    ctx.fillStyle = sunGlow;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.drawImage(img, -obj.size / 2, -obj.size / 2, obj.size, obj.size);
+                ctx.restore();
+            });
+
+            requestAnimationFrame(drawSpace);
         }
+
+        // Click Handling on Canvas Space Objects
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            spaceObjects.forEach(obj => {
+                const dist = Math.hypot(clickX - obj.x, clickY - obj.y);
+                if (dist < obj.size / 1.5) {
+                    playSpaceSound();
+                    burstParticles(obj.x, obj.y, ['⭐', '✨', '💫', '💥']);
+                    obj.size *= 1.15;
+                    setTimeout(() => obj.size /= 1.15, 200);
+                }
+            });
+        });
 
         window.addEventListener('resize', resizeSpace);
         resizeSpace();
-        animateSpace();
+        drawSpace();
     </script>
 </body>
 </html>
