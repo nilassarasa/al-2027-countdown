@@ -15,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #020208;
+            background: #000000;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -25,115 +25,31 @@
             position: relative;
         }
 
-        /* Pure CSS Deep Space Background */
-        .space-bg {
+        /* YouTube Background Container */
+        .video-background {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, #0d102d 0%, #050614 60%, #000000 100%);
             z-index: 1;
-        }
-
-        /* CSS Planets */
-        .planet {
-            position: absolute;
-            border-radius: 50%;
-            z-index: 2;
-        }
-
-        /* Realistic Earth with Atmosphere Glow */
-        .earth {
-            width: 140px;
-            height: 140px;
-            bottom: 8%;
-            left: 6%;
-            background: radial-gradient(circle at 30% 30%, #4facfe 0%, #00f2fe 20%, #103362 60%, #020b18 100%);
-            box-shadow: inset -20px -20px 40px #000, 0 0 35px rgba(0, 242, 254, 0.4);
-            animation: floatSlow 12s ease-in-out infinite alternate;
-        }
-
-        /* Earth Clouds Overlay */
-        .earth::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.4) 0%, transparent 60%);
-            filter: blur(4px);
-        }
-
-        /* Mars */
-        .mars {
-            width: 90px;
-            height: 90px;
-            top: 12%;
-            right: 8%;
-            background: radial-gradient(circle at 35% 35%, #ff7b54 0%, #ff5252 30%, #7a1c11 70%, #200402 100%);
-            box-shadow: inset -15px -15px 25px #000, 0 0 25px rgba(255, 82, 82, 0.35);
-            animation: floatSlow 10s ease-in-out infinite alternate-reverse;
-        }
-
-        /* Moon */
-        .moon {
-            width: 55px;
-            height: 55px;
-            bottom: 18%;
-            right: 12%;
-            background: radial-gradient(circle at 35% 35%, #e0e0e0 0%, #9e9e9e 50%, #424242 85%, #0f0f0f 100%);
-            box-shadow: inset -10px -10px 18px #000, 0 0 15px rgba(220, 220, 220, 0.2);
-            animation: floatSlow 14s ease-in-out infinite alternate;
-        }
-
-        @keyframes floatSlow {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-18px) rotate(5deg); }
-        }
-
-        /* Satellite SVG Flying Across */
-        .satellite-container {
-            position: absolute;
-            top: 25%;
-            left: -100px;
-            z-index: 3;
-            animation: flySatellite 22s linear infinite;
-        }
-
-        @keyframes flySatellite {
-            0% { transform: translateX(0) translateY(0) rotate(15deg); }
-            100% { transform: translateX(calc(100vw + 200px)) translateY(120px) rotate(25deg); }
-        }
-
-        /* Rocket Flying Upward */
-        .rocket-container {
-            position: absolute;
-            bottom: -100px;
-            left: 18%;
-            z-index: 3;
-            animation: flyRocket 16s ease-in-out infinite;
-            animation-delay: 3s;
-        }
-
-        @keyframes flyRocket {
-            0% { transform: translateY(0) translateX(0) rotate(-35deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(calc(-100vh - 200px)) translateX(300px) rotate(-35deg); opacity: 0; }
-        }
-
-        /* Canvas Overlay for Twinkling Stars & Comets */
-        canvas#spaceCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
             pointer-events: none;
+            overflow: hidden;
         }
 
-        /* Interactive Particle Burst */
+        .video-background iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 56.25vw; /* 16:9 Aspect Ratio */
+            min-height: 100vh;
+            min-width: 177.77vh; /* 16:9 Aspect Ratio */
+            transform: translate(-50%, -50%) scale(1.2);
+            filter: brightness(0.6) contrast(1.1);
+        }
+
+        /* Click Burst Particles */
         #particleContainer {
             position: absolute;
             top: 0;
@@ -168,6 +84,7 @@
             padding: 20px 10px;
         }
 
+        /* Animated Glow Title */
         h1 {
             font-size: clamp(1.6rem, 6vw, 2.6rem);
             font-weight: 900;
@@ -178,7 +95,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: rainbowShift 6s ease infinite;
-            filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.7));
+            filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.8));
             cursor: pointer;
             display: inline-block;
             transform-style: preserve-3d;
@@ -210,9 +127,9 @@
         }
 
         .box {
-            background: rgba(6, 8, 24, 0.65);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: rgba(6, 8, 24, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(139, 92, 246, 0.4);
             border-radius: 20px;
             padding: 22px 10px;
@@ -259,32 +176,14 @@
 </head>
 <body>
 
-    <div class="space-bg"></div>
-
-    <!-- Embedded High Resolution SVG Spacecraft Assets -->
-    <div class="planet earth"></div>
-    <div class="planet mars"></div>
-    <div class="planet moon"></div>
-
-    <div class="satellite-container">
-        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M13 7 9 3 5 7l4 4"></path>
-            <path d="m17 11 4 4-4 4-4-4"></path>
-            <path d="m8 12 4 4"></path>
-            <path d="m11 9 3 3"></path>
-            <line x1="2" y1="2" x2="22" y2="22"></line>
-        </svg>
+    <div class="video-background">
+        <iframe src="https://www.youtube.com/embed/6gI77Kq9SAA?autoplay=1&mute=1&controls=0&loop=1&playlist=6gI77Kq9SAA&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1" 
+                frameborder="0" 
+                allow="autoplay; encrypted-media" 
+                allowfullscreen>
+        </iframe>
     </div>
 
-    <div class="rocket-container">
-        <svg width="50" height="50" viewBox="0 0 24 24" fill="#ff5252" stroke="#ffffff" stroke-width="1">
-            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.71.12-2.47-.73-3.32a2.38 2.38 0 0 0-2.27-.68Z"></path>
-            <path d="M12 15l-3-3 8.5-8.5a2.12 2.12 0 0 1 3 3L12 15Z"></path>
-            <path d="M9 18l3 3 8.5-8.5a2.12 2.12 0 0 0-3-3L9 18Z"></path>
-        </svg>
-    </div>
-
-    <canvas id="spaceCanvas"></canvas>
     <div id="particleContainer"></div>
 
     <div class="container">
@@ -409,101 +308,6 @@
         }
         setInterval(updateCountdown, 1000);
         updateCountdown();
-
-        // Canvas Stars and Shooting Comets Engine
-        const canvas = document.getElementById('spaceCanvas');
-        const ctx = canvas.getContext('2d');
-
-        let stars = [];
-        let comets = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initStars();
-        }
-
-        function initStars() {
-            stars = [];
-            const count = Math.floor((canvas.width * canvas.height) / 1800);
-            for (let i = 0; i < count; i++) {
-                stars.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    radius: Math.random() * 1.5,
-                    alpha: Math.random(),
-                    speed: Math.random() * 0.02 + 0.005
-                });
-            }
-        }
-
-        class Comet {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * canvas.width * 1.5;
-                this.y = -50;
-                this.len = Math.random() * 120 + 60;
-                this.speed = Math.random() * 8 + 4;
-                this.size = Math.random() * 1.8 + 0.6;
-                this.active = false;
-                this.waitTime = Date.now() + Math.random() * 4000;
-            }
-            update() {
-                if (!this.active) {
-                    if (Date.now() > this.waitTime) this.active = true;
-                    return;
-                }
-                this.x -= this.speed;
-                this.y += this.speed;
-                if (this.x < -150 || this.y > canvas.height + 150) this.reset();
-            }
-            draw() {
-                if (!this.active) return;
-                ctx.save();
-                const grad = ctx.createLinearGradient(this.x, this.y, this.x + this.len, this.y - this.len);
-                grad.addColorStop(0, '#ffffff');
-                grad.addColorStop(0.2, '#00f2fe');
-                grad.addColorStop(1, 'transparent');
-                ctx.strokeStyle = grad;
-                ctx.lineWidth = this.size;
-                ctx.beginPath();
-                ctx.moveTo(this.x, this.y);
-                ctx.lineTo(this.x + this.len, this.y - this.len);
-                ctx.stroke();
-                ctx.restore();
-            }
-        }
-
-        comets = Array.from({ length: 5 }, () => new Comet());
-
-        function render() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Render Twinkling Stars
-            stars.forEach(s => {
-                s.alpha += s.speed;
-                if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
-                ctx.save();
-                ctx.globalAlpha = Math.abs(s.alpha);
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            });
-
-            // Render Comets
-            comets.forEach(c => {
-                c.update();
-                c.draw();
-            });
-
-            requestAnimationFrame(render);
-        }
-
-        window.addEventListener('resize', resize);
-        resize();
-        render();
     </script>
 </body>
 </html>
