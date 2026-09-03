@@ -15,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #030308;
+            background: #05050d;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -23,61 +23,70 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            perspective: 1000px; /* Enables 3D perspective */
+            perspective: 1200px; /* Provides realistic 3D depth */
         }
 
-        canvas {
+        /* Subtle Dark Ambient Glowing Background */
+        .ambient-bg {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
+            top: 0;
+            left: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.08) 0%, transparent 60%);
+            animation: pulseBg 12s ease-in-out infinite alternate;
             z-index: 1;
+        }
+
+        @keyframes pulseBg {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.1); opacity: 1; }
         }
 
         .container {
             position: relative;
             z-index: 2;
             width: 90%;
-            max-width: 500px;
+            max-width: 480px;
             text-align: center;
             padding: 20px 10px;
         }
 
-        /* Title with Horizontal 3D Spin */
+        /* Pro Smooth 3D Title */
         h1 {
-            font-size: clamp(1.6rem, 6vw, 2.8rem);
+            font-size: clamp(1.6rem, 6vw, 2.6rem);
             font-weight: 900;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             margin-bottom: 35px;
-            color: #fff;
+            color: #ffffff;
             text-shadow: 
-                0 0 7px #fff,
-                0 0 10px #8b5cf6,
-                0 0 21px #8b5cf6,
-                0 0 42px #3b82f6;
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(139, 92, 246, 0.6),
+                0 0 35px rgba(59, 130, 246, 0.4);
             cursor: pointer;
             display: inline-block;
             transform-style: preserve-3d;
+            will-change: transform;
+            backface-visibility: visible;
         }
 
-        /* Jump & Horizontal Y-Axis Spin Animation */
-        .jump-horizontal-spin {
-            animation: jumpHorizontalSpinAnim 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        /* High-End Smooth Jump & 3D Y-Axis Flip */
+        .pro-spin {
+            animation: proSpinAnim 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        @keyframes jumpHorizontalSpinAnim {
-            0% { 
-                transform: translateY(0) rotateY(0deg) scale(1); 
+        @keyframes proSpinAnim {
+            0% {
+                transform: translateY(0) rotateY(0deg) scale(1);
             }
-            40% { 
-                transform: translateY(-50px) rotateY(180deg) scale(1.25); 
+            40% {
+                transform: translateY(-40px) rotateY(180deg) scale(1.15);
             }
-            80% { 
-                transform: translateY(5px) rotateY(360deg) scale(0.95); 
-            }
-            100% { 
-                transform: translateY(0) rotateY(360deg) scale(1); 
+            100% {
+                transform: translateY(0) rotateY(360deg) scale(1);
             }
         }
 
@@ -89,36 +98,41 @@
         }
 
         .box {
-            background: rgba(18, 16, 38, 0.5);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(139, 92, 246, 0.25);
+            background: rgba(18, 16, 38, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 20px;
             padding: 22px 10px;
             text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             cursor: pointer;
             position: relative;
-            overflow: hidden;
+            will-change: transform;
+        }
+
+        .box:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
         }
 
         .card-bounce {
-            animation: cardBounceAnim 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: cardPopAnim 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        @keyframes cardBounceAnim {
-            0% { transform: scale(1) rotate(0deg); }
-            30% { transform: scale(0.85) rotate(-5deg); }
-            60% { transform: scale(1.1) rotate(5deg); }
-            100% { transform: scale(1) rotate(0deg); }
+        @keyframes cardPopAnim {
+            0% { transform: scale(1); }
+            40% { transform: scale(0.92); }
+            70% { transform: scale(1.06); }
+            100% { transform: scale(1); }
         }
 
         .number {
-            font-size: clamp(2rem, 8vw, 3.2rem);
+            font-size: clamp(2.2rem, 8vw, 3.4rem);
             font-weight: 800;
             color: #ffffff;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
             line-height: 1;
         }
 
@@ -134,7 +148,7 @@
 </head>
 <body>
 
-    <canvas id="particleCanvas"></canvas>
+    <div class="ambient-bg"></div>
 
     <div class="container">
         <h1 id="mainTitle" onclick="triggerTitleEffect()">2027 A/L COUNTDOWN</h1>
@@ -159,7 +173,7 @@
     </div>
 
     <script>
-        // Web Audio Synthesizer
+        // Web Audio Synthesizer Engine
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx;
 
@@ -169,7 +183,7 @@
             }
         }
 
-        // Cartoon "Piyuuuu" Slide Sound Effect
+        // High-Pitched Cartoon "Piyuuu" Slide Whistle
         function playPiyuuSound() {
             initAudio();
             if (!audioCtx) return;
@@ -177,26 +191,24 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
 
-            // High-pitched sine wave for authentic cartoon whistle
             osc.type = 'sine';
             const now = audioCtx.currentTime;
 
-            // Pitch sweeps rapidly upward then drops for classic "Piyuuu"
-            osc.frequency.setValueAtTime(350, now);
-            osc.frequency.exponentialRampToValueAtTime(1800, now + 0.3);
-            osc.frequency.exponentialRampToValueAtTime(250, now + 0.65);
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(2200, now + 0.32);
+            osc.frequency.exponentialRampToValueAtTime(300, now + 0.7);
 
-            gain.gain.setValueAtTime(0.35, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.65);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.7);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
 
             osc.start(now);
-            osc.stop(now + 0.65);
+            osc.stop(now + 0.7);
         }
 
-        // Pop sound effect for cards
+        // Clean Card Pop Sound
         function playPopSound() {
             initAudio();
             if (!audioCtx) return;
@@ -207,33 +219,30 @@
             osc.type = 'triangle';
             const now = audioCtx.currentTime;
 
-            osc.frequency.setValueAtTime(120, now);
-            osc.frequency.exponentialRampToValueAtTime(700, now + 0.1);
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.exponentialRampToValueAtTime(750, now + 0.08);
 
-            gain.gain.setValueAtTime(0.4, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            gain.gain.setValueAtTime(0.35, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
 
             osc.start(now);
-            osc.stop(now + 0.1);
+            osc.stop(now + 0.08);
         }
 
-        // Title Jump & Horizontal Spin Handler
+        // Title Smooth Spin Handler
         function triggerTitleEffect() {
             const title = document.getElementById('mainTitle');
-            if (title.classList.contains('jump-horizontal-spin')) return;
+            if (title.classList.contains('pro-spin')) return;
 
             playPiyuuSound();
-            title.classList.add('jump-horizontal-spin');
-
-            const rect = title.getBoundingClientRect();
-            spawnExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2, 40);
+            title.classList.add('pro-spin');
 
             setTimeout(() => {
-                title.classList.remove('jump-horizontal-spin');
-            }, 800);
+                title.classList.remove('pro-spin');
+            }, 850);
         }
 
         // Card Bounce Handler
@@ -244,11 +253,8 @@
             playPopSound();
 
             card.classList.remove('card-bounce');
-            void card.offsetWidth;
+            void card.offsetWidth; // Force Reflow
             card.classList.add('card-bounce');
-
-            const rect = card.getBoundingClientRect();
-            spawnExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2, 25);
         }
 
         // Countdown Logic
@@ -275,140 +281,6 @@
         }
         setInterval(updateCountdown, 1000);
         updateCountdown();
-
-        // Canvas Particle Engine
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-
-        let particles = [];
-        let mouse = { x: null, y: null, radius: 120 };
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initParticles();
-        }
-        window.addEventListener('resize', resizeCanvas);
-
-        class Particle {
-            constructor(x, y, vx, vy, size, color) {
-                this.x = x || Math.random() * canvas.width;
-                this.y = y || Math.random() * canvas.height;
-                this.vx = vx || (Math.random() - 0.5) * 1.2;
-                this.vy = vy || (Math.random() - 0.5) * 1.2;
-                this.size = size || Math.random() * 3 + 1;
-                this.color = color || ['#8b5cf6', '#3b82f6', '#ec4899'][Math.floor(Math.random() * 3)];
-                this.alpha = Math.random() * 0.7 + 0.3;
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.shadowBlur = 12;
-                ctx.shadowColor = this.color;
-                ctx.fill();
-                ctx.restore();
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-
-                if (mouse.x != null) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < mouse.radius) {
-                        let force = (mouse.radius - distance) / mouse.radius;
-                        let angle = Math.atan2(dy, dx);
-                        this.x -= Math.cos(angle) * force * 5;
-                        this.y -= Math.sin(angle) * force * 5;
-                    }
-                }
-            }
-        }
-
-        function initParticles() {
-            particles = [];
-            const count = Math.min(Math.floor((canvas.width * canvas.height) / 9000), 70);
-            for (let i = 0; i < count; i++) {
-                particles.push(new Particle());
-            }
-        }
-
-        function spawnExplosion(x, y, count = 25) {
-            for (let i = 0; i < count; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 7 + 2;
-                const vx = Math.cos(angle) * speed;
-                const vy = Math.sin(angle) * speed;
-                const size = Math.random() * 4 + 2;
-                const colors = ['#a855f7', '#ec4899', '#3b82f6', '#ffffff'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                particles.push(new Particle(x, y, vx, vy, size, color));
-            }
-            if (particles.length > 150) {
-                particles.splice(0, particles.length - 150);
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            for (let a = 0; a < particles.length; a++) {
-                for (let b = a + 1; b < particles.length; b++) {
-                    let dx = particles[a].x - particles[b].x;
-                    let dy = particles[a].y - particles[b].y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < 110) {
-                        ctx.save();
-                        ctx.globalAlpha = (1 - dist / 110) * 0.25;
-                        ctx.strokeStyle = particles[a].color;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[a].x, particles[a].y);
-                        ctx.lineTo(particles[b].x, particles[b].y);
-                        ctx.stroke();
-                        ctx.restore();
-                    }
-                }
-            }
-
-            particles.forEach((particle) => {
-                particle.update();
-                particle.draw();
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                mouse.x = e.touches[0].clientX;
-                mouse.y = e.touches[0].clientY;
-            }
-        });
-
-        window.addEventListener('touchend', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-
-        resizeCanvas();
-        animate();
     </script>
 </body>
 </html>
