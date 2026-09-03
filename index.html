@@ -25,31 +25,17 @@
             position: relative;
         }
 
-        /* Fullscreen Video Background Container */
-        .video-background {
+        /* Fullscreen Canvas for 3D Flying Stars & Nebulae */
+        canvas#spaceCanvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 1;
-            pointer-events: none;
-            overflow: hidden;
         }
 
-        .video-background iframe {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100vw;
-            height: 56.25vw; /* 16:9 Aspect Ratio */
-            min-height: 100vh;
-            min-width: 177.77vh; /* 16:9 Aspect Ratio */
-            transform: translate(-50%, -50%) scale(1.25);
-            filter: brightness(0.65) contrast(1.1);
-        }
-
-        /* Click Burst Particles */
+        /* Particle Container for Click Bursts */
         #particleContainer {
             position: absolute;
             top: 0;
@@ -84,7 +70,7 @@
             padding: 20px 10px;
         }
 
-        /* Animated Glow Title */
+        /* Title Styling */
         h1 {
             font-size: clamp(1.6rem, 6vw, 2.6rem);
             font-weight: 900;
@@ -127,7 +113,7 @@
         }
 
         .box {
-            background: rgba(6, 8, 24, 0.55);
+            background: rgba(6, 8, 24, 0.65);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(139, 92, 246, 0.4);
@@ -176,14 +162,7 @@
 </head>
 <body>
 
-    <div class="video-background">
-        <iframe src="https://yewtu.be/embed/6gI77Kq9SAA?autoplay=1&mute=1&controls=0&loop=1&listen=false" 
-                frameborder="0" 
-                allow="autoplay" 
-                allowfullscreen>
-        </iframe>
-    </div>
-
+    <canvas id="spaceCanvas"></canvas>
     <div id="particleContainer"></div>
 
     <div class="container">
@@ -308,6 +287,100 @@
         }
         setInterval(updateCountdown, 1000);
         updateCountdown();
+
+        // Real 3D Flying Stars (Warp Engine)
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const numStars = 600;
+        const stars = [];
+        const speed = 2.5;
+
+        class Star {
+            constructor() {
+                this.reset(true);
+            }
+
+            reset(initial = false) {
+                this.x = (Math.random() - 0.5) * width * 2;
+                this.y = (Math.random() - 0.5) * height * 2;
+                this.z = initial ? Math.random() * width : width;
+                this.pz = this.z;
+                
+                // Color variations: cyan, purple, white, blue
+                const colors = ['#ffffff', '#a78bfa', '#00f2fe', '#3b82f6', '#ff007f'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.pz = this.z;
+                this.z -= speed;
+
+                if (this.z <= 0) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                // Project 3D coordinates to 2D screen surface
+                const sx = (this.x / this.z) * (width / 2) + width / 2;
+                const sy = (this.y / this.z) * (height / 2) + height / 2;
+
+                const px = (this.x / this.pz) * (width / 2) + width / 2;
+                const py = (this.y / this.pz) * (height / 2) + height / 2;
+
+                if (sx < 0 || sx > width || sy < 0 || sy > height) return;
+
+                const size = (1 - this.z / width) * 3;
+                const alpha = Math.min(1, (1 - this.z / width) * 1.5);
+
+                ctx.save();
+                ctx.strokeStyle = this.color;
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = alpha;
+                ctx.lineWidth = size;
+
+                // Motion streak coming from distance
+                ctx.beginPath();
+                ctx.moveTo(px, py);
+                ctx.lineTo(sx, sy);
+                ctx.stroke();
+
+                // Glowing star head
+                ctx.beginPath();
+                ctx.arc(sx, sy, size * 0.8, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < numStars; i++) {
+            stars.push(new Star());
+        }
+
+        function renderSpace() {
+            // Soft trail effect for deep space field
+            ctx.fillStyle = 'rgba(2, 3, 12, 0.35)';
+            ctx.fillRect(0, 0, width, height);
+
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].update();
+                stars[i].draw();
+            }
+
+            requestAnimationFrame(renderSpace);
+        }
+
+        renderSpace();
     </script>
 </body>
 </html>
