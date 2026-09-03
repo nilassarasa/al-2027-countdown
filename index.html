@@ -23,6 +23,7 @@
             align-items: center;
             overflow: hidden;
             position: relative;
+            perspective: 1000px; /* Enables 3D perspective */
         }
 
         canvas {
@@ -43,7 +44,7 @@
             padding: 20px 10px;
         }
 
-        /* Title with Jump & Spin animation support */
+        /* Title with Horizontal 3D Spin */
         h1 {
             font-size: clamp(1.6rem, 6vw, 2.8rem);
             font-weight: 900;
@@ -57,18 +58,27 @@
                 0 0 42px #3b82f6;
             cursor: pointer;
             display: inline-block;
-            transition: transform 0.1s;
+            transform-style: preserve-3d;
         }
 
-        .jump-spin {
-            animation: jumpSpinAnim 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* Jump & Horizontal Y-Axis Spin Animation */
+        .jump-horizontal-spin {
+            animation: jumpHorizontalSpinAnim 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        @keyframes jumpSpinAnim {
-            0% { transform: translateY(0) rotate(0deg) scale(1); }
-            40% { transform: translateY(-45px) rotate(180deg) scale(1.2); }
-            80% { transform: translateY(5px) rotate(360deg) scale(0.95); }
-            100% { transform: translateY(0) rotate(360deg) scale(1); }
+        @keyframes jumpHorizontalSpinAnim {
+            0% { 
+                transform: translateY(0) rotateY(0deg) scale(1); 
+            }
+            40% { 
+                transform: translateY(-50px) rotateY(180deg) scale(1.25); 
+            }
+            80% { 
+                transform: translateY(5px) rotateY(360deg) scale(0.95); 
+            }
+            100% { 
+                transform: translateY(0) rotateY(360deg) scale(1); 
+            }
         }
 
         .countdown {
@@ -149,7 +159,7 @@
     </div>
 
     <script>
-        // Web Audio API Sound Generator
+        // Web Audio Synthesizer
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx;
 
@@ -159,7 +169,7 @@
             }
         }
 
-        // Cartoon Slide Whistle ("Piyuu" sound)
+        // Cartoon "Piyuuuu" Slide Sound Effect
         function playPiyuuSound() {
             initAudio();
             if (!audioCtx) return;
@@ -167,21 +177,23 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
 
+            // High-pitched sine wave for authentic cartoon whistle
             osc.type = 'sine';
             const now = audioCtx.currentTime;
 
-            osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.35);
-            osc.frequency.exponentialRampToValueAtTime(400, now + 0.7);
+            // Pitch sweeps rapidly upward then drops for classic "Piyuuu"
+            osc.frequency.setValueAtTime(350, now);
+            osc.frequency.exponentialRampToValueAtTime(1800, now + 0.3);
+            osc.frequency.exponentialRampToValueAtTime(250, now + 0.65);
 
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.7);
+            gain.gain.setValueAtTime(0.35, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.65);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
 
             osc.start(now);
-            osc.stop(now + 0.7);
+            osc.stop(now + 0.65);
         }
 
         // Pop sound effect for cards
@@ -195,36 +207,36 @@
             osc.type = 'triangle';
             const now = audioCtx.currentTime;
 
-            osc.frequency.setValueAtTime(150, now);
-            osc.frequency.exponentialRampToValueAtTime(600, now + 0.12);
+            osc.frequency.setValueAtTime(120, now);
+            osc.frequency.exponentialRampToValueAtTime(700, now + 0.1);
 
             gain.gain.setValueAtTime(0.4, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
 
             osc.start(now);
-            osc.stop(now + 0.12);
+            osc.stop(now + 0.1);
         }
 
-        // Title Jump & Spin Animation Handler
+        // Title Jump & Horizontal Spin Handler
         function triggerTitleEffect() {
             const title = document.getElementById('mainTitle');
-            if (title.classList.contains('jump-spin')) return;
+            if (title.classList.contains('jump-horizontal-spin')) return;
 
             playPiyuuSound();
-            title.classList.add('jump-spin');
+            title.classList.add('jump-horizontal-spin');
 
             const rect = title.getBoundingClientRect();
-            spawnExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2, 35);
+            spawnExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2, 40);
 
             setTimeout(() => {
-                title.classList.remove('jump-spin');
-            }, 750);
+                title.classList.remove('jump-horizontal-spin');
+            }, 800);
         }
 
-        // Card Bounce Animation Handler
+        // Card Bounce Handler
         function triggerCardEffect(e) {
             e.stopPropagation();
             const card = e.currentTarget;
@@ -232,7 +244,7 @@
             playPopSound();
 
             card.classList.remove('card-bounce');
-            void card.offsetWidth; // Trigger reflow
+            void card.offsetWidth;
             card.classList.add('card-bounce');
 
             const rect = card.getBoundingClientRect();
