@@ -79,21 +79,39 @@
             padding: 20px 10px;
         }
 
-        /* Title Styling */
+        /* Multi-color Animated Title */
         h1 {
             font-size: clamp(1.6rem, 6vw, 2.6rem);
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 35px;
-            color: #ffffff;
-            text-shadow: 
-                0 0 10px rgba(255, 255, 255, 0.8),
-                0 0 20px rgba(139, 92, 246, 0.7),
-                0 0 35px rgba(59, 130, 246, 0.5);
+            
+            /* Animated Multi-Color Gradient Text */
+            background: linear-gradient(
+                90deg, 
+                #ff007f, 
+                #a855f7, 
+                #3b82f6, 
+                #00f2fe, 
+                #4facfe, 
+                #ff007f
+            );
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbowShift 6s ease infinite;
+
+            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.5));
             cursor: pointer;
             display: inline-block;
             transform-style: preserve-3d;
             will-change: transform;
+        }
+
+        @keyframes rainbowShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* Double Spin (720deg) + High Jump */
@@ -209,29 +227,34 @@
             }
         }
 
-        // Cartoon "Piyuuu" Slide Whistle
-        function playPiyuuSound() {
+        // Funny Meme "Faaaaaaaaah!" Cartoon Slide Sound Effect
+        function playFaaahSound() {
             initAudio();
             if (!audioCtx) return;
 
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
 
-            osc.type = 'sine';
+            osc.type = 'sawtooth'; // Gives a funny, buzzy cartoon voice tone
             const now = audioCtx.currentTime;
 
-            osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(2400, now + 0.45);
-            osc.frequency.exponentialRampToValueAtTime(350, now + 0.9);
+            // Long pitch sweep that starts mid-range, leaps up high for the "FAAAAA", then drops at the end
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.linearRampToValueAtTime(1400, now + 0.35);
+            osc.frequency.setValueAtTime(1400, now + 0.65);
+            osc.frequency.exponentialRampToValueAtTime(200, now + 0.95);
 
-            gain.gain.setValueAtTime(0.35, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.9);
+            // Volume envelope
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.linearRampToValueAtTime(0.25, now + 0.1);
+            gain.gain.setValueAtTime(0.25, now + 0.65);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
 
             osc.start(now);
-            osc.stop(now + 0.9);
+            osc.stop(now + 0.95);
         }
 
         // Card Pop Sound
@@ -272,7 +295,7 @@
                 const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5);
                 const distance = Math.random() * 120 + 80;
                 const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance - 40; // upward bias
+                const ty = Math.sin(angle) * distance - 40;
                 const rot = (Math.random() - 0.5) * 360;
 
                 el.style.left = `${centerX}px`;
@@ -292,14 +315,13 @@
             const title = document.getElementById('mainTitle');
             if (title.classList.contains('double-spin')) return;
 
-            playPiyuuSound();
+            playFaaahSound();
             title.classList.add('double-spin');
 
             const rect = title.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
 
-            // Trigger educational item burst right when title completes landing
             setTimeout(() => {
                 burstEduItems(centerX, centerY);
             }, 850);
@@ -371,7 +393,6 @@
         function animateBg() {
             ctx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
             
-            // Draw subtle ambient glow
             const grad = ctx.createRadialGradient(
                 bgCanvas.width / 2, bgCanvas.height / 2, 50,
                 bgCanvas.width / 2, bgCanvas.height / 2, bgCanvas.width * 0.7
@@ -381,7 +402,6 @@
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
 
-            // Update & Draw Soft Floating Particles
             bgParticles.forEach(p => {
                 p.x += p.vx;
                 p.y += p.vy;
