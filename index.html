@@ -217,7 +217,7 @@
     </div>
 
     <script>
-        // Web Audio Synthesizer
+        // Web Audio Synthesizer Engine
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx;
 
@@ -227,34 +227,49 @@
             }
         }
 
-        // Funny Meme "Faaaaaaaaah!" Cartoon Slide Sound Effect
-        function playFaaahSound() {
+        // Voice "Ta-Daaa!" using Web Speech API + Musical Flourish
+        function playTadaSound() {
             initAudio();
-            if (!audioCtx) return;
 
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
+            // 1. Cute Voice "Ta-Daaa!"
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop active speech
+                const utterance = new SpeechSynthesisUtterance("Ta Daaa!");
+                utterance.pitch = 1.8; // Cute high pitch
+                utterance.rate = 1.15;  // Energetic speed
+                utterance.volume = 1.0;
 
-            osc.type = 'sawtooth'; // Gives a funny, buzzy cartoon voice tone
-            const now = audioCtx.currentTime;
+                // Select female/cute voice if available
+                const voices = window.speechSynthesis.getVoices();
+                const cuteVoice = voices.find(v => v.lang.includes('en') && (v.name.includes('Female') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Victoria')));
+                if (cuteVoice) utterance.voice = cuteVoice;
 
-            // Long pitch sweep that starts mid-range, leaps up high for the "FAAAAA", then drops at the end
-            osc.frequency.setValueAtTime(320, now);
-            osc.frequency.linearRampToValueAtTime(1400, now + 0.35);
-            osc.frequency.setValueAtTime(1400, now + 0.65);
-            osc.frequency.exponentialRampToValueAtTime(200, now + 0.95);
+                window.speechSynthesis.speak(utterance);
+            }
 
-            // Volume envelope
-            gain.gain.setValueAtTime(0.01, now);
-            gain.gain.linearRampToValueAtTime(0.25, now + 0.1);
-            gain.gain.setValueAtTime(0.25, now + 0.65);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
+            // 2. Brass Fanfare Musical Accord
+            if (audioCtx) {
+                const now = audioCtx.currentTime;
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 chord
 
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
+                notes.forEach((freq, index) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
 
-            osc.start(now);
-            osc.stop(now + 0.95);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + (index * 0.05));
+
+                    gain.gain.setValueAtTime(0.01, now);
+                    gain.gain.linearRampToValueAtTime(0.15, now + (index * 0.05) + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(now + (index * 0.05));
+                    osc.stop(now + 0.8);
+                });
+            }
         }
 
         // Card Pop Sound
@@ -315,7 +330,7 @@
             const title = document.getElementById('mainTitle');
             if (title.classList.contains('double-spin')) return;
 
-            playFaaahSound();
+            playTadaSound();
             title.classList.add('double-spin');
 
             const rect = title.getBoundingClientRect();
@@ -419,6 +434,13 @@
             });
 
             requestAnimationFrame(animateBg);
+        }
+
+        // Preload speech synthesis voices
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
         }
 
         window.addEventListener('resize', resizeBg);
