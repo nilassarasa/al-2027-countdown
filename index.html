@@ -15,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #000002;
+            background: #000000;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -23,10 +23,9 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            perspective: 1200px;
         }
 
-        /* Real Canvas Layer */
+        /* 3D Canvas Background */
         canvas#spaceCanvas {
             position: absolute;
             top: 0;
@@ -34,10 +33,9 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            cursor: pointer;
         }
 
-        /* Particle Explosions */
+        /* Click Burst Particles */
         #particleContainer {
             position: absolute;
             top: 0;
@@ -78,21 +76,11 @@
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 35px;
-            
-            background: linear-gradient(
-                90deg, 
-                #ff007f, 
-                #a855f7, 
-                #3b82f6, 
-                #00f2fe, 
-                #4facfe, 
-                #ff007f
-            );
+            background: linear-gradient(90deg, #ff007f, #a855f7, #3b82f6, #00f2fe, #4facfe, #ff007f);
             background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: rainbowShift 6s ease infinite;
-
             filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.5));
             cursor: pointer;
             display: inline-block;
@@ -125,9 +113,9 @@
         }
 
         .box {
-            background: rgba(5, 7, 20, 0.75);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: rgba(5, 7, 20, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(139, 92, 246, 0.35);
             border-radius: 20px;
             padding: 22px 10px;
@@ -171,6 +159,7 @@
             font-weight: 600;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -213,7 +202,7 @@
             const sound = document.getElementById('tadaSound');
             if (sound) {
                 sound.currentTime = 0;
-                sound.play().catch(e => console.log("Audio play blocked:", e));
+                sound.play().catch(e => console.log(e));
             }
         }
 
@@ -241,24 +230,23 @@
             const gain = audioCtx.createGain();
             osc.type = 'sine';
             const now = audioCtx.currentTime;
-            osc.frequency.setValueAtTime(250, now);
-            osc.frequency.exponentialRampToValueAtTime(1400, now + 0.22);
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.2);
             gain.gain.setValueAtTime(0.25, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(now);
-            osc.stop(now + 0.25);
+            osc.stop(now + 0.22);
         }
 
         function burstParticles(centerX, centerY, icons) {
             const container = document.getElementById('particleContainer');
-            const count = 14;
-            for (let i = 0; i < count; i++) {
+            for (let i = 0; i < 14; i++) {
                 const el = document.createElement('div');
                 el.className = 'particle';
                 el.innerText = icons[Math.floor(Math.random() * icons.length)];
-                const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5);
+                const angle = (Math.PI * 2 * i) / 14 + (Math.random() - 0.5);
                 const distance = Math.random() * 110 + 60;
                 const tx = Math.cos(angle) * distance;
                 const ty = Math.sin(angle) * distance - 20;
@@ -281,16 +269,8 @@
             playTadaSound();
             title.classList.add('double-spin');
             const rect = title.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-
-            setTimeout(() => {
-                burstParticles(centerX, centerY, ['📚', '🎓', '✏️', '💡', '📐', '🧪', '📖', '✨']);
-            }, 850);
-
-            setTimeout(() => {
-                title.classList.remove('double-spin');
-            }, 1100);
+            burstParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, ['📚', '🎓', '✏️', '💡', '📐', '🧪', '📖', '✨']);
+            setTimeout(() => title.classList.remove('double-spin'), 1100);
         }
 
         function triggerCardEffect(e) {
@@ -302,7 +282,7 @@
             card.classList.add('card-bounce');
         }
 
-        // Countdown Logic
+        // Countdown Timer
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
         function updateCountdown() {
             const now = new Date().getTime();
@@ -326,180 +306,168 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // High Resolution Photorealistic Canvas Space Simulation
+        // Three.js 3D Real Space Simulation Engine
         const canvas = document.getElementById('spaceCanvas');
-        const ctx = canvas.getContext('2d');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 25;
 
-        // Assets
-        const sources = {
-            sun: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.png',
-            earth: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Earth_Western_Hemisphere_transparent_background.png/600px-Earth_Western_Hemisphere_transparent_background.png',
-            mars: 'https://upload.wikimedia.org/wikipedia/commons/3/36/3D_Mars.png',
-            moon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.png/600px-FullMoon2010.png',
-            rocket: 'https://pngimg.com/uploads/rocket/rocket_PNG13.png',
-            sat: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Hubble_Space_Telescope_in_orbit.png/600px-Hubble_Space_Telescope_in_orbit.png'
-        };
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        const images = {};
-        let loadedCount = 0;
-        const totalImages = Object.keys(sources).length;
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
 
-        for (let key in sources) {
-            images[key] = new Image();
-            images[key].crossOrigin = "Anonymous";
-            images[key].src = sources[key];
-            images[key].onload = () => {
-                loadedCount++;
-            };
+        const sunLight = new THREE.PointLight(0xffddaa, 3, 100);
+        sunLight.position.set(-15, 10, 5);
+        scene.add(sunLight);
+
+        // Texture Loader
+        const loader = new THREE.TextureLoader();
+        loader.crossOrigin = 'anonymous';
+
+        // Starfield Background
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 3000;
+        const starPos = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount * 3; i++) {
+            starPos[i] = (Math.random() - 0.5) * 300;
         }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0.9 });
+        const starMesh = new THREE.Points(starGeo, starMat);
+        scene.add(starMesh);
 
-        let stars = [];
-        let spaceObjects = [];
+        // 3D Objects Array for Raycasting
+        const interactiveObjects = [];
 
-        function resizeSpace() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        // 1. Sun
+        const sunGeo = new THREE.SphereGeometry(3, 32, 32);
+        const sunMat = new THREE.MeshBasicMaterial({
+            map: loader.load('https://upload.wikimedia.org/wikipedia/commons/b/b4/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.png')
+        });
+        const sun = new THREE.Mesh(sunGeo, sunMat);
+        sun.position.set(-14, 9, -5);
+        scene.add(sun);
+        interactiveObjects.push(sun);
 
-            stars = [];
-            const count = Math.floor((canvas.width * canvas.height) / 2500);
-            for (let i = 0; i < count; i++) {
-                stars.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    radius: Math.random() * 1.6,
-                    alpha: Math.random(),
-                    speed: Math.random() * 0.015 + 0.005
-                });
+        // 2. Earth
+        const earthGeo = new THREE.SphereGeometry(2.2, 32, 32);
+        const earthMat = new THREE.MeshStandardMaterial({
+            map: loader.load('https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Earth_Western_Hemisphere_transparent_background.png/600px-Earth_Western_Hemisphere_transparent_background.png'),
+            roughness: 0.6
+        });
+        const earth = new THREE.Mesh(earthGeo, earthMat);
+        earth.position.set(-11, -9, 0);
+        scene.add(earth);
+        interactiveObjects.push(earth);
+
+        // 3. Mars
+        const marsGeo = new THREE.SphereGeometry(1.6, 32, 32);
+        const marsMat = new THREE.MeshStandardMaterial({
+            map: loader.load('https://upload.wikimedia.org/wikipedia/commons/3/36/3D_Mars.png'),
+            roughness: 0.8
+        });
+        const mars = new THREE.Mesh(marsGeo, marsMat);
+        mars.position.set(13, 8, -2);
+        scene.add(mars);
+        interactiveObjects.push(mars);
+
+        // 4. Moon
+        const moonGeo = new THREE.SphereGeometry(1.1, 32, 32);
+        const moonMat = new THREE.MeshStandardMaterial({
+            map: loader.load('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.png/600px-FullMoon2010.png'),
+            roughness: 0.9
+        });
+        const moon = new THREE.Mesh(moonGeo, moonMat);
+        moon.position.set(12, -8, 1);
+        scene.add(moon);
+        interactiveObjects.push(moon);
+
+        // 5. Satellite (Hubble)
+        const satGeo = new THREE.PlaneGeometry(3, 2);
+        const satMat = new THREE.MeshBasicMaterial({
+            map: loader.load('https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Hubble_Space_Telescope_in_orbit.png/600px-Hubble_Space_Telescope_in_orbit.png'),
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+        const satellite = new THREE.Mesh(satGeo, satMat);
+        satellite.position.set(15, 2, 2);
+        scene.add(satellite);
+        interactiveObjects.push(satellite);
+
+        // 6. Space Rocket
+        const rocketGeo = new THREE.PlaneGeometry(2.5, 3.5);
+        const rocketMat = new THREE.MeshBasicMaterial({
+            map: loader.load('https://pngimg.com/uploads/rocket/rocket_PNG13.png'),
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+        const rocket = new THREE.Mesh(rocketGeo, rocketMat);
+        rocket.position.set(-18, -2, 3);
+        rocket.rotation.z = -Math.PI / 4;
+        scene.add(rocket);
+        interactiveObjects.push(rocket);
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Object Rotations
+            sun.rotation.y += 0.002;
+            earth.rotation.y += 0.005;
+            mars.rotation.y += 0.004;
+            moon.rotation.y += 0.003;
+
+            // Rocket Orbit Trajectory
+            rocket.position.x += 0.035;
+            rocket.position.y += 0.015;
+            if (rocket.position.x > 22) {
+                rocket.position.x = -22;
+                rocket.position.y = -6;
             }
 
-            initObjects();
+            // Satellite Gentle Floating
+            satellite.position.x -= 0.015;
+            satellite.rotation.z += 0.002;
+            if (satellite.position.x < -22) {
+                satellite.position.x = 22;
+            }
+
+            renderer.render(scene, camera);
         }
+        animate();
 
-        function initObjects() {
-            spaceObjects = [
-                { id: 'sun', x: canvas.width * 0.12, y: canvas.height * 0.18, size: 140, rot: 0, rotSpeed: 0.001, pulse: 0 },
-                { id: 'earth', x: canvas.width * 0.15, y: canvas.height * 0.78, size: 90, rot: 0, rotSpeed: 0.003, dy: 0.2, yDirection: 1 },
-                { id: 'mars', x: canvas.width * 0.85, y: canvas.height * 0.22, size: 70, rot: 0, rotSpeed: -0.002, dy: 0.15, yDirection: -1 },
-                { id: 'moon', x: canvas.width * 0.82, y: canvas.height * 0.80, size: 55, rot: 0, rotSpeed: 0.001, dy: 0.25, yDirection: 1 },
-                { 
-                    id: 'rocket', 
-                    x: -100, 
-                    y: canvas.height * 0.85, 
-                    size: 80, 
-                    vx: (canvas.width + 200) / 700, 
-                    vy: -canvas.height / 700, 
-                    angle: -Math.PI / 4 
-                },
-                { 
-                    id: 'sat', 
-                    x: canvas.width + 100, 
-                    y: canvas.height * 0.3, 
-                    size: 75, 
-                    vx: -(canvas.width + 200) / 1000, 
-                    vy: canvas.height * 0.2 / 1000, 
-                    angle: 0.1 
-                }
-            ];
-        }
+        // 3D Object Click Raycaster Handler
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
 
-        function drawSpace() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        window.addEventListener('click', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-            // Deep Space Gradient
-            const nebula = ctx.createRadialGradient(
-                canvas.width * 0.5, canvas.height * 0.5, 10,
-                canvas.width * 0.5, canvas.height * 0.5, canvas.width
-            );
-            nebula.addColorStop(0, '#060818');
-            nebula.addColorStop(0.6, '#02030d');
-            nebula.addColorStop(1, '#000002');
-            ctx.fillStyle = nebula;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(interactiveObjects);
 
-            // Stars
-            stars.forEach(s => {
-                s.alpha += s.speed;
-                if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
-                ctx.save();
-                ctx.globalAlpha = Math.abs(s.alpha);
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            });
+            if (intersects.length > 0) {
+                const hitObject = intersects[0].object;
+                playSpaceSound();
+                burstParticles(event.clientX, event.clientY, ['⭐', '✨', '🚀', '💫', '💥']);
 
-            // Draw Real Space Assets
-            spaceObjects.forEach(obj => {
-                const img = images[obj.id];
-                if (!img || !img.complete) return;
-
-                ctx.save();
-
-                // Object Physics
-                obj.rot += obj.rotSpeed || 0;
-                if (obj.dy) {
-                    obj.y += obj.dy * obj.yDirection;
-                    if (obj.y > canvas.height * 0.85 || obj.y < canvas.height * 0.15) obj.yDirection *= -1;
-                }
-
-                if (obj.id === 'rocket' || obj.id === 'sat') {
-                    obj.x += obj.vx;
-                    obj.y += obj.vy;
-                    if (obj.id === 'rocket' && obj.x > canvas.width + 150) {
-                        obj.x = -150;
-                        obj.y = canvas.height * 0.85;
-                    }
-                    if (obj.id === 'sat' && obj.x < -150) {
-                        obj.x = canvas.width + 150;
-                        obj.y = canvas.height * 0.3;
-                    }
-                }
-
-                ctx.translate(obj.x, obj.y);
-                ctx.rotate(obj.angle || obj.rot);
-
-                // Realistic Sun Flare Effect
-                if (obj.id === 'sun') {
-                    obj.pulse += 0.02;
-                    const glowSize = obj.size * 0.8 + Math.sin(obj.pulse) * 8;
-                    const sunGlow = ctx.createRadialGradient(0, 0, obj.size * 0.3, 0, 0, glowSize);
-                    sunGlow.addColorStop(0, 'rgba(255, 180, 0, 0.8)');
-                    sunGlow.addColorStop(0.5, 'rgba(255, 80, 0, 0.3)');
-                    sunGlow.addColorStop(1, 'rgba(255, 0, 0, 0)');
-                    ctx.fillStyle = sunGlow;
-                    ctx.beginPath();
-                    ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-
-                ctx.drawImage(img, -obj.size / 2, -obj.size / 2, obj.size, obj.size);
-                ctx.restore();
-            });
-
-            requestAnimationFrame(drawSpace);
-        }
-
-        // Click Handling on Canvas Space Objects
-        canvas.addEventListener('click', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const clickY = e.clientY - rect.top;
-
-            spaceObjects.forEach(obj => {
-                const dist = Math.hypot(clickX - obj.x, clickY - obj.y);
-                if (dist < obj.size / 1.5) {
-                    playSpaceSound();
-                    burstParticles(obj.x, obj.y, ['⭐', '✨', '💫', '💥']);
-                    obj.size *= 1.15;
-                    setTimeout(() => obj.size /= 1.15, 200);
-                }
-            });
+                // Click Bounce Animation
+                hitObject.scale.set(1.3, 1.3, 1.3);
+                setTimeout(() => hitObject.scale.set(1, 1, 1), 250);
+            }
         });
 
-        window.addEventListener('resize', resizeSpace);
-        resizeSpace();
-        drawSpace();
+        // Window Resize Handling
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     </script>
 </body>
 </html>
