@@ -1,47 +1,156 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A/L 2027 Countdown</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #0f172a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #050508;
             color: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
         }
-        h1 { font-size: 2.2rem; margin-bottom: 20px; color: #38bdf8; text-align: center; }
-        .countdown { display: flex; gap: 15px; }
-        .box {
-            background: #1e293b;
-            padding: 15px 20px;
-            border-radius: 10px;
+
+        /* Animated Dark Particle Background */
+        .bg-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
+            top: 20%;
+            left: 10%;
+            animation: float 8s infinite alternate ease-in-out;
+            z-index: 1;
+        }
+
+        .bg-glow-2 {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+            bottom: 15%;
+            right: 10%;
+            animation: float 10s infinite alternate-reverse ease-in-out;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 50px) scale(1.2); }
+        }
+
+        /* Container */
+        .container {
+            z-index: 2;
             text-align: center;
-            min-width: 70px;
-            border: 1px solid #334155;
+            width: 100%;
+            max-width: 800px;
         }
-        .number { font-size: 2.5rem; font-weight: bold; color: #f8fafc; }
-        .label { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; }
+
+        /* Glowing Animated Title */
+        h1 {
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #a855f7, #3b82f6, #ec4899, #a855f7);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 6s ease infinite, neonGlow 2s ease-in-out infinite alternate;
+            text-transform: uppercase;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Mobile-Responsive Grid */
+        .countdown {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        /* Glassmorphism Card */
+        .box {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px 10px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .number {
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+        }
+
+        .label {
+            font-size: clamp(0.65rem, 2vw, 0.9rem);
+            color: #94a3b8;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* Mobile Breakpoints */
+        @media (max-width: 480px) {
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .box {
+                padding: 18px 8px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <h1>2027 A/L Exam Countdown</h1>
-    <div class="countdown">
-        <div class="box"><div class="number" id="days">00</div><div class="label">දින</div></div>
-        <div class="box"><div class="number" id="hours">00</div><div class="label">පැය</div></div>
-        <div class="box"><div class="number" id="minutes">00</div><div class="label">මිලිනිටු</div></div>
-        <div class="box"><div class="number" id="seconds">00</div><div class="label">තත්පර</div></div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
+    <div class="container">
+        <h1>2027 A/L Countdown</h1>
+        <div class="countdown">
+            <div class="box"><div class="number" id="days">00</div><div class="label">Days</div></div>
+            <div class="box"><div class="number" id="hours">00</div><div class="label">Hours</div></div>
+            <div class="box"><div class="number" id="minutes">00</div><div class="label">Minutes</div></div>
+            <div class="box"><div class="number" id="seconds">00</div><div class="label">Seconds</div></div>
+        </div>
     </div>
 
     <script>
-        // 2027 A/L ආරම්භක දිනය (2027 අගෝස්තු 03)
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
         const timer = setInterval(function() {
@@ -50,14 +159,19 @@
 
             if (difference < 0) {
                 clearInterval(timer);
-                document.querySelector(".countdown").innerHTML = "<h2>විභාගය ආරම්භ වී ඇත!</h2>";
+                document.querySelector(".container").innerHTML = "<h1>EXAM HAS STARTED!</h1>";
                 return;
             }
 
-            document.getElementById("days").innerText = Math.floor(difference / (1000 * 60 * 60 * 24));
-            document.getElementById("hours").innerText = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            document.getElementById("minutes").innerText = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-            document.getElementById("seconds").innerText = Math.floor((difference % (1000 * 60)) / 1000);
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = d < 10 ? '0' + d : d;
+            document.getElementById("hours").innerText = h < 10 ? '0' + h : h;
+            document.getElementById("minutes").innerText = m < 10 ? '0' + m : m;
+            document.getElementById("seconds").innerText = s < 10 ? '0' + s : s;
         }, 1000);
     </script>
 </body>
