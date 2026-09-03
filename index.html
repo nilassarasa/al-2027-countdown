@@ -15,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #04040a;
+            background: #020208;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -26,8 +26,8 @@
             perspective: 1200px;
         }
 
-        /* Ambient Canvas Background */
-        canvas#bgCanvas {
+        /* Ambient Space Canvas */
+        canvas#spaceCanvas {
             position: absolute;
             top: 0;
             left: 0;
@@ -36,7 +36,92 @@
             z-index: 1;
         }
 
-        /* Floating Edu Emoji Particles Container */
+        /* Floating Space Elements Layer */
+        #spaceItemsContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .space-obj {
+            position: absolute;
+            pointer-events: auto;
+            cursor: pointer;
+            will-change: transform;
+            transition: transform 0.2s ease;
+        }
+
+        .space-obj:active {
+            transform: scale(1.3) !important;
+        }
+
+        /* Sun & Glow Effect */
+        .sun {
+            top: 8%;
+            left: 8%;
+            font-size: 4rem;
+            animation: sunGlow 4s ease-in-out infinite alternate, floatSlow 12s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 25px #ffaa00) drop-shadow(0 0 50px #ff5500);
+        }
+
+        @keyframes sunGlow {
+            0% { filter: drop-shadow(0 0 20px #ffaa00) drop-shadow(0 0 40px #ff5500); transform: scale(1); }
+            100% { filter: drop-shadow(0 0 35px #ffdd00) drop-shadow(0 0 70px #ff3300); transform: scale(1.08); }
+        }
+
+        /* Planets */
+        .earth {
+            top: 68%;
+            left: 10%;
+            font-size: 3.2rem;
+            animation: floatSlow 10s ease-in-out infinite alternate;
+        }
+
+        .mars {
+            top: 18%;
+            right: 12%;
+            font-size: 2.8rem;
+            animation: floatSlow 14s ease-in-out infinite alternate-reverse;
+        }
+
+        .moon {
+            top: 75%;
+            right: 15%;
+            font-size: 2.5rem;
+            animation: floatSlow 9s ease-in-out infinite alternate;
+        }
+
+        /* Orbiting Rocket & Satellite */
+        .rocket {
+            font-size: 3rem;
+            animation: flyRocket 22s linear infinite;
+        }
+
+        .satellite {
+            font-size: 2.5rem;
+            animation: orbitSat 28s linear infinite;
+        }
+
+        @keyframes flyRocket {
+            0% { transform: translate(-100px, 80vh) rotate(45deg); }
+            100% { transform: translate(110vw, -100px) rotate(45deg); }
+        }
+
+        @keyframes orbitSat {
+            0% { transform: translate(110vw, 30vh) rotate(-15deg); }
+            100% { transform: translate(-100px, 60vh) rotate(-15deg); }
+        }
+
+        @keyframes floatSlow {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-18px) rotate(10deg); }
+        }
+
+        /* Click Burst Particles Container */
         #particleContainer {
             position: absolute;
             top: 0;
@@ -57,22 +142,14 @@
         }
 
         @keyframes eduFly {
-            0% {
-                transform: translate(0, 0) scale(0.5) rotate(0deg);
-                opacity: 1;
-            }
-            70% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--tx), var(--ty)) scale(1.3) rotate(var(--rot));
-                opacity: 0;
-            }
+            0% { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 1; }
+            70% { opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1.3) rotate(var(--rot)); opacity: 0; }
         }
 
         .container {
             position: relative;
-            z-index: 2;
+            z-index: 5;
             width: 90%;
             max-width: 480px;
             text-align: center;
@@ -86,7 +163,6 @@
             letter-spacing: 2px;
             margin-bottom: 35px;
             
-            /* Animated Multi-Color Gradient Text */
             background: linear-gradient(
                 90deg, 
                 #ff007f, 
@@ -114,24 +190,15 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Double Spin (720deg) + High Jump */
         .double-spin {
             animation: doubleSpinAnim 1.1s cubic-bezier(0.25, 1, 0.3, 1) forwards;
         }
 
         @keyframes doubleSpinAnim {
-            0% {
-                transform: translateY(0) rotateY(0deg) scale(1);
-            }
-            45% {
-                transform: translateY(-65px) rotateY(360deg) scale(1.25);
-            }
-            85% {
-                transform: translateY(8px) rotateY(720deg) scale(0.95);
-            }
-            100% {
-                transform: translateY(0) rotateY(720deg) scale(1);
-            }
+            0% { transform: translateY(0) rotateY(0deg) scale(1); }
+            45% { transform: translateY(-65px) rotateY(360deg) scale(1.25); }
+            85% { transform: translateY(8px) rotateY(720deg) scale(0.95); }
+            100% { transform: translateY(0) rotateY(720deg) scale(1); }
         }
 
         .countdown {
@@ -142,22 +209,22 @@
         }
 
         .box {
-            background: rgba(15, 14, 32, 0.65);
+            background: rgba(10, 12, 30, 0.7);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 92, 246, 0.25);
+            border: 1px solid rgba(139, 92, 246, 0.3);
             border-radius: 20px;
             padding: 22px 10px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
             transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             cursor: pointer;
             position: relative;
         }
 
         .box:hover {
-            border-color: rgba(139, 92, 246, 0.5);
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
         }
 
         .card-bounce {
@@ -191,7 +258,18 @@
 </head>
 <body>
 
-    <canvas id="bgCanvas"></canvas>
+    <canvas id="spaceCanvas"></canvas>
+    
+    <!-- Floating Space Interactive Elements -->
+    <div id="spaceItemsContainer">
+        <div class="space-obj sun" onclick="triggerSpaceObject(event, '☀️')">☀️</div>
+        <div class="space-obj earth" onclick="triggerSpaceObject(event, '🌍')">🌍</div>
+        <div class="space-obj mars" onclick="triggerSpaceObject(event, '🔴')">🔴</div>
+        <div class="space-obj moon" onclick="triggerSpaceObject(event, '🌙')">🌙</div>
+        <div class="space-obj rocket" onclick="triggerSpaceObject(event, '🚀')">🚀</div>
+        <div class="space-obj satellite" onclick="triggerSpaceObject(event, '🛰️')">🛰️</div>
+    </div>
+
     <div id="particleContainer"></div>
 
     <div class="container">
@@ -219,7 +297,6 @@
     <audio id="tadaSound" src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3" preload="auto"></audio>
 
     <script>
-        // Web Audio Synthesizer Engine
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx;
 
@@ -229,12 +306,12 @@
             }
         }
 
-        // Play exact "Ta-Daaa!" sound effect
+        // Ta-Daaa Sound
         function playTadaSound() {
             const sound = document.getElementById('tadaSound');
             if (sound) {
                 sound.currentTime = 0;
-                sound.play().catch(e => console.log("Audio play blocked by browser:", e));
+                sound.play().catch(e => console.log("Audio block:", e));
             }
         }
 
@@ -262,21 +339,44 @@
             osc.stop(now + 0.1);
         }
 
-        // Burst Education Items (📚, 🎓, ✏️, etc.)
-        function burstEduItems(centerX, centerY) {
+        // Sci-Fi Space Beep Sound for Planets/Rockets
+        function playSpaceSound() {
+            initAudio();
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            const now = audioCtx.currentTime;
+
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.2);
+
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.25);
+        }
+
+        // Burst Particles
+        function burstParticles(centerX, centerY, icons) {
             const container = document.getElementById('particleContainer');
-            const eduIcons = ['📚', '🎓', '✏️', '💡', '📐', '🧪', '📖', '✨', '📝', '🧠'];
-            const count = 14;
+            const count = 12;
 
             for (let i = 0; i < count; i++) {
                 const el = document.createElement('div');
                 el.className = 'edu-item';
-                el.innerText = eduIcons[Math.floor(Math.random() * eduIcons.length)];
+                el.innerText = icons[Math.floor(Math.random() * icons.length)];
 
                 const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5);
-                const distance = Math.random() * 120 + 80;
+                const distance = Math.random() * 110 + 60;
                 const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance - 40;
+                const ty = Math.sin(angle) * distance - 20;
                 const rot = (Math.random() - 0.5) * 360;
 
                 el.style.left = `${centerX}px`;
@@ -291,7 +391,19 @@
             }
         }
 
-        // Title Double Spin & Landing Burst Handler
+        // Handle Clicking Sun, Planets, Rocket & Satellite
+        function triggerSpaceObject(e, emoji) {
+            e.stopPropagation();
+            playSpaceSound();
+
+            const rect = e.currentTarget.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            burstParticles(centerX, centerY, [emoji, '⭐', '✨', '💫']);
+        }
+
+        // Title Double Spin Handler
         function triggerTitleEffect() {
             const title = document.getElementById('mainTitle');
             if (title.classList.contains('double-spin')) return;
@@ -304,7 +416,7 @@
             const centerY = rect.top + rect.height / 2;
 
             setTimeout(() => {
-                burstEduItems(centerX, centerY);
+                burstParticles(centerX, centerY, ['📚', '🎓', '✏️', '💡', '📐', '🧪', '📖', '✨']);
             }, 850);
 
             setTimeout(() => {
@@ -349,62 +461,62 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Subtle Ambient Canvas Animation
-        const bgCanvas = document.getElementById('bgCanvas');
-        const ctx = bgCanvas.getContext('2d');
-        let bgParticles = [];
+        // Canvas Stars & Nebula Background
+        const spaceCanvas = document.getElementById('spaceCanvas');
+        const ctx = spaceCanvas.getContext('2d');
+        let stars = [];
 
-        function resizeBg() {
-            bgCanvas.width = window.innerWidth;
-            bgCanvas.height = window.innerHeight;
-            bgParticles = [];
-            const count = Math.min(Math.floor((bgCanvas.width * bgCanvas.height) / 12000), 40);
+        function resizeSpace() {
+            spaceCanvas.width = window.innerWidth;
+            spaceCanvas.height = window.innerHeight;
+            stars = [];
+
+            const count = Math.floor((spaceCanvas.width * spaceCanvas.height) / 3000);
             for (let i = 0; i < count; i++) {
-                bgParticles.push({
-                    x: Math.random() * bgCanvas.width,
-                    y: Math.random() * bgCanvas.height,
-                    radius: Math.random() * 2 + 0.5,
-                    vx: (Math.random() - 0.5) * 0.4,
-                    vy: (Math.random() - 0.5) * 0.4,
-                    alpha: Math.random() * 0.4 + 0.1
+                stars.push({
+                    x: Math.random() * spaceCanvas.width,
+                    y: Math.random() * spaceCanvas.height,
+                    radius: Math.random() * 1.5,
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.02 + 0.005
                 });
             }
         }
 
-        function animateBg() {
-            ctx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-            
-            const grad = ctx.createRadialGradient(
-                bgCanvas.width / 2, bgCanvas.height / 2, 50,
-                bgCanvas.width / 2, bgCanvas.height / 2, bgCanvas.width * 0.7
+        function animateSpace() {
+            ctx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
+
+            // Deep Space Nebula Glow
+            const nebula = ctx.createRadialGradient(
+                spaceCanvas.width * 0.5, spaceCanvas.height * 0.5, 10,
+                spaceCanvas.width * 0.5, spaceCanvas.height * 0.5, spaceCanvas.width
             );
-            grad.addColorStop(0, 'rgba(139, 92, 246, 0.08)');
-            grad.addColorStop(1, 'rgba(4, 4, 10, 0)');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+            nebula.addColorStop(0, '#0c0721');
+            nebula.addColorStop(0.5, '#050414');
+            nebula.addColorStop(1, '#020208');
+            ctx.fillStyle = nebula;
+            ctx.fillRect(0, 0, spaceCanvas.width, spaceCanvas.height);
 
-            bgParticles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < 0 || p.x > bgCanvas.width) p.vx *= -1;
-                if (p.y < 0 || p.y > bgCanvas.height) p.vy *= -1;
+            // Twinkling Stars
+            stars.forEach(s => {
+                s.alpha += s.speed;
+                if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
 
                 ctx.save();
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = '#8b5cf6';
+                ctx.globalAlpha = Math.abs(s.alpha);
+                ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
             });
 
-            requestAnimationFrame(animateBg);
+            requestAnimationFrame(animateSpace);
         }
 
-        window.addEventListener('resize', resizeBg);
-        resizeBg();
-        animateBg();
+        window.addEventListener('resize', resizeSpace);
+        resizeSpace();
+        animateSpace();
     </script>
 </body>
 </html>
