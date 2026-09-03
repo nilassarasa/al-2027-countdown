@@ -41,9 +41,10 @@
             max-width: 520px;
             text-align: center;
             padding: 10px;
+            perspective: 1000px;
         }
 
-        /* Multi-Color Rainbow Shifting Title */
+        /* Multi-Color Rainbow Shifting Title with Spin Effect */
         h1 {
             font-size: clamp(1.1rem, 5.5vw, 2.4rem);
             font-weight: 900;
@@ -56,6 +57,20 @@
             -webkit-text-fill-color: transparent;
             animation: rainbowShift 4s linear infinite;
             filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Title Spin Animation Class */
+        h1.spin-effect {
+            animation: rainbowShift 4s linear infinite, titleSpin 0.8s ease-in-out;
+        }
+
+        @keyframes titleSpin {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(180deg) scale(1.15); }
+            100% { transform: rotateY(360deg) scale(1); }
         }
 
         @keyframes rainbowShift {
@@ -112,7 +127,7 @@
     <canvas id="starfieldCanvas"></canvas>
 
     <div class="container">
-        <h1>2027 A/L COUNTDOWN</h1>
+        <h1 id="title" onclick="spinTitle(event)">2027 A/L COUNTDOWN</h1>
         <div class="countdown">
             <div class="box" onclick="triggerCardEffect(event, 600)">
                 <div class="number" id="days">00</div>
@@ -157,6 +172,19 @@
 
             osc.start();
             osc.stop(audioCtx.currentTime + 0.12);
+        }
+
+        // Title Spin Function
+        function spinTitle(e) {
+            e.stopPropagation();
+            const titleEl = document.getElementById('title');
+            titleEl.classList.remove('spin-effect');
+            void titleEl.offsetWidth; // Trigger reflow to restart animation
+            titleEl.classList.add('spin-effect');
+
+            const rect = titleEl.getBoundingClientRect();
+            spawnInteraction(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            playFuturisticSound(1200);
         }
 
         // Countdown Logic
@@ -242,7 +270,6 @@
             for (let i = 0; i < numStars; i++) stars.push(new Star());
         }
 
-        // Particle Explosions & Shockwave Rings
         class Ring {
             constructor(x, y) {
                 this.x = x;
