@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>A/L 2027 Countdown</title>
     <style>
-        /* --- CSS Reset & Core Styling --- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -21,56 +20,75 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden; /* Keeps background elements inside */
+            overflow: hidden;
             position: relative;
             padding: 20px;
         }
 
-        /* --- 1. New Animated Cartoon SVG Background --- */
-        .animated-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* Lowest layer */
-            opacity: 0.06; /* Keep it subtle but visible */
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC41IiBmaWxsLXJ1bGU9Im5vbnplcm8iPjxwYXRoIGQ9Ik0wIDBoNHY0SDBWMHptMCA4aDR2NEgwVjh6bTAgOGg0djRIMFYxNnptMCA4aDR2NEgwVjI0em0wIDhoNHY0SDBWMzJ6bTggMGg0djRIMFYzMnpteSAwZDR2NEgwVjh6bTggMGg0djRIMFY4em0wIDhoNHY0SDBWMTZ6bTggMGg0djRIMFYxNnptMCA4aDR2NEgwVjI0em04IDBoNHY0SDBWMjR6bTAgOGg0djRIMFYzMnpteCAwZDR2NEgwVjh6bTggMGg0djRIMFY4em0wIDhoNHY0SDBWMTZ6bTggMGg0djRIMFYxNnptMCA4aDR2NEgwVjI0em04IDBoNHY0SDBWMjR6bTAgOGg0djRIMFYzMnpteCAwZDR2NEgwVjh6bTggMGg0djRIMFY4em0wIDhoNHY0SDBWMTZ6bTggMGg0djRIMFYxNnptMCA4aDR2NEgwVjI0em04IDBoNHY0SDBWMjR6bTAgOGg0djRIMFYzMnp6Ii8+PC9nPjwvZz48L3N2Zz4=');
-            animation: bgScroll 60s linear infinite;
-        }
-
-        @keyframes bgScroll {
-            0% { background-position: 0 0; }
-            100% { background-position: 100% 100%; }
-        }
-
-        /* --- 2. Floating Ambient Glow Blobs (Kept for vibe) --- */
+        /* --- Ambient Lighting --- */
         .bg-glow {
             position: absolute;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
-            top: 20%; left: 10%;
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+            top: 15%; left: 10%;
             animation: floatGlow 12s infinite alternate ease-in-out;
-            z-index: 2;
+            z-index: 1;
         }
 
         .bg-glow-2 {
             position: absolute;
-            width: 350px; height: 350px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
-            bottom: 15%; right: 10%;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+            bottom: 10%; right: 10%;
             animation: floatGlow 15s infinite alternate-reverse ease-in-out;
-            z-index: 2;
+            z-index: 1;
         }
 
         @keyframes floatGlow {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(60px, 70px) scale(1.3); }
+            100% { transform: translate(50px, 60px) scale(1.2); }
         }
 
-        /* --- 3. Main Content Container --- */
+        /* --- Floating Cartoon Characters Layer --- */
+        .character-layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .char {
+            position: absolute;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 10px rgba(168, 85, 247, 0.3));
+            animation: floatChar 6s ease-in-out infinite alternate;
+            user-select: none;
+        }
+
+        /* Individual Character Placement & Unique Timings */
+        .char-1 { top: 12%; left: 8%;  animation-duration: 5s; animation-delay: 0s; }    /* Books */
+        .char-2 { top: 18%; right: 10%; animation-duration: 7s; animation-delay: 1s; }   /* Rocket */
+        .char-3 { bottom: 18%; left: 10%; animation-duration: 6s; animation-delay: 2s; }  /* Grad Cap */
+        .char-4 { bottom: 15%; right: 12%; animation-duration: 8s; animation-delay: 0.5s; } /* Lightbulb */
+        .char-5 { top: 50%; left: 4%; transform: translateY(-50%); animation-duration: 6.5s; animation-delay: 1.5s; } /* Target */
+        .char-6 { top: 52%; right: 4%; transform: translateY(-50%); animation-duration: 5.5s; animation-delay: 2.5s; } /* Alarm Clock */
+
+        @keyframes floatChar {
+            0% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) rotate(8deg) scale(1.08);
+            }
+            100% {
+                transform: translateY(10px) rotate(-6deg) scale(0.96);
+            }
+        }
+
+        /* --- Main Content --- */
         .container {
-            z-index: 3; /* Above all background layers */
+            z-index: 3;
             text-align: center;
             width: 100%;
             max-width: 800px;
@@ -79,9 +97,9 @@
             align-items: center;
         }
 
-        /* --- 4. Shining Animated Title --- */
+        /* --- Shining Title --- */
         h1 {
-            font-size: clamp(1.6rem, 6vw, 3.8rem); /* Even more responsive font */
+            font-size: clamp(1.6rem, 6vw, 3.8rem);
             font-weight: 800;
             letter-spacing: 2px;
             margin-bottom: clamp(20px, 5vh, 40px);
@@ -100,11 +118,11 @@
         }
 
         @keyframes neonPulse {
-            from { text-shadow: 0 0 10px rgba(168, 85, 247, 0.4), 0 0 20px rgba(168, 85, 247, 0.2); }
-            to { text-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(59, 130, 246, 0.3); }
+            from { text-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
+            to { text-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
         }
 
-        /* --- 5. Responsive Countdown Grid (2x2 on Mobile, 1x4 on Desktop) --- */
+        /* --- Grid (2x2 Mobile, 1x4 Desktop) --- */
         .countdown {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -113,45 +131,25 @@
             max-width: 700px;
         }
 
-        /* --- 6. Glassmorphism Card Effect --- */
         .box {
-            background: rgba(255, 255, 255, 0.025);
-            backdrop-filter: blur(15px) saturate(180%);
-            -webkit-backdrop-filter: blur(15px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
             border-radius: clamp(12px, 3vw, 20px);
             padding: clamp(15px, 4vw, 25px) 10px;
             text-align: center;
-            box-shadow: 0 10px 32px 0 rgba(0, 0, 0, 0.4);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 10px 32px 0 rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, border-color 0.3s ease;
         }
 
         .box:hover {
             transform: translateY(-8px) scale(1.03);
-            border-color: rgba(168, 85, 247, 0.5);
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        /* Shiny Glint on Hover */
-        .box::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            transform: rotate(45deg);
-            transition: 0.5s;
-            opacity: 0;
-        }
-        .box:hover::after {
-            left: 100%;
-            opacity: 1;
+            border-color: rgba(168, 85, 247, 0.6);
         }
 
         .number {
-            font-size: clamp(1.6rem, 7vw, 4rem); /* Very dynamic font size */
+            font-size: clamp(1.6rem, 7vw, 4rem);
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
@@ -167,29 +165,34 @@
             font-weight: 600;
         }
 
-        /* --- 7. Final Mobile Optimization (Force 2x2 Grid) --- */
         @media (max-width: 500px) {
             .countdown {
-                grid-template-columns: repeat(2, 1fr); /* 2 columns only */
+                grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
             }
-            
-            .box {
-                padding: 18px 8px; /* Slightly less vertical padding on mobile */
+            .char {
+                opacity: 0.6; /* Slight transparency on mobile so it doesn't distract */
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. Cartoon SVG Background Layer (Scrolls) -->
-    <div class="animated-bg"></div>
-
-    <!-- 2. Ambient Light Glows Layer (Floats) -->
+    <!-- Ambient Glow Background -->
     <div class="bg-glow"></div>
     <div class="bg-glow-2"></div>
 
-    <!-- 3. Foreground Content Layer -->
+    <!-- Floating 3D Animated Cartoon Characters -->
+    <div class="character-layer">
+        <div class="char char-1">📚</div>
+        <div class="char char-2">🚀</div>
+        <div class="char char-3">🎓</div>
+        <div class="char char-4">💡</div>
+        <div class="char char-5">🎯</div>
+        <div class="char char-6">⏰</div>
+    </div>
+
+    <!-- Main Countdown -->
     <div class="container">
         <h1>2027 A/L Countdown</h1>
         <div class="countdown">
@@ -201,10 +204,8 @@
     </div>
 
     <script>
-        // Set the targeted exam date
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
-        // Update the countdown every 1 second
         const timer = setInterval(function() {
             const now = new Date().getTime();
             const difference = examDate - now;
@@ -215,13 +216,11 @@
                 return;
             }
 
-            // Time calculations
             const d = Math.floor(difference / (1000 * 60 * 60 * 24));
             const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((difference % (1000 * 60)) / 1000);
 
-            // Output the results and force 2-digit format
             document.getElementById("days").innerText = d < 10 ? '0' + d : d;
             document.getElementById("hours").innerText = h < 10 ? '0' + h : h;
             document.getElementById("minutes").innerText = m < 10 ? '0' + m : m;
