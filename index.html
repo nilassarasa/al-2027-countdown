@@ -25,17 +25,33 @@
             position: relative;
         }
 
-        /* 3D Canvas Background */
+        /* HD Video Background */
+        .video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            filter: brightness(0.65) contrast(1.15);
+        }
+
+        /* Space Overlay Canvas for Asteroids & Satellites */
         canvas#spaceCanvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 2;
+            pointer-events: none;
         }
 
-        /* Click Burst Particles */
+        /* Particle Overlay */
         #particleContainer {
             position: absolute;
             top: 0;
@@ -70,7 +86,7 @@
             padding: 20px 10px;
         }
 
-        /* Animated Title */
+        /* Animated Glow Title */
         h1 {
             font-size: clamp(1.6rem, 6vw, 2.6rem);
             font-weight: 900;
@@ -81,7 +97,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: rainbowShift 6s ease infinite;
-            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.5));
+            filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.7));
             cursor: pointer;
             display: inline-block;
             transform-style: preserve-3d;
@@ -113,22 +129,22 @@
         }
 
         .box {
-            background: rgba(5, 7, 20, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 92, 246, 0.35);
+            background: rgba(8, 10, 26, 0.55);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(139, 92, 246, 0.4);
             border-radius: 20px;
             padding: 22px 10px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85);
             transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             cursor: pointer;
             position: relative;
         }
 
         .box:hover {
-            border-color: rgba(139, 92, 246, 0.6);
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
         }
 
         .card-bounce {
@@ -146,7 +162,7 @@
             font-size: clamp(2.2rem, 8vw, 3.4rem);
             font-weight: 800;
             color: #ffffff;
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
             line-height: 1;
         }
 
@@ -159,9 +175,13 @@
             font-weight: 600;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
+
+    <!-- Real HD Space Video Stream -->
+    <video class="video-bg" autoplay loop muted playsinline>
+        <source src="https://cdn.pixabay.com/video/2019/05/20/23805-337583689_large.mp4" type="video/mp4">
+    </video>
 
     <canvas id="spaceCanvas"></canvas>
     <div id="particleContainer"></div>
@@ -221,23 +241,6 @@
             gain.connect(audioCtx.destination);
             osc.start(now);
             osc.stop(now + 0.1);
-        }
-
-        function playSpaceSound() {
-            initAudio();
-            if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            const now = audioCtx.currentTime;
-            osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.2);
-            gain.gain.setValueAtTime(0.25, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(now);
-            osc.stop(now + 0.22);
         }
 
         function burstParticles(centerX, centerY, icons) {
@@ -306,168 +309,67 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Three.js 3D Real Space Simulation Engine
+        // Canvas Shooting Stars & Asteroids Engine
         const canvas = document.getElementById('spaceCanvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 25;
+        const ctx = canvas.getContext('2d');
 
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-        scene.add(ambientLight);
-
-        const sunLight = new THREE.PointLight(0xffddaa, 3, 100);
-        sunLight.position.set(-15, 10, 5);
-        scene.add(sunLight);
-
-        // Texture Loader
-        const loader = new THREE.TextureLoader();
-        loader.crossOrigin = 'anonymous';
-
-        // Starfield Background
-        const starGeo = new THREE.BufferGeometry();
-        const starCount = 3000;
-        const starPos = new Float32Array(starCount * 3);
-        for (let i = 0; i < starCount * 3; i++) {
-            starPos[i] = (Math.random() - 0.5) * 300;
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
-        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-        const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0.9 });
-        const starMesh = new THREE.Points(starGeo, starMat);
-        scene.add(starMesh);
+        window.addEventListener('resize', resize);
+        resize();
 
-        // 3D Objects Array for Raycasting
-        const interactiveObjects = [];
-
-        // 1. Sun
-        const sunGeo = new THREE.SphereGeometry(3, 32, 32);
-        const sunMat = new THREE.MeshBasicMaterial({
-            map: loader.load('https://upload.wikimedia.org/wikipedia/commons/b/b4/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.png')
-        });
-        const sun = new THREE.Mesh(sunGeo, sunMat);
-        sun.position.set(-14, 9, -5);
-        scene.add(sun);
-        interactiveObjects.push(sun);
-
-        // 2. Earth
-        const earthGeo = new THREE.SphereGeometry(2.2, 32, 32);
-        const earthMat = new THREE.MeshStandardMaterial({
-            map: loader.load('https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Earth_Western_Hemisphere_transparent_background.png/600px-Earth_Western_Hemisphere_transparent_background.png'),
-            roughness: 0.6
-        });
-        const earth = new THREE.Mesh(earthGeo, earthMat);
-        earth.position.set(-11, -9, 0);
-        scene.add(earth);
-        interactiveObjects.push(earth);
-
-        // 3. Mars
-        const marsGeo = new THREE.SphereGeometry(1.6, 32, 32);
-        const marsMat = new THREE.MeshStandardMaterial({
-            map: loader.load('https://upload.wikimedia.org/wikipedia/commons/3/36/3D_Mars.png'),
-            roughness: 0.8
-        });
-        const mars = new THREE.Mesh(marsGeo, marsMat);
-        mars.position.set(13, 8, -2);
-        scene.add(mars);
-        interactiveObjects.push(mars);
-
-        // 4. Moon
-        const moonGeo = new THREE.SphereGeometry(1.1, 32, 32);
-        const moonMat = new THREE.MeshStandardMaterial({
-            map: loader.load('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.png/600px-FullMoon2010.png'),
-            roughness: 0.9
-        });
-        const moon = new THREE.Mesh(moonGeo, moonMat);
-        moon.position.set(12, -8, 1);
-        scene.add(moon);
-        interactiveObjects.push(moon);
-
-        // 5. Satellite (Hubble)
-        const satGeo = new THREE.PlaneGeometry(3, 2);
-        const satMat = new THREE.MeshBasicMaterial({
-            map: loader.load('https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Hubble_Space_Telescope_in_orbit.png/600px-Hubble_Space_Telescope_in_orbit.png'),
-            transparent: true,
-            side: THREE.DoubleSide
-        });
-        const satellite = new THREE.Mesh(satGeo, satMat);
-        satellite.position.set(15, 2, 2);
-        scene.add(satellite);
-        interactiveObjects.push(satellite);
-
-        // 6. Space Rocket
-        const rocketGeo = new THREE.PlaneGeometry(2.5, 3.5);
-        const rocketMat = new THREE.MeshBasicMaterial({
-            map: loader.load('https://pngimg.com/uploads/rocket/rocket_PNG13.png'),
-            transparent: true,
-            side: THREE.DoubleSide
-        });
-        const rocket = new THREE.Mesh(rocketGeo, rocketMat);
-        rocket.position.set(-18, -2, 3);
-        rocket.rotation.z = -Math.PI / 4;
-        scene.add(rocket);
-        interactiveObjects.push(rocket);
-
-        // Animation Loop
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Object Rotations
-            sun.rotation.y += 0.002;
-            earth.rotation.y += 0.005;
-            mars.rotation.y += 0.004;
-            moon.rotation.y += 0.003;
-
-            // Rocket Orbit Trajectory
-            rocket.position.x += 0.035;
-            rocket.position.y += 0.015;
-            if (rocket.position.x > 22) {
-                rocket.position.x = -22;
-                rocket.position.y = -6;
+        class ShootingStar {
+            constructor() {
+                this.reset();
             }
-
-            // Satellite Gentle Floating
-            satellite.position.x -= 0.015;
-            satellite.rotation.z += 0.002;
-            if (satellite.position.x < -22) {
-                satellite.position.x = 22;
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * (canvas.height / 2);
+                this.len = Math.random() * 80 + 40;
+                this.speed = Math.random() * 10 + 6;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.waitTime = new Date().getTime() + Math.random() * 3000;
+                this.active = false;
             }
-
-            renderer.render(scene, camera);
+            update() {
+                if (!this.active) {
+                    if (new Date().getTime() > this.waitTime) {
+                        this.active = true;
+                    }
+                    return;
+                }
+                this.x -= this.speed;
+                this.y += this.speed;
+                if (this.x < -this.len || this.y > canvas.height + this.len) {
+                    this.reset();
+                }
+            }
+            draw() {
+                if (!this.active) return;
+                ctx.save();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = this.size;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x + this.len, this.y - this.len);
+                ctx.stroke();
+                ctx.restore();
+            }
         }
-        animate();
 
-        // 3D Object Click Raycaster Handler
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
+        const shootingStars = Array.from({ length: 6 }, () => new ShootingStar());
 
-        window.addEventListener('click', (event) => {
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(interactiveObjects);
-
-            if (intersects.length > 0) {
-                const hitObject = intersects[0].object;
-                playSpaceSound();
-                burstParticles(event.clientX, event.clientY, ['⭐', '✨', '🚀', '💫', '💥']);
-
-                // Click Bounce Animation
-                hitObject.scale.set(1.3, 1.3, 1.3);
-                setTimeout(() => hitObject.scale.set(1, 1, 1), 250);
-            }
-        });
-
-        // Window Resize Handling
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        function renderOverlay() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            shootingStars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+            requestAnimationFrame(renderOverlay);
+        }
+        renderOverlay();
     </script>
 </body>
 </html>
