@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/L 2027 Countdown</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h1 { font-size: 2.2rem; margin-bottom: 20px; color: #38bdf8; text-align: center; }
+        .countdown { display: flex; gap: 15px; }
+        .box {
+            background: #1e293b;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 70px;
+            border: 1px solid #334155;
+        }
+        .number { font-size: 2.5rem; font-weight: bold; color: #f8fafc; }
+        .label { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <h1>2027 A/L Exam Countdown</h1>
+    <div class="countdown">
+        <div class="box"><div class="number" id="days">00</div><div class="label">දින</div></div>
+        <div class="box"><div class="number" id="hours">00</div><div class="label">පැය</div></div>
+        <div class="box"><div class="number" id="minutes">00</div><div class="label">මිලිනිටු</div></div>
+        <div class="box"><div class="number" id="seconds">00</div><div class="label">තත්පර</div></div>
+    </div>
+
+    <script>
+        // 2027 A/L ආරම්භක දිනය (2027 අගෝස්තු 03)
+        const examDate = new Date("August 3, 2027 08:30:00").getTime();
+
+        const timer = setInterval(function() {
+            const now = new Date().getTime();
+            const difference = examDate - now;
+
+            if (difference < 0) {
+                clearInterval(timer);
+                document.querySelector(".countdown").innerHTML = "<h2>විභාගය ආරම්භ වී ඇත!</h2>";
+                return;
+            }
+
+            document.getElementById("days").innerText = Math.floor(difference / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerText = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("minutes").innerText = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById("seconds").innerText = Math.floor((difference % (1000 * 60)) / 1000);
+        }, 1000);
+    </script>
+</body>
+</html>
