@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>A/L 2027 Countdown</title>
     <style>
+        /* --- CSS Reset & Core Styling --- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -12,66 +13,83 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #050508;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #050508;
             color: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* Keeps background elements inside */
             position: relative;
             padding: 20px;
         }
 
-        /* Animated Dark Particle Background */
+        /* --- 1. New Animated Cartoon SVG Background --- */
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Lowest layer */
+            opacity: 0.06; /* Keep it subtle but visible */
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC41IiBmaWxsLXJ1bGU9Im5vbnplcm8iPjxwYXRoIGQ9Ik0wIDBoNHY0SDBWMHptMCA4aDR2NEgwVjh6bTAgOGg0djRIMFYxNnptMCA4aDR2NEgwVjI0em0wIDhoNHY0SDBWMzJ6bTggMGg0djRIMFYzMnpteSAwZDR2NEgwVjh6bTggMGg0djRIMFY4em0wIDhoNHY0SDBWMTZ6bTggMGg0djRIMFYxNnptMCA4aDR2NEgwVjI0em04IDBoNHY0SDBWMjR6bTAgOGg0djRIMFYzMnpteCAwZDR2NEgwVjh6bTggMGg0djRIMFY4em0wIDhoNHY0SDBWMTZ6bTggMGg0djRIMFYxNnptMCA4aDR2NEgwVjI0em04IDBoNHY0SDBWMjR6bTAgOGg0djRIMFYzMnpteCAwZDR2NEgwVjh6bTggMGg0djRIMFY4em0wIDhoNHY0SDBWMTZ6bTggMGg0djRIMFYxNnptMCA4aDR2NEgwVjI0em04IDBoNHY0SDBWMjR6bTAgOGg0djRIMFYzMnp6Ii8+PC9nPjwvZz48L3N2Zz4=');
+            animation: bgScroll 60s linear infinite;
+        }
+
+        @keyframes bgScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* --- 2. Floating Ambient Glow Blobs (Kept for vibe) --- */
         .bg-glow {
             position: absolute;
-            width: 300px;
-            height: 300px;
+            width: 300px; height: 300px;
             background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
-            top: 20%;
-            left: 10%;
-            animation: float 8s infinite alternate ease-in-out;
-            z-index: 1;
+            top: 20%; left: 10%;
+            animation: floatGlow 12s infinite alternate ease-in-out;
+            z-index: 2;
         }
 
         .bg-glow-2 {
             position: absolute;
-            width: 350px;
-            height: 350px;
+            width: 350px; height: 350px;
             background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
-            bottom: 15%;
-            right: 10%;
-            animation: float 10s infinite alternate-reverse ease-in-out;
-            z-index: 1;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, 50px) scale(1.2); }
-        }
-
-        /* Container */
-        .container {
+            bottom: 15%; right: 10%;
+            animation: floatGlow 15s infinite alternate-reverse ease-in-out;
             z-index: 2;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, 70px) scale(1.3); }
+        }
+
+        /* --- 3. Main Content Container --- */
+        .container {
+            z-index: 3; /* Above all background layers */
             text-align: center;
             width: 100%;
             max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Glowing Animated Title */
+        /* --- 4. Shining Animated Title --- */
         h1 {
-            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-size: clamp(1.6rem, 6vw, 3.8rem); /* Even more responsive font */
             font-weight: 800;
             letter-spacing: 2px;
-            margin-bottom: 30px;
+            margin-bottom: clamp(20px, 5vh, 40px);
             background: linear-gradient(90deg, #a855f7, #3b82f6, #ec4899, #a855f7);
             background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradientShift 6s ease infinite, neonGlow 2s ease-in-out infinite alternate;
+            animation: gradientShift 6s ease infinite, neonPulse 2.5s ease-in-out infinite alternate;
             text-transform: uppercase;
         }
 
@@ -81,65 +99,97 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Mobile-Responsive Grid */
+        @keyframes neonPulse {
+            from { text-shadow: 0 0 10px rgba(168, 85, 247, 0.4), 0 0 20px rgba(168, 85, 247, 0.2); }
+            to { text-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(59, 130, 246, 0.3); }
+        }
+
+        /* --- 5. Responsive Countdown Grid (2x2 on Mobile, 1x4 on Desktop) --- */
         .countdown {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            gap: clamp(10px, 3vw, 20px);
             width: 100%;
+            max-width: 700px;
         }
 
-        /* Glassmorphism Card */
+        /* --- 6. Glassmorphism Card Effect --- */
         .box {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.025);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 20px 10px;
+            border-radius: clamp(12px, 3vw, 20px);
+            padding: clamp(15px, 4vw, 25px) 10px;
             text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 10px 32px 0 rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .box:hover {
-            transform: translateY(-5px);
-            border-color: rgba(168, 85, 247, 0.4);
+            transform: translateY(-8px) scale(1.03);
+            border-color: rgba(168, 85, 247, 0.5);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        /* Shiny Glint on Hover */
+        .box::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: rotate(45deg);
+            transition: 0.5s;
+            opacity: 0;
+        }
+        .box:hover::after {
+            left: 100%;
+            opacity: 1;
         }
 
         .number {
-            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            font-size: clamp(1.6rem, 7vw, 4rem); /* Very dynamic font size */
             font-weight: 700;
             color: #ffffff;
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            line-height: 1;
         }
 
         .label {
-            font-size: clamp(0.65rem, 2vw, 0.9rem);
+            font-size: clamp(0.6rem, 2.2vw, 0.95rem);
             color: #94a3b8;
-            margin-top: 8px;
+            margin-top: clamp(8px, 2vw, 12px);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
+            font-weight: 600;
         }
 
-        /* Mobile Breakpoints */
-        @media (max-width: 480px) {
+        /* --- 7. Final Mobile Optimization (Force 2x2 Grid) --- */
+        @media (max-width: 500px) {
             .countdown {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr); /* 2 columns only */
                 gap: 15px;
             }
             
             .box {
-                padding: 18px 8px;
+                padding: 18px 8px; /* Slightly less vertical padding on mobile */
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- 1. Cartoon SVG Background Layer (Scrolls) -->
+    <div class="animated-bg"></div>
+
+    <!-- 2. Ambient Light Glows Layer (Floats) -->
     <div class="bg-glow"></div>
     <div class="bg-glow-2"></div>
 
+    <!-- 3. Foreground Content Layer -->
     <div class="container">
         <h1>2027 A/L Countdown</h1>
         <div class="countdown">
@@ -151,8 +201,10 @@
     </div>
 
     <script>
+        // Set the targeted exam date
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
+        // Update the countdown every 1 second
         const timer = setInterval(function() {
             const now = new Date().getTime();
             const difference = examDate - now;
@@ -163,11 +215,13 @@
                 return;
             }
 
+            // Time calculations
             const d = Math.floor(difference / (1000 * 60 * 60 * 24));
             const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((difference % (1000 * 60)) / 1000);
 
+            // Output the results and force 2-digit format
             document.getElementById("days").innerText = d < 10 ? '0' + d : d;
             document.getElementById("hours").innerText = h < 10 ? '0' + h : h;
             document.getElementById("minutes").innerText = m < 10 ? '0' + m : m;
