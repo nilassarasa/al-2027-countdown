@@ -3,215 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>A/L 2027 Countdown</title>
+    <title>2027 A/L Countdown</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #050508;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #030308;
             color: #ffffff;
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             overflow: hidden;
             position: relative;
-            padding: 20px;
         }
 
-        /* --- Ambient Lighting --- */
-        .bg-glow {
+        /* Interactive Canvas Background */
+        canvas {
             position: absolute;
-            width: 350px; height: 350px;
-            background: radial-gradient(circle, rgba(147, 51, 234, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
-            top: 15%; left: 10%;
-            animation: floatGlow 12s infinite alternate ease-in-out;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 1;
         }
 
-        .bg-glow-2 {
-            position: absolute;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
-            bottom: 10%; right: 10%;
-            animation: floatGlow 15s infinite alternate-reverse ease-in-out;
-            z-index: 1;
-        }
-
-        @keyframes floatGlow {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 60px) scale(1.2); }
-        }
-
-        /* --- Floating Cartoon Characters Layer --- */
-        .character-layer {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+        /* Content Container */
+        .container {
+            position: relative;
             z-index: 2;
-            pointer-events: none;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            padding: 20px 10px;
         }
 
-        .char {
-            position: absolute;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 10px rgba(168, 85, 247, 0.3));
-            animation: floatChar 6s ease-in-out infinite alternate;
-            user-select: none;
+        /* Glowing Neon Title */
+        h1 {
+            font-size: clamp(1.6rem, 6vw, 2.8rem);
+            font-weight: 900;
+            letter-spacing: 3px;
+            margin-bottom: 35px;
+            color: #fff;
+            text-shadow: 
+                0 0 7px #fff,
+                0 0 10px #8b5cf6,
+                0 0 21px #8b5cf6,
+                0 0 42px #3b82f6,
+                0 0 82px #3b82f6;
+            animation: pulseGlow 3s ease-in-out infinite alternate;
         }
 
-        /* Individual Character Placement & Unique Timings */
-        .char-1 { top: 12%; left: 8%;  animation-duration: 5s; animation-delay: 0s; }    /* Books */
-        .char-2 { top: 18%; right: 10%; animation-duration: 7s; animation-delay: 1s; }   /* Rocket */
-        .char-3 { bottom: 18%; left: 10%; animation-duration: 6s; animation-delay: 2s; }  /* Grad Cap */
-        .char-4 { bottom: 15%; right: 12%; animation-duration: 8s; animation-delay: 0.5s; } /* Lightbulb */
-        .char-5 { top: 50%; left: 4%; transform: translateY(-50%); animation-duration: 6.5s; animation-delay: 1.5s; } /* Target */
-        .char-6 { top: 52%; right: 4%; transform: translateY(-50%); animation-duration: 5.5s; animation-delay: 2.5s; } /* Alarm Clock */
-
-        @keyframes floatChar {
+        @keyframes pulseGlow {
             0% {
-                transform: translateY(0px) rotate(0deg) scale(1);
-            }
-            50% {
-                transform: translateY(-20px) rotate(8deg) scale(1.08);
+                text-shadow: 
+                    0 0 4px #fff,
+                    0 0 11px #8b5cf6,
+                    0 0 19px #8b5cf6,
+                    0 0 40px #3b82f6;
             }
             100% {
-                transform: translateY(10px) rotate(-6deg) scale(0.96);
+                text-shadow: 
+                    0 0 8px #fff,
+                    0 0 15px #ec4899,
+                    0 0 25px #8b5cf6,
+                    0 0 55px #3b82f6;
             }
         }
 
-        /* --- Main Content --- */
-        .container {
-            z-index: 3;
-            text-align: center;
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* --- Shining Title --- */
-        h1 {
-            font-size: clamp(1.6rem, 6vw, 3.8rem);
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: clamp(20px, 5vh, 40px);
-            background: linear-gradient(90deg, #a855f7, #3b82f6, #ec4899, #a855f7);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientShift 6s ease infinite, neonPulse 2.5s ease-in-out infinite alternate;
-            text-transform: uppercase;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes neonPulse {
-            from { text-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
-            to { text-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
-        }
-
-        /* --- Grid (2x2 Mobile, 1x4 Desktop) --- */
+        /* Responsive 2x2 Grid */
         .countdown {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: clamp(10px, 3vw, 20px);
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
             width: 100%;
-            max-width: 700px;
         }
 
+        /* Glassmorphic Touch-Interactive Box */
         .box {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            border-radius: clamp(12px, 3vw, 20px);
-            padding: clamp(15px, 4vw, 25px) 10px;
+            background: rgba(18, 16, 38, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 20px;
+            padding: 22px 10px;
             text-align: center;
-            box-shadow: 0 10px 32px 0 rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
-        .box:hover {
-            transform: translateY(-8px) scale(1.03);
-            border-color: rgba(168, 85, 247, 0.6);
+        .box:active {
+            transform: scale(0.92);
+            border-color: #ec4899;
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.6);
         }
 
         .number {
-            font-size: clamp(1.6rem, 7vw, 4rem);
-            font-weight: 700;
+            font-size: clamp(2rem, 8vw, 3.2rem);
+            font-weight: 800;
             color: #ffffff;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
             line-height: 1;
         }
 
         .label {
-            font-size: clamp(0.6rem, 2.2vw, 0.95rem);
-            color: #94a3b8;
-            margin-top: clamp(8px, 2vw, 12px);
+            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+            color: #a78bfa;
+            margin-top: 10px;
             text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: 600;
-        }
-
-        @media (max-width: 500px) {
-            .countdown {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-            .char {
-                opacity: 0.6; /* Slight transparency on mobile so it doesn't distract */
-            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Ambient Glow Background -->
-    <div class="bg-glow"></div>
-    <div class="bg-glow-2"></div>
+    <canvas id="particleCanvas"></canvas>
 
-    <!-- Floating 3D Animated Cartoon Characters -->
-    <div class="character-layer">
-        <div class="char char-1">📚</div>
-        <div class="char char-2">🚀</div>
-        <div class="char char-3">🎓</div>
-        <div class="char char-4">💡</div>
-        <div class="char char-5">🎯</div>
-        <div class="char char-6">⏰</div>
-    </div>
-
-    <!-- Main Countdown -->
     <div class="container">
-        <h1>2027 A/L Countdown</h1>
+        <h1>2027 A/L COUNTDOWN</h1>
         <div class="countdown">
-            <div class="box"><div class="number" id="days">00</div><div class="label">Days</div></div>
-            <div class="box"><div class="number" id="hours">00</div><div class="label">Hours</div></div>
-            <div class="box"><div class="number" id="minutes">00</div><div class="label">Minutes</div></div>
-            <div class="box"><div class="number" id="seconds">00</div><div class="label">Seconds</div></div>
+            <div class="box" onclick="triggerCardEffect(event)">
+                <div class="number" id="days">00</div>
+                <div class="label">Days</div>
+            </div>
+            <div class="box" onclick="triggerCardEffect(event)">
+                <div class="number" id="hours">00</div>
+                <div class="label">Hours</div>
+            </div>
+            <div class="box" onclick="triggerCardEffect(event)">
+                <div class="number" id="minutes">00</div>
+                <div class="label">Minutes</div>
+            </div>
+            <div class="box" onclick="triggerCardEffect(event)">
+                <div class="number" id="seconds">00</div>
+                <div class="label">Seconds</div>
+            </div>
         </div>
     </div>
 
     <script>
+        // Countdown Logic
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
-        const timer = setInterval(function() {
+        function updateCountdown() {
             const now = new Date().getTime();
             const difference = examDate - now;
 
             if (difference < 0) {
-                clearInterval(timer);
                 document.querySelector(".container").innerHTML = "<h1>EXAM HAS STARTED!</h1>";
                 return;
             }
@@ -225,7 +174,163 @@
             document.getElementById("hours").innerText = h < 10 ? '0' + h : h;
             document.getElementById("minutes").innerText = m < 10 ? '0' + m : m;
             document.getElementById("seconds").innerText = s < 10 ? '0' + s : s;
-        }, 1000);
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Canvas Particle Engine
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 120 };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor(x, y, vx, vy, size, color) {
+                this.x = x || Math.random() * canvas.width;
+                this.y = y || Math.random() * canvas.height;
+                this.vx = vx || (Math.random() - 0.5) * 1.2;
+                this.vy = vy || (Math.random() - 0.5) * 1.2;
+                this.size = size || Math.random() * 3 + 1;
+                this.color = color || ['#8b5cf6', '#3b82f6', '#ec4899'][Math.floor(Math.random() * 3)];
+                this.alpha = Math.random() * 0.7 + 0.3;
+                this.life = 100;
+                this.maxLife = 100;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                // Mouse interaction / Push away effect
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        let force = (mouse.radius - distance) / mouse.radius;
+                        let angle = Math.atan2(dy, dx);
+                        this.x -= Math.cos(angle) * force * 5;
+                        this.y -= Math.sin(angle) * force * 5;
+                    }
+                }
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.min(Math.floor((canvas.width * canvas.height) / 9000), 80);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function spawnExplosion(x, y, count = 25) {
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 6 + 2;
+                const vx = Math.cos(angle) * speed;
+                const vy = Math.sin(angle) * speed;
+                const size = Math.random() * 4 + 2;
+                const colors = ['#a855f7', '#ec4899', '#3b82f6', '#ffffff'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                let p = new Particle(x, y, vx, vy, size, color);
+                particles.push(p);
+            }
+            if (particles.length > 150) {
+                particles.splice(0, particles.length - 150);
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Connect nearby particles with glow lines
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a + 1; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 110) {
+                        ctx.save();
+                        ctx.globalAlpha = (1 - dist / 110) * 0.25;
+                        ctx.strokeStyle = particles[a].color;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                }
+            }
+
+            particles.forEach((particle) => {
+                particle.update();
+                particle.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Global Event Listeners
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            spawnExplosion(e.clientX, e.clientY, 20);
+        });
+
+        window.addEventListener('touchend', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        function triggerCardEffect(e) {
+            e.stopPropagation();
+            const rect = e.currentTarget.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            spawnExplosion(centerX, centerY, 30);
+        }
+
+        // Init
+        resizeCanvas();
+        animate();
     </script>
 </body>
 </html>
