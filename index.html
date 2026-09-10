@@ -43,52 +43,75 @@
             padding: 10px;
         }
 
-        /* Fixed Title CSS - Wavy Slow Glitch & Solid Mobile Display */
+        /* Title Container Setup */
         h1 {
-            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            font-size: clamp(1.3rem, 4.5vw, 2.2rem);
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 30px;
             text-align: center;
             display: block;
             width: 100%;
-            
-            /* High visibility color fallback */
             color: #ffffff;
-            
-            /* Gradient Text Fill */
             background: linear-gradient(90deg, #ff007f, #a855f7, #00f0ff, #3b82f6, #ff007f);
             background-size: 300% 300%;
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            
-            /* Slow Wavy Glitch Animation */
-            animation: rainbowShift 6s linear infinite, slowWavyGlitch 6s ease-in-out infinite;
+            animation: rainbowShift 6s linear infinite;
+            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             cursor: pointer;
+            white-space: nowrap;
         }
 
-        /* Smooth, Slow Wavy Glitch Keyframes */
-        @keyframes slowWavyGlitch {
-            0%, 100% {
+        /* Individual Letters */
+        h1 .char {
+            display: inline-block;
+            animation: combinedSequence 9s ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        /* Spacing Fix for Mobile/Desktop */
+        h1 .space {
+            display: inline-block;
+            width: 0.35em;
+        }
+
+        /* Combined Wave Jump + Pause + Wavy Glitch + Pause Sequence */
+        @keyframes combinedSequence {
+            /* 1. Letter-by-Letter Wave Jump (0% to 35%) */
+            0% { transform: translateY(0) skewX(0deg); filter: none; }
+            8% { transform: translateY(-16px) skewX(0deg); }
+            16% { transform: translateY(0) skewX(0deg); }
+            
+            /* 2. Short Pause (35% to 50%) */
+            35%, 50% { 
                 transform: translateY(0) skewX(0deg);
-                filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
+                filter: none;
             }
-            20% {
-                transform: translateY(-4px) skewX(-2deg);
-                filter: drop-shadow(-3px 0 #00f0ff) drop-shadow(3px 0 #ff007f);
+
+            /* 3. Wavy Soft Glitch (50% to 70%) */
+            53% {
+                transform: translateY(-3px) skewX(-3deg);
+                filter: drop-shadow(-3px 0 #00f0ff);
             }
-            40% {
-                transform: translateY(3px) skewX(2deg);
-                filter: drop-shadow(3px 0 #00f0ff) drop-shadow(-3px 0 #ff007f);
+            58% {
+                transform: translateY(3px) skewX(3deg);
+                filter: drop-shadow(3px 0 #ff007f);
             }
-            60% {
-                transform: translateY(-2px) skewX(-1deg);
-                filter: drop-shadow(-2px 1px #a855f7) drop-shadow(2px -1px #00f0ff);
+            63% {
+                transform: translateY(-2px) skewX(-2deg);
+                filter: drop-shadow(-2px 1px #a855f7);
             }
-            80% {
-                transform: translateY(2px) skewX(1deg);
-                filter: drop-shadow(2px 0 #ff007f) drop-shadow(-2px 0 #a855f7);
+            68% {
+                transform: translateY(1px) skewX(1deg);
+                filter: drop-shadow(2px 0 #00f0ff);
+            }
+
+            /* 4. Final Pause before repeating (70% to 100%) */
+            70%, 100% {
+                transform: translateY(0) skewX(0deg);
+                filter: none;
             }
         }
 
@@ -186,7 +209,23 @@
     </div>
 
     <script>
+        // Character Spanning Logic
         const titleEl = document.getElementById('title');
+        const text = titleEl.textContent;
+        titleEl.textContent = '';
+
+        text.split('').forEach((char, index) => {
+            const span = document.createElement('span');
+            if (char === ' ') {
+                span.className = 'space';
+            } else {
+                span.className = 'char';
+                span.textContent = char;
+                // Stagger letter jumps by 0.08s
+                span.style.setProperty('--delay', `${index * 0.08}s`);
+            }
+            titleEl.appendChild(span);
+        });
 
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
