@@ -326,7 +326,7 @@
     </div>
 
     <script>
-        // Array of your M4A background music files (will pick one randomly on load)
+        // Array of your M4A background music files (picks one randomly on load)
         const bgTracks = [
             'YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a',
             'YTDown.com_YouTube_NNX-LXSY-HEMENESY-No-Copyright_Media_1fVQrSZV31k_005_48k.m4a',
@@ -338,35 +338,44 @@
         const randomTrack = bgTracks[Math.floor(Math.random() * bgTracks.length)];
 
         // 1. Background Music setup
-        const bgSound = new Audio(randomTrack);
-        bgSound.volume = 0.25; // Adjusted volume level
-        bgSound.loop = true;   // Loops the music continuously
+        const bgMusic = new Audio(randomTrack);
+        bgMusic.volume = 0.25; 
+        bgMusic.loop = true;   
 
-        // 2. Sound for Title
+        // 2. Background Tap Sound setup (bg.mp3)
+        const tapSound = new Audio('bg.mp3');
+        tapSound.volume = 0.05;
+
+        // 3. Sound for Title
         const titleSound = new Audio('title.mp3'); 
         titleSound.volume = 0.05;
 
-        // 3. Sound for 4 Countdown Tabs (click.mp3)
+        // 4. Sound for 4 Countdown Tabs (click.mp3)
         const tabSound = new Audio('click.mp3'); 
         tabSound.volume = 0.05;
 
         let isMuted = true;
 
-        // Toggle Audio on Button Click
+        // Toggle Audio on Floating Button Click
         function toggleAudio() {
             const btn = document.getElementById('audioToggleBtn');
             if (isMuted) {
-                bgSound.play().then(() => {
+                bgMusic.play().then(() => {
                     isMuted = false;
                     btn.textContent = '🔊';
                     btn.classList.remove('jumping-icon'); // Stops jumping when unmuted
                 }).catch(e => console.log("Audio play blocked"));
             } else {
-                bgSound.pause();
+                bgMusic.pause();
                 isMuted = true;
                 btn.textContent = '🔇';
                 btn.classList.add('jumping-icon'); // Starts jumping again when muted
             }
+        }
+
+        function playTapSound() {
+            tapSound.currentTime = 0;
+            tapSound.play().catch(e => {});
         }
 
         function playTitleSound() {
@@ -619,9 +628,10 @@
             requestAnimationFrame(animate);
         }
 
-        // Global background click listener for visual effects
+        // Global background click listener (plays bg.mp3 tap sound & triggers visual effects)
         window.addEventListener('click', (e) => {
             spawnInteraction(e.clientX, e.clientY);
+            playTapSound(); 
         });
 
         // Tab cards click listener (plays click.mp3)
