@@ -287,17 +287,31 @@
     </div>
 
     <script>
-        // Preload custom MP3 audio file
-        const customSound = new Audio('click.mp3');
-        
-        // Adjust volume (0.0 = muted, 0.3 = 30% volume, 1.0 = 100% volume)
-        customSound.volume = 0.1; 
+        // 1. Sound for Title
+        const titleSound = new Audio('title.mp3'); 
+        titleSound.volume = 0.3;
 
-        function playCustomSound() {
-            customSound.currentTime = 0; // Rewinds audio so rapid consecutive taps play instantly
-            customSound.play().catch(e => {
-                console.log("Audio play allowed on user interaction");
-            });
+        // 2. Sound for 4 Countdown Tabs
+        const tabSound = new Audio('click.mp3'); 
+        tabSound.volume = 0.3;
+
+        // 3. Sound for Background Click
+        const bgSound = new Audio('bg.mp3'); 
+        bgSound.volume = 0.3;
+
+        function playTitleSound() {
+            titleSound.currentTime = 0;
+            titleSound.play().catch(e => console.log("Audio play allowed on user interaction"));
+        }
+
+        function playTabSound() {
+            tabSound.currentTime = 0;
+            tabSound.play().catch(e => console.log("Audio play allowed on user interaction"));
+        }
+
+        function playBgSound() {
+            bgSound.currentTime = 0;
+            bgSound.play().catch(e => console.log("Audio play allowed on user interaction"));
         }
 
         // Wrap Title Characters into Spans safely
@@ -317,8 +331,9 @@
             titleEl.appendChild(span);
         });
 
+        // Title click handler
         function triggerTitleAction(e) {
-            e.stopPropagation();
+            e.stopPropagation(); // Prevents background click sound from triggering
             titleEl.classList.remove('jump-spin-effect');
             void titleEl.offsetWidth;
             titleEl.classList.add('jump-spin-effect');
@@ -329,7 +344,7 @@
 
             spawnInteraction(centerX, centerY);
             spawnEduItems(centerX, centerY);
-            playCustomSound();
+            playTitleSound();
         }
 
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
@@ -539,18 +554,20 @@
             requestAnimationFrame(animate);
         }
 
+        // Global background click listener (plays bg.mp3)
         window.addEventListener('click', (e) => {
             spawnInteraction(e.clientX, e.clientY);
-            playCustomSound();
+            playBgSound(); 
         });
 
+        // Tab cards click listener (plays click.mp3)
         function triggerCardEffect(e) {
-            e.stopPropagation();
+            e.stopPropagation(); 
             const rect = e.currentTarget.getBoundingClientRect();
             const x = rect.left + rect.width / 2;
             const y = rect.top + rect.height / 2;
             spawnInteraction(x, y);
-            playCustomSound();
+            playTabSound(); 
         }
 
         resizeCanvas();
