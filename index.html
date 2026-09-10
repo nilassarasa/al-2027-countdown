@@ -44,7 +44,7 @@
             perspective: 1000px;
         }
 
-        /* Title Container with Glitch Wrapper */
+        /* Title Container */
         h1 {
             font-size: clamp(1.1rem, 5.5vw, 2.4rem);
             font-weight: 900;
@@ -55,7 +55,7 @@
             background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: rainbowShift 4s linear infinite, glitchAnim 5s infinite;
+            animation: rainbowShift 4s linear infinite, mainSequence 7s infinite ease-in-out;
             filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             cursor: pointer;
             display: inline-block;
@@ -75,24 +75,22 @@
             background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            opacity: 0.8;
+            opacity: 0;
             pointer-events: none;
         }
 
         h1::before {
-            animation: glitchTop 3s infinite linear alternate-reverse, rainbowShift 4s linear infinite;
-            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+            animation: glitchTop 7s infinite linear;
         }
 
         h1::after {
-            animation: glitchBottom 2.5s infinite linear alternate-reverse, rainbowShift 4s linear infinite;
-            clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+            animation: glitchBottom 7s infinite linear;
         }
 
-        /* Individual Letter Wave Animation */
+        /* Individual Letter Wave Animation - Synchronized with 7s main sequence */
         h1 span {
             display: inline-block;
-            animation: waveJump 3s ease-in-out infinite;
+            animation: waveJump 7s ease-in-out infinite;
             animation-delay: var(--delay);
         }
 
@@ -101,59 +99,73 @@
             width: 0.35em;
         }
 
+        /* Wave Jump runs from 0% to 25% of the 7s cycle (approx 1.75s) */
         @keyframes waveJump {
-            0%, 40%, 100% {
-                transform: translateY(0);
-            }
-            20% {
-                transform: translateY(-16px);
-            }
+            0% { transform: translateY(0); }
+            5% { transform: translateY(-16px); }
+            12%, 100% { transform: translateY(0); }
         }
 
-        /* Cyberpunk Glitch Keyframes */
-        @keyframes glitchAnim {
-            0%, 90%, 100% {
+        /* Glitch Keyframes - Triggers only from 55% to 65% of the 7s cycle */
+        @keyframes mainSequence {
+            0%, 54%, 66%, 100% {
                 transform: translate(0);
                 filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             }
-            92% {
-                transform: translate(-2px, 1px) skewX(-2deg);
-                filter: drop-shadow(-2px 0 #00f0ff);
+            56% {
+                transform: translate(-3px, 1px) skewX(-3deg);
+                filter: drop-shadow(-3px 0 #00f0ff);
             }
-            94% {
-                transform: translate(2px, -1px) skewX(2deg);
-                filter: drop-shadow(2px 0 #ff007f);
+            58% {
+                transform: translate(3px, -1px) skewX(3deg);
+                filter: drop-shadow(3px 0 #ff007f);
             }
-            96% {
-                transform: translate(-1px, 2px);
-                filter: drop-shadow(-1px -2px #a855f7);
+            60% {
+                transform: translate(-2px, 2px);
+                filter: drop-shadow(-2px -2px #a855f7);
             }
-            98% {
-                transform: translate(1px, -2px);
+            62% {
+                transform: translate(2px, -2px);
+                filter: drop-shadow(2px 0 #00f0ff);
+            }
+            64% {
+                transform: translate(-1px, 1px);
             }
         }
 
         @keyframes glitchTop {
-            0%, 85%, 100% {
+            0%, 54%, 66%, 100% {
+                opacity: 0;
                 transform: translate(0);
             }
-            87% {
-                transform: translate(-3px, -2px);
+            55%, 65% {
+                opacity: 0.8;
             }
-            91% {
-                transform: translate(3px, 1px);
+            57% {
+                transform: translate(-4px, -2px);
+                clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            }
+            61% {
+                transform: translate(4px, 1px);
+                clip-path: polygon(0 15%, 100% 15%, 100% 45%, 0 45%);
             }
         }
 
         @keyframes glitchBottom {
-            0%, 88%, 100% {
+            0%, 54%, 66%, 100% {
+                opacity: 0;
                 transform: translate(0);
             }
-            90% {
-                transform: translate(3px, 2px);
+            55%, 65% {
+                opacity: 0.8;
             }
-            95% {
-                transform: translate(-3px, -1px);
+            59% {
+                transform: translate(4px, 2px);
+                clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+            }
+            63% {
+                transform: translate(-4px, -1px);
+                clip-path: polygon(0 50%, 100% 50%, 100% 85%, 0 85%);
             }
         }
 
