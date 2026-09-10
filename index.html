@@ -326,7 +326,7 @@
     </div>
 
     <script>
-        // Array of your M4A background music files (picks one randomly on load)
+        // Array of your M4A background music files
         const bgTracks = [
             'YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a',
             'YTDown.com_YouTube_NNX-LXSY-HEMENESY-No-Copyright_Media_1fVQrSZV31k_005_48k.m4a',
@@ -334,13 +334,23 @@
             'YTDown.com_YouTube_FULL-BASS-REMIX-Linkin-Park-In-The-End-N_Media_8YoHeuN0v0k_004_48k(1).m4a'
         ];
 
-        // Pick a random track automatically
-        const randomTrack = bgTracks[Math.floor(Math.random() * bgTracks.length)];
+        let currentTrackIndex = Math.floor(Math.random() * bgTracks.length);
 
         // 1. Background Music setup
-        const bgMusic = new Audio(randomTrack);
+        const bgMusic = new Audio(bgTracks[currentTrackIndex]);
         bgMusic.volume = 0.06; 
-        bgMusic.loop = true;   
+
+        // Automatically play next random track when current one ends
+        bgMusic.addEventListener('ended', () => {
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * bgTracks.length);
+            } while (nextIndex === currentTrackIndex && bgTracks.length > 1); // Avoid repeating the exact same track consecutively if possible
+            
+            currentTrackIndex = nextIndex;
+            bgMusic.src = bgTracks[currentTrackIndex];
+            bgMusic.play().catch(e => console.log("Auto-play next track error"));
+        });
 
         // 2. Background Tap Sound setup (bg.mp3)
         const tapSound = new Audio('bg.mp3');
