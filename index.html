@@ -43,9 +43,9 @@
             padding: 10px;
         }
 
-        /* Title CSS Fix & High-Intensity Glitch */
+        /* Fixed Title CSS - Wavy Slow Glitch & Solid Mobile Display */
         h1 {
-            font-size: 2.2rem;
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 30px;
@@ -53,74 +53,42 @@
             display: block;
             width: 100%;
             
-            /* Fallback color for mobile desktop mode rendering bugs */
-            color: #00f0ff;
+            /* High visibility color fallback */
+            color: #ffffff;
             
-            /* Cross-browser gradient text */
+            /* Gradient Text Fill */
             background: linear-gradient(90deg, #ff007f, #a855f7, #00f0ff, #3b82f6, #ff007f);
             background-size: 300% 300%;
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             
-            /* Animations */
-            animation: rainbowShift 4s linear infinite, strongGlitchSequence 4s infinite ease-in-out;
-            filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.8));
+            /* Slow Wavy Glitch Animation */
+            animation: rainbowShift 6s linear infinite, slowWavyGlitch 6s ease-in-out infinite;
             cursor: pointer;
         }
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.5rem;
+        /* Smooth, Slow Wavy Glitch Keyframes */
+        @keyframes slowWavyGlitch {
+            0%, 100% {
+                transform: translateY(0) skewX(0deg);
+                filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             }
-        }
-
-        /* Wave Animation per Letter */
-        h1 span {
-            display: inline-block;
-            animation: waveJump 4s ease-in-out infinite;
-            animation-delay: var(--delay);
-        }
-
-        h1 span.space {
-            width: 0.35em;
-        }
-
-        @keyframes waveJump {
-            0%, 100% { transform: translateY(0); }
-            10% { transform: translateY(-14px); }
-            20% { transform: translateY(0); }
-        }
-
-        /* Aggressive & Frequent Glitch Sequence */
-        @keyframes strongGlitchSequence {
-            0%, 40%, 60%, 100% {
-                transform: translate(0, 0) skewX(0deg);
-                filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.8));
+            20% {
+                transform: translateY(-4px) skewX(-2deg);
+                filter: drop-shadow(-3px 0 #00f0ff) drop-shadow(3px 0 #ff007f);
             }
-            41% {
-                transform: translate(-8px, 4px) skewX(-12deg);
-                filter: drop-shadow(-6px 0 #00f0ff) drop-shadow(6px 0 #ff007f);
+            40% {
+                transform: translateY(3px) skewX(2deg);
+                filter: drop-shadow(3px 0 #00f0ff) drop-shadow(-3px 0 #ff007f);
             }
-            43% {
-                transform: translate(8px, -4px) skewX(12deg);
-                filter: drop-shadow(6px -3px #ff007f) drop-shadow(-6px 3px #00f0ff);
+            60% {
+                transform: translateY(-2px) skewX(-1deg);
+                filter: drop-shadow(-2px 1px #a855f7) drop-shadow(2px -1px #00f0ff);
             }
-            45% {
-                transform: translate(-10px, 2px) skewX(-18deg);
-                filter: drop-shadow(-8px 0 #a855f7);
-            }
-            47% {
-                transform: translate(10px, -2px) skewX(18deg);
-                filter: drop-shadow(8px 0 #00f0ff);
-            }
-            49% {
-                transform: translate(-4px, 5px) skewX(-6deg);
-                filter: drop-shadow(-4px -4px #ff007f);
-            }
-            52% {
-                transform: translate(0, 0) skewX(0deg);
-                filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.8));
+            80% {
+                transform: translateY(2px) skewX(1deg);
+                filter: drop-shadow(2px 0 #ff007f) drop-shadow(-2px 0 #a855f7);
             }
         }
 
@@ -219,19 +187,6 @@
 
     <script>
         const titleEl = document.getElementById('title');
-        const text = titleEl.textContent;
-        titleEl.textContent = '';
-
-        text.split('').forEach((char, index) => {
-            const span = document.createElement('span');
-            if (char === ' ') {
-                span.classList.add('space');
-            } else {
-                span.textContent = char;
-            }
-            span.style.setProperty('--delay', `${index * 0.08}s`);
-            titleEl.appendChild(span);
-        });
 
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
