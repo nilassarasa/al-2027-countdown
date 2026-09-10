@@ -44,7 +44,7 @@
             perspective: 1000px;
         }
 
-        /* Multi-Color Rainbow Shifting Title with Jump & Spin Effect */
+        /* Title Container */
         h1 {
             font-size: clamp(1.1rem, 5.5vw, 2.4rem);
             font-weight: 900;
@@ -59,10 +59,30 @@
             filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             cursor: pointer;
             display: inline-block;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Title Jump & Spin Animation Class */
+        /* Individual Letter Wave Animation */
+        h1 span {
+            display: inline-block;
+            animation: waveJump 3s ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        /* Preserves spacing between words */
+        h1 span.space {
+            width: 0.35em;
+        }
+
+        @keyframes waveJump {
+            0%, 40%, 100% {
+                transform: translateY(0);
+            }
+            20% {
+                transform: translateY(-16px);
+            }
+        }
+
+        /* Manual Jump/Spin Click Animation */
         h1.jump-spin-effect {
             animation: rainbowShift 4s linear infinite, titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -149,6 +169,23 @@
     </div>
 
     <script>
+        // Letter-by-letter Animation Setup
+        const titleEl = document.getElementById('title');
+        const text = titleEl.textContent;
+        titleEl.textContent = '';
+
+        text.split('').forEach((char, index) => {
+            const span = document.createElement('span');
+            if (char === ' ') {
+                span.classList.add('space');
+            } else {
+                span.textContent = char;
+            }
+            // Stagger animation timing per letter
+            span.style.setProperty('--delay', `${index * 0.08}s`);
+            titleEl.appendChild(span);
+        });
+
         // Web Audio API Synth Engine
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -174,10 +211,9 @@
             osc.stop(audioCtx.currentTime + 0.12);
         }
 
-        // Title Jump, Spin & Edu Item Throw Function
+        // Title Action Event
         function triggerTitleAction(e) {
             e.stopPropagation();
-            const titleEl = document.getElementById('title');
             titleEl.classList.remove('jump-spin-effect');
             void titleEl.offsetWidth; // Trigger reflow
             titleEl.classList.add('jump-spin-effect');
@@ -333,7 +369,6 @@
             }
         }
 
-        // Thrown Educational Item Particles
         class EduItem {
             constructor(x, y) {
                 this.x = x;
