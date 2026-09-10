@@ -77,92 +77,94 @@
             align-items: center;
         }
 
-        /* Title Boxed Letter Containers */
-        .title-container {
+        /* Single Line Title Layout */
+        .title-line {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 25px;
-            width: 100%;
+            white-space: nowrap;
+            margin-bottom: 30px;
             cursor: pointer;
-        }
-
-        .title-word {
-            display: flex;
-            gap: 5px;
-            justify-content: center;
-        }
-
-        .letter-card {
-            width: clamp(26px, 6.5vw, 42px);
-            height: clamp(34px, 8vw, 50px);
-            background: linear-gradient(145deg, rgba(25, 18, 48, 0.95), rgba(10, 8, 22, 0.9));
-            border: 1px solid rgba(0, 240, 255, 0.4);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: clamp(1rem, 3.8vw, 1.6rem);
+            font-size: clamp(1.2rem, 4.2vw, 2.2rem);
             font-weight: 900;
-            color: #00f0ff;
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.9);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(0, 240, 255, 0.25);
-            animation: cardWaveSequence 7s ease-in-out infinite;
-            animation-delay: var(--delay);
-            backdrop-filter: blur(8px);
+            letter-spacing: 2px;
+            width: 100%;
         }
 
-        /* Card Wave Jump & Glitch Sequence */
-        @keyframes cardWaveSequence {
-            /* 1. Sequential Wave Bounce (0% - 25%) */
+        .title-line .space {
+            width: 0.4em;
+        }
+
+        /* Individual Letter Styling */
+        .title-line .char {
+            display: inline-block;
+            color: #ffffff;
+            transition: color 0.2s ease;
+            animation: continuousWaveSequence 7s ease-in-out infinite;
+            animation-delay: var(--delay);
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Wave Jump + Moving Light Blue / Pink-Purple Glow + Multi-Color Glitch Sequence */
+        @keyframes continuousWaveSequence {
+            /* 1. Wave Phase: Sequential Smooth Jump with Light Blue & Pinky-Purple Glow (0% to 28%) */
             0% {
                 transform: translateY(0) scale(1);
-                border-color: rgba(0, 240, 255, 0.4);
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(0, 240, 255, 0.25);
+                color: #ffffff;
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
             }
-            8% {
-                transform: translateY(-16px) scale(1.1);
-                border-color: #00f0ff;
-                box-shadow: 0 10px 25px rgba(0, 240, 255, 0.6), inset 0 0 15px rgba(0, 240, 255, 0.6);
+            10% {
+                transform: translateY(-20px) scale(1.15);
+                color: #00f0ff; /* Glowing Light Blue */
+                text-shadow: 
+                    0 0 12px #00f0ff,
+                    0 0 24px #ff007f, /* Pinky-Purple Back Glow */
+                    0 0 36px #a855f7;
             }
-            16% {
+            20% {
                 transform: translateY(0) scale(1);
-                border-color: rgba(0, 240, 255, 0.4);
+                color: #ffffff;
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
             }
 
-            /* 2. Hold Phase (25% - 50%) */
-            25%, 50% {
+            /* 2. Pause / Hold Phase (28% to 55%) */
+            28%, 55% {
                 transform: translateY(0) skewX(0deg);
-                border-color: rgba(0, 240, 255, 0.4);
+                color: #ffffff;
+                text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
             }
 
-            /* 3. Glitch Phase (52% - 68%) */
-            52% {
-                transform: translateY(-2px) skewX(-10deg);
-                border-color: #ff007f;
-                box-shadow: -3px 0 12px rgba(255, 0, 127, 0.8);
+            /* 3. Multi-Color Glitch Phase (56% to 75%) */
+            56% {
+                transform: translate(-3px, 2px) skewX(-14deg);
+                color: #00f0ff;
+                text-shadow: -4px 0 #ff007f, 4px 0 #00f0ff, 0 0 10px #3b82f6;
             }
-            58% {
-                transform: translateY(2px) skewX(10deg);
-                border-color: #a855f7;
-                box-shadow: 3px 0 12px rgba(168, 85, 247, 0.8);
+            60% {
+                transform: translate(3px, -2px) skewX(12deg);
+                color: #ff007f;
+                text-shadow: 4px 0 #a855f7, -4px 0 #00f0ff, 0 0 12px #ff007f;
             }
             64% {
-                transform: translateY(-1px) skewX(-5deg);
-                border-color: #00f0ff;
-                box-shadow: -2px 0 10px rgba(0, 240, 255, 0.8);
+                transform: translate(-2px, -1px) skewX(-8deg);
+                color: #a855f7;
+                text-shadow: -3px 0 #00f0ff, 3px 0 #ff007f;
+            }
+            68% {
+                transform: translate(2px, 1px) skewX(6deg);
+                color: #00f0ff;
+                text-shadow: 3px 0 #ff007f, -3px 0 #a855f7;
             }
 
-            /* 4. Reset (70% - 100%) */
-            70%, 100% {
+            /* 4. Reset Back to Normal (76% to 100%) */
+            76%, 100% {
                 transform: translateY(0) skewX(0deg);
-                border-color: rgba(0, 240, 255, 0.4);
+                color: #ffffff;
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
             }
         }
 
-        /* Countdown Cards Grid */
+        /* Countdown Cards Layout */
         .countdown {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -273,12 +275,8 @@
     <canvas id="starfieldCanvas"></canvas>
 
     <div class="container">
-        <!-- Title Built With Individual Box Cards -->
-        <div class="title-container" id="title" onclick="triggerTitleAction(event)">
-            <div class="title-word" id="word1"></div>
-            <div class="title-word" id="word2"></div>
-            <div class="title-word" id="word3"></div>
-        </div>
+        <!-- Single Line Title Container -->
+        <div class="title-line" id="titleLine" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</div>
 
         <div class="countdown">
             <div class="box" onclick="triggerCardEffect(event)">
@@ -305,27 +303,24 @@
     </div>
 
     <script>
-        // Generate Card Containers for "2027", "A/L", and "COUNTDOWN"
-        const wordsData = [
-            { id: 'word1', text: '2027' },
-            { id: 'word2', text: 'A/L' },
-            { id: 'word3', text: 'COUNTDOWN' }
-        ];
+        // Split title into individual spans with incremental animation delays
+        const titleEl = document.getElementById('titleLine');
+        const titleText = titleEl.textContent;
+        titleEl.textContent = '';
 
-        let letterCounter = 0;
-        wordsData.forEach(wordObj => {
-            const container = document.getElementById(wordObj.id);
-            wordObj.text.split('').forEach(char => {
-                const card = document.createElement('div');
-                card.className = 'letter-card';
-                card.textContent = char;
-                card.style.setProperty('--delay', `${letterCounter * 0.08}s`);
-                container.appendChild(card);
-                letterCounter++;
-            });
+        titleText.split('').forEach((char, index) => {
+            const span = document.createElement('span');
+            if (char === ' ') {
+                span.className = 'space';
+            } else {
+                span.className = 'char';
+                span.textContent = char;
+                span.style.setProperty('--delay', `${index * 0.08}s`);
+            }
+            titleEl.appendChild(span);
         });
 
-        // Background Tracklist (Looping randomly, volume 0.06)
+        // Background Tracklist
         const bgPlaylist = [
             "YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a",
             "YTDown.com_YouTube_NNX-LXSY-KONOSOO-No-Copyright-Thanks-NNX_Media_MOsQFsa6ZzI_005_48k.m4a",
@@ -390,7 +385,6 @@
             e.stopPropagation();
             playFx(soundTitle);
 
-            const titleEl = document.getElementById('title');
             const rect = titleEl.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
@@ -465,7 +459,7 @@
             const difference = examDate - now;
 
             if (difference < 0) {
-                document.querySelector(".container").innerHTML = "<h1 style='color:#00f0ff;'>EXAM HAS STARTED!</h1>";
+                document.querySelector(".container").innerHTML = "<h1>EXAM HAS STARTED!</h1>";
                 return;
             }
 
