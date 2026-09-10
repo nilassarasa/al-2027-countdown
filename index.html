@@ -34,7 +34,7 @@
             z-index: 1;
         }
 
-        /* Bottom Right Unmute/Mute Toggle Control */
+        /* Bottom Right Unmute Control */
         .audio-control {
             position: fixed;
             bottom: 24px;
@@ -53,7 +53,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: transform 0.2s ease, border-color 0.3s ease;
+            transition: transform 0.2s ease;
         }
 
         .audio-control.bouncing {
@@ -61,13 +61,8 @@
         }
 
         @keyframes bouncePulse {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                transform: translateY(-12px) scale(1.05);
-                box-shadow: 0 0 25px rgba(0, 240, 255, 0.8);
-            }
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-12px) scale(1.05); box-shadow: 0 0 25px rgba(0, 240, 255, 0.8); }
         }
 
         .container {
@@ -82,104 +77,92 @@
             align-items: center;
         }
 
-        /* Title Layout & Keyframe Logic */
-        h1 {
-            font-size: clamp(1.3rem, 4.5vw, 2.2rem);
-            font-weight: 900;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            text-align: center;
+        /* Title Boxed Letter Containers */
+        .title-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
             width: 100%;
-            color: #ffffff;
             cursor: pointer;
         }
 
-        h1 .char {
-            display: inline-block;
-            background: linear-gradient(90deg, #a855f7, #00f0ff, #ffffff, #00f0ff, #a855f7);
-            background-size: 200% auto;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: lightBlueSweep 3s linear infinite, continuousTitleSequence 8s ease-in-out infinite;
+        .title-word {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .letter-card {
+            width: clamp(26px, 6.5vw, 42px);
+            height: clamp(34px, 8vw, 50px);
+            background: linear-gradient(145deg, rgba(25, 18, 48, 0.95), rgba(10, 8, 22, 0.9));
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(1rem, 3.8vw, 1.6rem);
+            font-weight: 900;
+            color: #00f0ff;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.9);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(0, 240, 255, 0.25);
+            animation: cardWaveSequence 7s ease-in-out infinite;
             animation-delay: var(--delay);
-            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
+            backdrop-filter: blur(8px);
         }
 
-        h1 .space {
-            display: inline-block;
-            width: 0.35em;
-        }
-
-        /* Moving Light Blue Color Sweep Effect */
-        @keyframes lightBlueSweep {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-
-        /* Sequenced Animation: Wave Jump -> Hold -> Glitch -> Loop */
-        @keyframes continuousTitleSequence {
-            /* 1. Jumping Wave Effect (0% to 25%) */
+        /* Card Wave Jump & Glitch Sequence */
+        @keyframes cardWaveSequence {
+            /* 1. Sequential Wave Bounce (0% - 25%) */
             0% {
-                transform: translateY(0) skewX(0deg);
-                filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
-            }
-            10% {
-                transform: translateY(-18px) scale(1.1);
-                filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.9));
-            }
-            20% {
                 transform: translateY(0) scale(1);
-                filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
+                border-color: rgba(0, 240, 255, 0.4);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(0, 240, 255, 0.25);
+            }
+            8% {
+                transform: translateY(-16px) scale(1.1);
+                border-color: #00f0ff;
+                box-shadow: 0 10px 25px rgba(0, 240, 255, 0.6), inset 0 0 15px rgba(0, 240, 255, 0.6);
+            }
+            16% {
+                transform: translateY(0) scale(1);
+                border-color: rgba(0, 240, 255, 0.4);
             }
 
-            /* 2. Pause / Hold State (25% to 55%) */
-            25%, 55% {
+            /* 2. Hold Phase (25% - 50%) */
+            25%, 50% {
                 transform: translateY(0) skewX(0deg);
-                filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
+                border-color: rgba(0, 240, 255, 0.4);
             }
 
-            /* 3. Glitch Phase (56% to 70%) */
-            56% {
-                transform: translateY(-3px) skewX(-12deg);
-                filter: drop-shadow(-4px 0 #00f0ff) drop-shadow(4px 0 #ff007f);
+            /* 3. Glitch Phase (52% - 68%) */
+            52% {
+                transform: translateY(-2px) skewX(-10deg);
+                border-color: #ff007f;
+                box-shadow: -3px 0 12px rgba(255, 0, 127, 0.8);
             }
-            60% {
-                transform: translateY(3px) skewX(12deg);
-                filter: drop-shadow(4px 0 #ff007f) drop-shadow(-4px 0 #00f0ff);
+            58% {
+                transform: translateY(2px) skewX(10deg);
+                border-color: #a855f7;
+                box-shadow: 3px 0 12px rgba(168, 85, 247, 0.8);
             }
             64% {
-                transform: translateY(-2px) skewX(-8deg);
-                filter: drop-shadow(-3px 0 #a855f7);
-            }
-            68% {
-                transform: translateY(1px) skewX(4deg);
-                filter: drop-shadow(2px 0 #00f0ff);
+                transform: translateY(-1px) skewX(-5deg);
+                border-color: #00f0ff;
+                box-shadow: -2px 0 10px rgba(0, 240, 255, 0.8);
             }
 
-            /* 4. Reset Back to Normal (71% to 100%) */
-            71%, 100% {
+            /* 4. Reset (70% - 100%) */
+            70%, 100% {
                 transform: translateY(0) skewX(0deg);
-                filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
+                border-color: rgba(0, 240, 255, 0.4);
             }
         }
 
-        /* Touch Jump-Spin Effect */
-        h1.jump-spin-effect .char {
-            animation: titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes titleJumpSpin {
-            0% { transform: translateY(0) rotateY(0deg) scale(1); }
-            40% { transform: translateY(-35px) rotateY(180deg) scale(1.2); }
-            100% { transform: translateY(0) rotateY(360deg) scale(1); }
-        }
-
-        /* Countdown Cards Layout */
+        /* Countdown Cards Grid */
         .countdown {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -229,7 +212,7 @@
             font-weight: 600;
         }
 
-        /* Quotes Styling */
+        /* Moving Glow Quotes */
         .quote-container {
             margin-top: 35px;
             min-height: 52px;
@@ -285,13 +268,18 @@
 </head>
 <body>
 
-    <!-- Bottom Right Bouncing Unmute Control -->
     <button class="audio-control bouncing" id="audioBtn" onclick="toggleAudio()">🔇 Tap to Unmute</button>
 
     <canvas id="starfieldCanvas"></canvas>
 
     <div class="container">
-        <h1 id="title" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</h1>
+        <!-- Title Built With Individual Box Cards -->
+        <div class="title-container" id="title" onclick="triggerTitleAction(event)">
+            <div class="title-word" id="word1"></div>
+            <div class="title-word" id="word2"></div>
+            <div class="title-word" id="word3"></div>
+        </div>
+
         <div class="countdown">
             <div class="box" onclick="triggerCardEffect(event)">
                 <div class="number" id="days">00</div>
@@ -317,24 +305,27 @@
     </div>
 
     <script>
-        // Title Letter Spanning with Delays
-        const titleEl = document.getElementById('title');
-        const text = titleEl.textContent;
-        titleEl.textContent = '';
+        // Generate Card Containers for "2027", "A/L", and "COUNTDOWN"
+        const wordsData = [
+            { id: 'word1', text: '2027' },
+            { id: 'word2', text: 'A/L' },
+            { id: 'word3', text: 'COUNTDOWN' }
+        ];
 
-        text.split('').forEach((char, index) => {
-            const span = document.createElement('span');
-            if (char === ' ') {
-                span.className = 'space';
-            } else {
-                span.className = 'char';
-                span.textContent = char;
-                span.style.setProperty('--delay', `${index * 0.08}s`);
-            }
-            titleEl.appendChild(span);
+        let letterCounter = 0;
+        wordsData.forEach(wordObj => {
+            const container = document.getElementById(wordObj.id);
+            wordObj.text.split('').forEach(char => {
+                const card = document.createElement('div');
+                card.className = 'letter-card';
+                card.textContent = char;
+                card.style.setProperty('--delay', `${letterCounter * 0.08}s`);
+                container.appendChild(card);
+                letterCounter++;
+            });
         });
 
-        // Background Tracklist
+        // Background Tracklist (Looping randomly, volume 0.06)
         const bgPlaylist = [
             "YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a",
             "YTDown.com_YouTube_NNX-LXSY-KONOSOO-No-Copyright-Thanks-NNX_Media_MOsQFsa6ZzI_005_48k.m4a",
@@ -399,10 +390,7 @@
             e.stopPropagation();
             playFx(soundTitle);
 
-            titleEl.classList.remove('jump-spin-effect');
-            void titleEl.offsetWidth;
-            titleEl.classList.add('jump-spin-effect');
-
+            const titleEl = document.getElementById('title');
             const rect = titleEl.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
@@ -477,7 +465,7 @@
             const difference = examDate - now;
 
             if (difference < 0) {
-                document.querySelector(".container").innerHTML = "<h1>EXAM HAS STARTED!</h1>";
+                document.querySelector(".container").innerHTML = "<h1 style='color:#00f0ff;'>EXAM HAS STARTED!</h1>";
                 return;
             }
 
@@ -494,7 +482,7 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Canvas Starfield & Particle Background
+        // Canvas Particle & Spark Background
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
