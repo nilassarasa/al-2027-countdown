@@ -34,6 +34,42 @@
             z-index: 1;
         }
 
+        /* Bottom Right Unmute/Mute Toggle Control with Bouncing Effect */
+        .audio-control {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            background: rgba(13, 12, 28, 0.85);
+            border: 2px solid #00f0ff;
+            color: #00f0ff;
+            padding: 12px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s ease, border-color 0.3s ease;
+        }
+
+        .audio-control.bouncing {
+            animation: bouncePulse 1.2s infinite ease-in-out;
+        }
+
+        @keyframes bouncePulse {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-12px) scale(1.05);
+                box-shadow: 0 0 25px rgba(0, 240, 255, 0.8);
+            }
+        }
+
         .container {
             position: relative;
             z-index: 2;
@@ -41,16 +77,22 @@
             max-width: 760px;
             text-align: center;
             padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Title Container Setup */
+        /* Responsive Title Layout */
         h1 {
             font-size: clamp(1.3rem, 4.5vw, 2.2rem);
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 30px;
             text-align: center;
-            display: block;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
             width: 100%;
             color: #ffffff;
             background: linear-gradient(90deg, #ff007f, #a855f7, #00f0ff, #3b82f6, #ff007f);
@@ -61,36 +103,29 @@
             animation: rainbowShift 6s linear infinite;
             filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             cursor: pointer;
-            white-space: nowrap;
         }
 
-        /* Individual Letters */
         h1 .char {
             display: inline-block;
             animation: combinedSequence 9s ease-in-out infinite;
             animation-delay: var(--delay);
         }
 
-        /* Spacing Fix for Mobile/Desktop */
         h1 .space {
             display: inline-block;
             width: 0.35em;
         }
 
-        /* Combined Wave Jump + Pause + Wavy Glitch + Pause Sequence */
         @keyframes combinedSequence {
-            /* 1. Letter-by-Letter Wave Jump (0% to 35%) */
             0% { transform: translateY(0) skewX(0deg); filter: none; }
             8% { transform: translateY(-16px) skewX(0deg); }
             16% { transform: translateY(0) skewX(0deg); }
             
-            /* 2. Short Pause (35% to 50%) */
             35%, 50% { 
                 transform: translateY(0) skewX(0deg);
                 filter: none;
             }
 
-            /* 3. Wavy Soft Glitch (50% to 70%) */
             53% {
                 transform: translateY(-3px) skewX(-3deg);
                 filter: drop-shadow(-3px 0 #00f0ff);
@@ -108,14 +143,12 @@
                 filter: drop-shadow(2px 0 #00f0ff);
             }
 
-            /* 4. Final Pause before repeating (70% to 100%) */
             70%, 100% {
                 transform: translateY(0) skewX(0deg);
                 filter: none;
             }
         }
 
-        /* Manual Jump/Spin Click Animation */
         h1.jump-spin-effect {
             animation: rainbowShift 4s linear infinite, titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -131,7 +164,7 @@
             100% { background-position: 300% 50%; }
         }
 
-        /* Countdown Grid Setup */
+        /* Countdown Cards Layout */
         .countdown {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -180,36 +213,96 @@
             letter-spacing: 2px;
             font-weight: 600;
         }
+
+        /* Quotes with Animated Shimmer Gradient */
+        .quote-container {
+            margin-top: 35px;
+            min-height: 52px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .quote-text {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: clamp(0.75rem, 2.5vw, 0.95rem);
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.4;
+            background: linear-gradient(90deg, #00f0ff, #a855f7, #ff007f, #00f0ff);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: quoteShimmer 4s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5));
+        }
+
+        @keyframes quoteShimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .quote-text.glitch-out {
+            animation: quoteGlitchOut 0.4s forwards;
+        }
+
+        .quote-text.glitch-in {
+            animation: quoteGlitchIn 0.4s forwards, quoteShimmer 4s linear infinite;
+        }
+
+        @keyframes quoteGlitchOut {
+            0% { opacity: 1; transform: translate(0, 0) skewX(0deg); }
+            30% { opacity: 0.8; transform: translate(-5px, 2px) skewX(12deg); filter: drop-shadow(-4px 0 #ff007f) drop-shadow(4px 0 #00f0ff); }
+            60% { opacity: 0.4; transform: translate(5px, -2px) skewX(-12deg); filter: drop-shadow(4px 0 #00f0ff) drop-shadow(-4px 0 #a855f7); }
+            100% { opacity: 0; transform: translate(0, 0) skewX(0deg); }
+        }
+
+        @keyframes quoteGlitchIn {
+            0% { opacity: 0; transform: translate(0, 0) skewX(0deg); filter: drop-shadow(-4px 0 #00f0ff) drop-shadow(4px 0 #ff007f); }
+            40% { opacity: 0.6; transform: translate(4px, -2px) skewX(-10deg); }
+            80% { opacity: 0.9; transform: translate(-2px, 1px) skewX(5deg); }
+            100% { opacity: 1; transform: translate(0, 0) skewX(0deg); }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Bottom Right Bouncing Unmute Control -->
+    <button class="audio-control bouncing" id="audioBtn" onclick="toggleAudio()">🔇 Tap to Unmute</button>
 
     <canvas id="starfieldCanvas"></canvas>
 
     <div class="container">
         <h1 id="title" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</h1>
         <div class="countdown">
-            <div class="box" onclick="triggerCardEffect(event, 600)">
+            <div class="box" onclick="triggerCardEffect(event)">
                 <div class="number" id="days">00</div>
                 <div class="label">Days</div>
             </div>
-            <div class="box" onclick="triggerCardEffect(event, 750)">
+            <div class="box" onclick="triggerCardEffect(event)">
                 <div class="number" id="hours">00</div>
                 <div class="label">Hours</div>
             </div>
-            <div class="box" onclick="triggerCardEffect(event, 900)">
+            <div class="box" onclick="triggerCardEffect(event)">
                 <div class="number" id="minutes">00</div>
                 <div class="label">Minutes</div>
             </div>
-            <div class="box" onclick="triggerCardEffect(event, 1050)">
+            <div class="box" onclick="triggerCardEffect(event)">
                 <div class="number" id="seconds">00</div>
                 <div class="label">Seconds</div>
             </div>
         </div>
+
+        <div class="quote-container">
+            <div class="quote-text" id="quoteDisplay"></div>
+        </div>
     </div>
 
     <script>
-        // Character Spanning Logic
+        // Restored Title Letter Spanning Logic
         const titleEl = document.getElementById('title');
         const text = titleEl.textContent;
         titleEl.textContent = '';
@@ -221,38 +314,78 @@
             } else {
                 span.className = 'char';
                 span.textContent = char;
-                // Stagger letter jumps by 0.08s
                 span.style.setProperty('--delay', `${index * 0.08}s`);
             }
             titleEl.appendChild(span);
         });
 
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx = null;
+        // Background Tracklist (Random initial selection & auto-looping next track)
+        const bgPlaylist = [
+            "YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a",
+            "YTDown.com_YouTube_NNX-LXSY-KONOSOO-No-Copyright-Thanks-NNX_Media_MOsQFsa6ZzI_005_48k.m4a",
+            "YTDown.com_YouTube_NNX-LXSY-HEMENESY-No-Copyright_Media_1fVQrSZV31k_005_48k.m4a",
+            "YTDown.com_YouTube_FULL-BASS-REMIX-Linkin-Park-In-The-End-N_Media_8YoHeuN0v0k_004_48k(1).m4a"
+        ];
 
-        function playFuturisticSound(freq = 520) {
-            if (!audioCtx) audioCtx = new AudioContext();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+        let currentTrackIndex = Math.floor(Math.random() * bgPlaylist.length);
+        const bgAudio = new Audio();
+        bgAudio.volume = 0.06;
 
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(freq * 1.8, audioCtx.currentTime + 0.12);
-
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.12);
+        function loadTrack(index) {
+            bgAudio.src = bgPlaylist[index];
+            bgAudio.load();
         }
 
+        // Play next random track on song completion
+        bgAudio.addEventListener('ended', () => {
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * bgPlaylist.length);
+            } while (nextIndex === currentTrackIndex && bgPlaylist.length > 1);
+            currentTrackIndex = nextIndex;
+            loadTrack(currentTrackIndex);
+            bgAudio.play();
+        });
+
+        loadTrack(currentTrackIndex);
+
+        // Audio Effects setup (Volume: 0.05)
+        const soundBg = new Audio("bg.mp3");
+        const soundClick = new Audio("click.mp3");
+        const soundTitle = new Audio("title.mp3");
+
+        soundBg.volume = 0.05;
+        soundClick.volume = 0.05;
+        soundTitle.volume = 0.05;
+
+        function playFx(audioObj) {
+            audioObj.currentTime = 0;
+            audioObj.play().catch(() => {});
+        }
+
+        let isPlaying = false;
+
+        function toggleAudio() {
+            const btn = document.getElementById('audioBtn');
+            if (!isPlaying) {
+                bgAudio.play().then(() => {
+                    isPlaying = true;
+                    btn.innerHTML = "🔊 Sound ON";
+                    btn.classList.remove('bouncing');
+                }).catch(err => console.log("Audio play blocked:", err));
+            } else {
+                bgAudio.pause();
+                isPlaying = false;
+                btn.innerHTML = "🔇 Sound OFF";
+                btn.classList.add('bouncing');
+            }
+        }
+
+        // Interaction Handlers with sound effects
         function triggerTitleAction(e) {
             e.stopPropagation();
+            playFx(soundTitle);
+
             titleEl.classList.remove('jump-spin-effect');
             void titleEl.offsetWidth;
             titleEl.classList.add('jump-spin-effect');
@@ -263,9 +396,67 @@
 
             spawnInteraction(centerX, centerY);
             spawnEduItems(centerX, centerY);
-            playFuturisticSound(1200);
         }
 
+        function triggerCardEffect(e) {
+            e.stopPropagation();
+            playFx(soundClick);
+
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            spawnInteraction(x, y);
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target.id === 'audioBtn') return;
+            playFx(soundBg);
+            spawnInteraction(e.clientX, e.clientY);
+        });
+
+        // Quotes System
+        const quotes = [
+            "~ Time is an illusion ~ ⏳ ✨ 🌌 Douglas Adams",
+            "~ Lost time is never found again ~ ⌛ 🪙 🔑 Benjamin Franklin",
+            "~ The problem is, you think you have time ~ 👁️ 🍃 Jack Kornfield",
+            "~ Time moves in one direction, memory in another ~ 🧠 🕯️ William Gibson",
+            "~ Time is the most valuable thing a man can spend ~ 💎 ⚖️ Theophrastus",
+            "~ Time flies over us, but leaves its shadow behind ~ 🕊️ ⛅ Nathaniel Hawthorne",
+            "~ Time is a storm in which we are all lost ~ ⛈️ 🌪️ William Carlos Williams",
+            "~ How did it get so late so soon? ~ 🌙 🦉 Dr. Seuss",
+            "~ Time is a dressmaker specializing in alterations ~ 🪡 🧵 Faith Baldwin",
+            "~ Time, which strengthens friendship, weakens love ~ 🤝 🥀 🖤 Jean de La Bruyère",
+            "~ Your time is limited, so don't waste it living someone else's life ~ 🚀 💡 🌟 Steve Jobs",
+            "~ They always say time changes things, but you actually have to change them yourself ~ ⚡ 🎨 Andy Warhol",
+            "~ Time is a created thing. To say 'I don't have time' is like saying 'I don't want to' ~ 🛠️ ☯️ Lao Tzu",
+            "~ The two most powerful warriors are patience and time ~ ⚔️ 🛡️ Leo Tolstoy",
+            "~ Better three hours too soon than a minute too late ~ ⏰ 🗝️ William Shakespeare",
+            "~ Time is what we want most, but what we use worst ~ ⏳ 🗑️ William Penn",
+            "~ The future is something which everyone reaches at the rate of sixty minutes an hour ~ 🚶 🧭 C.S. Lewis",
+            "~ Punctuality is the thief of time ~ 🕵️ 🎩 Oscar Wilde",
+            "~ Realize that now, in this moment, time is stopping for nothing ~ 📍 🏃 ✨ Steve Maraboli",
+            "~ Time slips away like sand through an hourglass ~ 🏖️ ⌛ 🌊 Traditional Proverb"
+        ];
+
+        let currentQuoteIndex = 0;
+        const quoteDisplay = document.getElementById('quoteDisplay');
+        quoteDisplay.textContent = quotes[currentQuoteIndex];
+
+        function rotateQuote() {
+            quoteDisplay.classList.remove('glitch-in');
+            quoteDisplay.classList.add('glitch-out');
+
+            setTimeout(() => {
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+                quoteDisplay.textContent = quotes[currentQuoteIndex];
+                quoteDisplay.classList.remove('glitch-out');
+                quoteDisplay.classList.add('glitch-in');
+            }, 400);
+        }
+
+        setInterval(rotateQuote, 6000);
+
+        // Countdown Timer Logic
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
         function updateCountdown() {
@@ -290,6 +481,7 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
+        // Canvas Particle & Spark Background
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -471,20 +663,6 @@
             });
 
             requestAnimationFrame(animate);
-        }
-
-        window.addEventListener('click', (e) => {
-            spawnInteraction(e.clientX, e.clientY);
-            playFuturisticSound(480);
-        });
-
-        function triggerCardEffect(e, soundFreq) {
-            e.stopPropagation();
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = rect.left + rect.width / 2;
-            const y = rect.top + rect.height / 2;
-            spawnInteraction(x, y);
-            playFuturisticSound(soundFreq);
         }
 
         resizeCanvas();
