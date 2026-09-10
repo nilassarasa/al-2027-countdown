@@ -38,7 +38,7 @@
             position: relative;
             z-index: 2;
             width: 92%;
-            max-width: 520px;
+            max-width: 760px; /* Increased max-width to allow room for horizontal cards on PC */
             text-align: center;
             padding: 10px;
             perspective: 1000px;
@@ -99,7 +99,7 @@
             width: 0.35em;
         }
 
-        /* Wave Jump runs from 0% to 25% of the 7s cycle (approx 1.75s) */
+        /* Wave Jump runs at the start of the 7s cycle */
         @keyframes waveJump {
             0% { transform: translateY(0); }
             5% { transform: translateY(-16px); }
@@ -185,11 +185,20 @@
             100% { background-position: 300% 50%; }
         }
 
+        /* Responsive Grid Setup */
         .countdown {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            /* Default for PC/Desktop: 4 tabs in 1 horizontal line */
+            grid-template-columns: repeat(4, 1fr);
             gap: 14px;
             width: 100%;
+        }
+
+        /* Mobile Layout: 2 columns x 2 rows on screens under 600px width */
+        @media (max-width: 600px) {
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .box {
