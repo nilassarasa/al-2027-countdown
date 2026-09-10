@@ -43,21 +43,36 @@
             padding: 10px;
         }
 
-        /* Pure CSS Cyberpunk Glitch Title */
+        /* Title Outer Box Setup */
         h1 {
-            font-size: clamp(1.4rem, 4.5vw, 2.2rem);
+            font-size: clamp(1.2rem, 4.2vw, 2.2rem);
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 30px;
             text-align: center;
             display: inline-block;
             position: relative;
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
             cursor: pointer;
+            white-space: nowrap;
+            line-height: 1.4;
         }
 
-        /* Glitch Layer 1 (Cyan Channel) */
+        /* Individual Spanned Characters for Wave Jump */
+        h1 .char {
+            display: inline-block;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+            animation: combinedCycle 8s ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        /* Spaces Fix for Mobile WebKit */
+        h1 .space {
+            display: inline-block;
+            width: 0.35em;
+        }
+
+        /* Glitch Slice 1 (Cyan Overlay) - Fires during Glitch Phase (50%-70%) */
         h1::before {
             content: attr(data-text);
             position: absolute;
@@ -69,10 +84,11 @@
             background: #020205;
             clip-path: inset(0 0 0 0);
             opacity: 0;
-            animation: glitchCyan 6s infinite;
+            animation: glitchCyan 8s infinite;
+            pointer-events: none;
         }
 
-        /* Glitch Layer 2 (Magenta/Pink Channel) */
+        /* Glitch Slice 2 (Magenta Overlay) - Fires during Glitch Phase (50%-70%) */
         h1::after {
             content: attr(data-text);
             position: absolute;
@@ -84,72 +100,112 @@
             background: #020205;
             clip-path: inset(0 0 0 0);
             opacity: 0;
-            animation: glitchMagenta 6s infinite;
+            animation: glitchMagenta 8s infinite;
+            pointer-events: none;
         }
 
-        /* Cyan Layer Slice Keyframes */
+        /* Keyframes for Jump Wave + Multicolor + Light Blue Glow + Pauses */
+        @keyframes combinedCycle {
+            /* 1. Jumping Letters Wave with Multi-Color & Light Blue Glow (0% - 35%) */
+            0% {
+                transform: translateY(0);
+                color: #ffffff;
+                text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+            }
+            10% {
+                transform: translateY(-18px);
+                color: #00f0ff; /* Vibrant light blue header highlight */
+                text-shadow: 0 0 15px #00f0ff, 0 0 25px #00f0ff, 0 0 35px #3b82f6; /* Bright Light Blue Effect */
+            }
+            20% {
+                transform: translateY(0);
+                color: #a855f7;
+                text-shadow: 0 0 12px #ff007f;
+            }
+
+            /* 2. Break / Pause (35% - 50%) */
+            35%, 50% {
+                transform: translateY(0);
+                color: #ffffff;
+                text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+            }
+
+            /* 3. Base behavior during Glitch Phase (50% - 70%) */
+            50.1%, 70% {
+                color: #ffffff;
+            }
+
+            /* 4. Final Break before repeat (70% - 100%) */
+            70.1%, 100% {
+                transform: translateY(0);
+                color: #ffffff;
+                text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+            }
+        }
+
+        /* Glitch Layer Keyframes - Cyan Slice (50% - 70%) */
         @keyframes glitchCyan {
-            0%, 50%, 100% {
+            0%, 50%, 70.1%, 100% {
                 opacity: 0;
                 transform: translate(0);
             }
             52% {
-                opacity: 0.9;
+                opacity: 0.95;
                 transform: translate(-3px, -2px);
                 clip-path: inset(20% 0 60% 0);
             }
-            54% {
-                opacity: 0.9;
+            55% {
+                opacity: 0.95;
                 transform: translate(2px, 1px);
                 clip-path: inset(50% 0 20% 0);
             }
-            56% {
-                opacity: 0.9;
+            58% {
+                opacity: 0.95;
                 transform: translate(-2px, 2px);
                 clip-path: inset(10% 0 75% 0);
             }
-            58% {
-                opacity: 0.9;
+            62% {
+                opacity: 0.95;
                 transform: translate(3px, -1px);
                 clip-path: inset(70% 0 10% 0);
             }
-            60% {
+            65% {
                 opacity: 0;
             }
         }
 
-        /* Magenta Layer Slice Keyframes */
+        /* Glitch Layer Keyframes - Magenta Slice (50% - 70%) */
         @keyframes glitchMagenta {
-            0%, 50%, 100% {
+            0%, 50%, 70.1%, 100% {
                 opacity: 0;
                 transform: translate(0);
             }
             52% {
-                opacity: 0.9;
+                opacity: 0.95;
                 transform: translate(3px, 1px);
                 clip-path: inset(60% 0 15% 0);
             }
-            54% {
-                opacity: 0.9;
+            55% {
+                opacity: 0.95;
                 transform: translate(-2px, -2px);
                 clip-path: inset(15% 0 65% 0);
             }
-            56% {
-                opacity: 0.9;
+            58% {
+                opacity: 0.95;
                 transform: translate(2px, -1px);
                 clip-path: inset(80% 0 5% 0);
             }
-            58% {
-                opacity: 0.9;
+            62% {
+                opacity: 0.95;
                 transform: translate(-3px, 2px);
                 clip-path: inset(5% 0 85% 0);
             }
-            60% {
+            65% {
                 opacity: 0;
             }
         }
 
-        /* Click Jump/Spin Effect */
+        /* Manual Spin Effect on User Click */
         h1.jump-spin-effect {
             animation: titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -238,7 +294,23 @@
     </div>
 
     <script>
+        // Wrap Title Characters into Spans safely
         const titleEl = document.getElementById('title');
+        const text = titleEl.textContent;
+        titleEl.textContent = '';
+
+        text.split('').forEach((char, index) => {
+            const span = document.createElement('span');
+            if (char === ' ') {
+                span.className = 'space';
+            } else {
+                span.className = 'char';
+                span.textContent = char;
+                // Delay letter jumps by 0.08s
+                span.style.setProperty('--delay', `${index * 0.08}s`);
+            }
+            titleEl.appendChild(span);
+        });
 
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
