@@ -38,13 +38,13 @@
             position: relative;
             z-index: 2;
             width: 92%;
-            max-width: 760px; /* Increased max-width to allow room for horizontal cards on PC */
+            max-width: 760px;
             text-align: center;
             padding: 10px;
             perspective: 1000px;
         }
 
-        /* Title Container */
+        /* Fixed Title CSS */
         h1 {
             font-size: clamp(1.1rem, 5.5vw, 2.4rem);
             font-weight: 900;
@@ -55,39 +55,13 @@
             background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: rainbowShift 4s linear infinite, mainSequence 7s infinite ease-in-out;
+            animation: rainbowShift 4s linear infinite, mainGlitchSequence 7s infinite ease-in-out;
             filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             cursor: pointer;
             display: inline-block;
-            position: relative;
         }
 
-        /* Glitch Pseudo Layers */
-        h1::before,
-        h1::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #ff007f, #a855f7, #00f0ff, #3b82f6, #ff007f);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        h1::before {
-            animation: glitchTop 7s infinite linear;
-        }
-
-        h1::after {
-            animation: glitchBottom 7s infinite linear;
-        }
-
-        /* Individual Letter Wave Animation - Synchronized with 7s main sequence */
+        /* Individual Letter Wave Animation - Alternates cleanly with Glitch */
         h1 span {
             display: inline-block;
             animation: waveJump 7s ease-in-out infinite;
@@ -99,73 +73,38 @@
             width: 0.35em;
         }
 
-        /* Wave Jump runs at the start of the 7s cycle */
+        /* Wave Jump runs from 0% to 20% of the 7s cycle */
         @keyframes waveJump {
             0% { transform: translateY(0); }
             5% { transform: translateY(-16px); }
             12%, 100% { transform: translateY(0); }
         }
 
-        /* Glitch Keyframes - Triggers only from 55% to 65% of the 7s cycle */
-        @keyframes mainSequence {
-            0%, 54%, 66%, 100% {
-                transform: translate(0);
+        /* Clean Glitch Effect (Runs safely without collapsing text layout) */
+        @keyframes mainGlitchSequence {
+            0%, 50%, 70%, 100% {
+                transform: translate(0, 0) skewX(0deg);
                 filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             }
-            56% {
-                transform: translate(-3px, 1px) skewX(-3deg);
+            52% {
+                transform: translate(-4px, 2px) skewX(-4deg);
                 filter: drop-shadow(-3px 0 #00f0ff);
             }
-            58% {
-                transform: translate(3px, -1px) skewX(3deg);
+            55% {
+                transform: translate(4px, -2px) skewX(4deg);
                 filter: drop-shadow(3px 0 #ff007f);
             }
-            60% {
-                transform: translate(-2px, 2px);
-                filter: drop-shadow(-2px -2px #a855f7);
+            58% {
+                transform: translate(-3px, -1px) skewX(-2deg);
+                filter: drop-shadow(-2px 2px #a855f7);
             }
             62% {
-                transform: translate(2px, -2px);
-                filter: drop-shadow(2px 0 #00f0ff);
+                transform: translate(3px, 1px) skewX(2deg);
+                filter: drop-shadow(2px -2px #00f0ff);
             }
-            64% {
-                transform: translate(-1px, 1px);
-            }
-        }
-
-        @keyframes glitchTop {
-            0%, 54%, 66%, 100% {
-                opacity: 0;
-                transform: translate(0);
-            }
-            55%, 65% {
-                opacity: 0.8;
-            }
-            57% {
-                transform: translate(-4px, -2px);
-                clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
-            }
-            61% {
-                transform: translate(4px, 1px);
-                clip-path: polygon(0 15%, 100% 15%, 100% 45%, 0 45%);
-            }
-        }
-
-        @keyframes glitchBottom {
-            0%, 54%, 66%, 100% {
-                opacity: 0;
-                transform: translate(0);
-            }
-            55%, 65% {
-                opacity: 0.8;
-            }
-            59% {
-                transform: translate(4px, 2px);
-                clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
-            }
-            63% {
-                transform: translate(-4px, -1px);
-                clip-path: polygon(0 50%, 100% 50%, 100% 85%, 0 85%);
+            65% {
+                transform: translate(-1px, 2px);
+                filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             }
         }
 
@@ -185,16 +124,14 @@
             100% { background-position: 300% 50%; }
         }
 
-        /* Responsive Grid Setup */
+        /* Countdown Grid Setup */
         .countdown {
             display: grid;
-            /* Default for PC/Desktop: 4 tabs in 1 horizontal line */
             grid-template-columns: repeat(4, 1fr);
             gap: 14px;
             width: 100%;
         }
 
-        /* Mobile Layout: 2 columns x 2 rows on screens under 600px width */
         @media (max-width: 600px) {
             .countdown {
                 grid-template-columns: repeat(2, 1fr);
@@ -265,10 +202,8 @@
     </div>
 
     <script>
-        // Letter-by-letter Animation Setup & Glitch Attribute
         const titleEl = document.getElementById('title');
         const text = titleEl.textContent;
-        titleEl.setAttribute('data-text', text); // Needed for glitch layer duplication
         titleEl.textContent = '';
 
         text.split('').forEach((char, index) => {
@@ -278,12 +213,10 @@
             } else {
                 span.textContent = char;
             }
-            // Stagger animation timing per letter
             span.style.setProperty('--delay', `${index * 0.08}s`);
             titleEl.appendChild(span);
         });
 
-        // Web Audio API Synth Engine
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
 
@@ -308,11 +241,10 @@
             osc.stop(audioCtx.currentTime + 0.12);
         }
 
-        // Title Action Event
         function triggerTitleAction(e) {
             e.stopPropagation();
             titleEl.classList.remove('jump-spin-effect');
-            void titleEl.offsetWidth; // Trigger reflow
+            void titleEl.offsetWidth;
             titleEl.classList.add('jump-spin-effect');
 
             const rect = titleEl.getBoundingClientRect();
@@ -324,7 +256,6 @@
             playFuturisticSound(1200);
         }
 
-        // Countdown Logic
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
         function updateCountdown() {
@@ -349,7 +280,6 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Canvas Engine
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
