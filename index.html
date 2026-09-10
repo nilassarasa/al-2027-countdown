@@ -43,92 +43,83 @@
             padding: 10px;
         }
 
-        /* Title Container Setup */
+        /* Title Main Setup */
         h1 {
-            font-size: clamp(1.3rem, 4.5vw, 2.2rem);
+            font-size: clamp(1.2rem, 4.2vw, 2.2rem);
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 30px;
             text-align: center;
             display: block;
             width: 100%;
-            color: #ffffff;
-            background: linear-gradient(90deg, #ff007f, #a855f7, #00f0ff, #3b82f6, #ff007f);
-            background-size: 300% 300%;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: rainbowShift 6s linear infinite;
-            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             cursor: pointer;
             white-space: nowrap;
         }
 
-        /* Individual Letters */
+        /* Letters Styling & Animation */
         h1 .char {
             display: inline-block;
-            animation: combinedSequence 9s ease-in-out infinite;
+            color: #e0e7ff;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 20px rgba(0, 240, 255, 0.5);
+            animation: waveGlitchSequence 9s ease-in-out infinite;
             animation-delay: var(--delay);
         }
 
-        /* Spacing Fix for Mobile/Desktop */
+        /* Mobile Space Element */
         h1 .space {
             display: inline-block;
             width: 0.35em;
         }
 
-        /* Combined Wave Jump + Pause + Wavy Glitch + Pause Sequence */
-        @keyframes combinedSequence {
-            /* 1. Letter-by-Letter Wave Jump (0% to 35%) */
-            0% { transform: translateY(0) skewX(0deg); filter: none; }
-            8% { transform: translateY(-16px) skewX(0deg); }
-            16% { transform: translateY(0) skewX(0deg); }
-            
-            /* 2. Short Pause (35% to 50%) */
-            35%, 50% { 
+        /* 9-Second Loop: Jump -> Pause -> Soft Glitch -> Pause */
+        @keyframes waveGlitchSequence {
+            /* Phase 1: Letter Jump Wave (0% - 35%) */
+            0% { transform: translateY(0); }
+            10% { transform: translateY(-16px); color: #00f0ff; text-shadow: 0 0 15px #00f0ff; }
+            20% { transform: translateY(0); color: #e0e7ff; }
+
+            /* Phase 2: First Pause (35% - 50%) */
+            35%, 50% {
                 transform: translateY(0) skewX(0deg);
-                filter: none;
+                color: #e0e7ff;
+                text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
             }
 
-            /* 3. Wavy Soft Glitch (50% to 70%) */
+            /* Phase 3: Smooth Wavy Soft Glitch (50% - 70%) */
             53% {
-                transform: translateY(-3px) skewX(-3deg);
-                filter: drop-shadow(-3px 0 #00f0ff);
+                transform: translateY(-2px) skewX(-2deg);
+                text-shadow: -3px 0 #00f0ff, 3px 0 #ff007f;
             }
             58% {
-                transform: translateY(3px) skewX(3deg);
-                filter: drop-shadow(3px 0 #ff007f);
+                transform: translateY(2px) skewX(2deg);
+                text-shadow: 3px 0 #00f0ff, -3px 0 #ff007f;
             }
             63% {
-                transform: translateY(-2px) skewX(-2deg);
-                filter: drop-shadow(-2px 1px #a855f7);
+                transform: translateY(-1px) skewX(-1deg);
+                text-shadow: -2px 1px #a855f7;
             }
             68% {
                 transform: translateY(1px) skewX(1deg);
-                filter: drop-shadow(2px 0 #00f0ff);
+                text-shadow: 2px -1px #00f0ff;
             }
 
-            /* 4. Final Pause before repeating (70% to 100%) */
+            /* Phase 4: Final Pause before restarting (70% - 100%) */
             70%, 100% {
                 transform: translateY(0) skewX(0deg);
-                filter: none;
+                color: #e0e7ff;
+                text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
             }
         }
 
-        /* Manual Jump/Spin Click Animation */
+        /* Title Spin Action on Click */
         h1.jump-spin-effect {
-            animation: rainbowShift 4s linear infinite, titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @keyframes titleJumpSpin {
             0% { transform: translateY(0) rotateY(0deg) scale(1); }
-            40% { transform: translateY(-35px) rotateY(180deg) scale(1.2); }
+            40% { transform: translateY(-30px) rotateY(180deg) scale(1.15); }
             100% { transform: translateY(0) rotateY(360deg) scale(1); }
-        }
-
-        @keyframes rainbowShift {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 300% 50%; }
         }
 
         /* Countdown Grid Setup */
@@ -209,7 +200,7 @@
     </div>
 
     <script>
-        // Character Spanning Logic
+        // Safely wrap text in letter spans
         const titleEl = document.getElementById('title');
         const text = titleEl.textContent;
         titleEl.textContent = '';
@@ -221,7 +212,7 @@
             } else {
                 span.className = 'char';
                 span.textContent = char;
-                // Stagger letter jumps by 0.08s
+                // Delay each character's jump wave
                 span.style.setProperty('--delay', `${index * 0.08}s`);
             }
             titleEl.appendChild(span);
