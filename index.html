@@ -288,8 +288,10 @@
 
     <script>
         // Preload custom MP3 audio file
-        // Make sure your MP3 file is named 'click.mp3' and placed in the same folder as this HTML file
         const customSound = new Audio('click.mp3');
+        
+        // Adjust volume (0.0 = muted, 0.3 = 30% volume, 1.0 = 100% volume)
+        customSound.volume = 0.3; 
 
         function playCustomSound() {
             customSound.currentTime = 0; // Rewinds audio so rapid consecutive taps play instantly
