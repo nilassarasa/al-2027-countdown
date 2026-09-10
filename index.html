@@ -258,11 +258,50 @@
             letter-spacing: 2px;
             font-weight: 600;
         }
+
+        /* Bottom-Right Floating Mute/Audio Button with Jumping Animation */
+        #audioToggleBtn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+            background: rgba(13, 12, 28, 0.85);
+            backdrop-filter: blur(12px);
+            border: 2px solid #a855f7;
+            color: #ffffff;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.5);
+            font-size: 1.4rem;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        /* Continuous Jumping Animation until unmuted */
+        .jumping-icon {
+            animation: iconJump 0.8s ease-in-out infinite;
+        }
+
+        @keyframes iconJump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); box-shadow: 0 12px 25px rgba(0, 240, 255, 0.8); border-color: #00f0ff; }
+        }
+
+        #audioToggleBtn:hover {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
 
     <canvas id="starfieldCanvas"></canvas>
+
+    <!-- Floating Mute/Unmute Button -->
+    <div id="audioToggleBtn" class="jumping-icon" onclick="toggleAudio()" title="Click to Unmute Music">🔇</div>
 
     <div class="container">
         <h1 id="title" data-text="2027 A/L COUNTDOWN" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</h1>
@@ -287,31 +326,57 @@
     </div>
 
     <script>
-        // 1. Sound for Title
+        // Array of your M4A background music files (will pick one randomly on load)
+        const bgTracks = [
+            'YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a',
+            'YTDown.com_YouTube_NNX-LXSY-HEMENESY-No-Copyright_Media_1fVQrSZV31k_005_48k.m4a',
+            'YTDown.com_YouTube_NNX-LXSY-KONOSOO-No-Copyright-Thanks-NNX_Media_MOsQFsa6ZzI_005_48k.m4a',
+            'YTDown.com_YouTube_FULL-BASS-REMIX-Linkin-Park-In-The-End-N_Media_8YoHeuN0v0k_004_48k(1).m4a'
+        ];
+
+        // Pick a random track automatically
+        const randomTrack = bgTracks[Math.floor(Math.random() * bgTracks.length)];
+
+        // 1. Background Music setup
+        const bgSound = new Audio(randomTrack);
+        bgSound.volume = 0.25; // Adjusted volume level
+        bgSound.loop = true;   // Loops the music continuously
+
+        // 2. Sound for Title
         const titleSound = new Audio('title.mp3'); 
         titleSound.volume = 0.05;
 
-        // 2. Sound for 4 Countdown Tabs
+        // 3. Sound for 4 Countdown Tabs (click.mp3)
         const tabSound = new Audio('click.mp3'); 
         tabSound.volume = 0.05;
 
-        // 3. Sound for Background Click
-        const bgSound = new Audio('bg.mp3'); 
-        bgSound.volume = 0.05;
+        let isMuted = true;
+
+        // Toggle Audio on Button Click
+        function toggleAudio() {
+            const btn = document.getElementById('audioToggleBtn');
+            if (isMuted) {
+                bgSound.play().then(() => {
+                    isMuted = false;
+                    btn.textContent = '🔊';
+                    btn.classList.remove('jumping-icon'); // Stops jumping when unmuted
+                }).catch(e => console.log("Audio play blocked"));
+            } else {
+                bgSound.pause();
+                isMuted = true;
+                btn.textContent = '🔇';
+                btn.classList.add('jumping-icon'); // Starts jumping again when muted
+            }
+        }
 
         function playTitleSound() {
             titleSound.currentTime = 0;
-            titleSound.play().catch(e => console.log("Audio play allowed on user interaction"));
+            titleSound.play().catch(e => {});
         }
 
         function playTabSound() {
             tabSound.currentTime = 0;
-            tabSound.play().catch(e => console.log("Audio play allowed on user interaction"));
-        }
-
-        function playBgSound() {
-            bgSound.currentTime = 0;
-            bgSound.play().catch(e => console.log("Audio play allowed on user interaction"));
+            tabSound.play().catch(e => {});
         }
 
         // Wrap Title Characters into Spans safely
@@ -333,7 +398,7 @@
 
         // Title click handler
         function triggerTitleAction(e) {
-            e.stopPropagation(); // Prevents background click sound from triggering
+            e.stopPropagation();
             titleEl.classList.remove('jump-spin-effect');
             void titleEl.offsetWidth;
             titleEl.classList.add('jump-spin-effect');
@@ -554,10 +619,9 @@
             requestAnimationFrame(animate);
         }
 
-        // Global background click listener (plays bg.mp3)
+        // Global background click listener for visual effects
         window.addEventListener('click', (e) => {
             spawnInteraction(e.clientX, e.clientY);
-            playBgSound(); 
         });
 
         // Tab cards click listener (plays click.mp3)
