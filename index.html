@@ -35,22 +35,22 @@
             z-index: 1;
         }
 
-        /* Unmute Control Wrapper for Gradient Border Effect */
+        /* Fixed Unmute Button at Bottom-Right with Fast Ring Loader Effect */
         .audio-wrapper {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 100;
-            width: 150px;
-            height: 48px;
+            position: fixed !important;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            width: 130px;
+            height: 42px;
             border-radius: 30px;
             padding: 3px;
             background: conic-gradient(from 0deg, #00f0ff, #d946ef, #ff007f, #00f0ff);
-            animation: spinRing 3s linear infinite;
+            animation: spinRing 1.2s linear infinite; /* Faster rotation */
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
         }
 
         @keyframes spinRing {
@@ -65,15 +65,14 @@
             border: none;
             color: #00f0ff;
             border-radius: 27px;
-            font-size: 0.85rem;
-            font-weight: 700;
+            font-size: 0.8rem;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            /* Reverse rotation so text stays upright */
-            animation: unspinText 3s linear infinite;
+            gap: 4px;
+            animation: unspinText 1.2s linear infinite;
         }
 
         @keyframes unspinText {
@@ -82,12 +81,12 @@
         }
 
         .audio-wrapper.bouncing {
-            animation: spinRing 3s linear infinite, bouncePulse 1.5s infinite ease-in-out;
+            animation: spinRing 1.2s linear infinite, bouncePulse 0.8s infinite ease-in-out;
         }
 
         @keyframes bouncePulse {
-            0%, 100% { bottom: 24px; }
-            50% { bottom: 36px; }
+            0%, 100% { bottom: 20px; }
+            50% { bottom: 28px; }
         }
 
         .container {
@@ -115,12 +114,12 @@
             width: 100%;
             position: relative;
             transform-style: preserve-3d;
-            /* Reduced frequency from 8s to 16s */
-            animation: fullTitleGlitchShake 16s ease-in-out infinite;
+            animation: fullTitleGlitchShake 4s ease-in-out infinite; /* Fast timing */
         }
 
+        /* Fast Spin Jump */
         .title-line.title-spin-jump {
-            animation: titleDoubleSpinJump 0.85s cubic-bezier(0.25, 1, 0.5, 1) !important;
+            animation: titleDoubleSpinJump 0.45s cubic-bezier(0.25, 1, 0.5, 1) !important;
         }
 
         @keyframes titleDoubleSpinJump {
@@ -128,7 +127,7 @@
                 transform: translateY(0) rotateY(0deg) scale(1);
             }
             50% {
-                transform: translateY(-50px) rotateY(360deg) scale(1.25);
+                transform: translateY(-40px) rotateY(360deg) scale(1.2);
                 filter: drop-shadow(0 0 20px #00f0ff) drop-shadow(0 0 35px #d946ef);
             }
             100% {
@@ -143,59 +142,58 @@
         .title-line .char {
             display: inline-block;
             color: #ffffff;
-            /* Reduced frequency from 8s to 16s */
-            animation: letterJumpWave 16s ease-in-out infinite;
+            animation: letterJumpWave 4s ease-in-out infinite;
             animation-delay: var(--delay);
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
         }
 
-        /* Letter Wave: Light Blue -> Pinky Purple -> Normal */
+        /* Fast Letter Wave Jump: Light Blue -> Pinky Purple -> Reset */
         @keyframes letterJumpWave {
             0% {
                 transform: translateY(0) scale(1);
                 color: #ffffff;
                 text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
             }
-            3% {
-                transform: translateY(-22px) scale(1.15);
+            6% {
+                transform: translateY(-18px) scale(1.15);
                 color: #00f0ff; /* Light Blue */
                 text-shadow: 0 0 12px #00f0ff, 0 0 24px #00f0ff;
             }
-            6% {
-                transform: translateY(-10px) scale(1.08);
+            12% {
+                transform: translateY(-6px) scale(1.08);
                 color: #d946ef; /* Pinky Purple */
                 text-shadow: 0 0 14px #d946ef, 0 0 28px #d946ef;
             }
-            10%, 100% {
+            18%, 100% {
                 transform: translateY(0) scale(1);
                 color: #ffffff;
                 text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
             }
         }
 
-        /* Toned down glitch duration */
+        /* Snappy Glitch */
         @keyframes fullTitleGlitchShake {
-            0%, 80% {
+            0%, 75% {
                 transform: translate(0, 0) skewX(0deg);
                 filter: none;
             }
 
-            81% {
+            76% {
                 transform: translate(-6px, 1px) skewX(-3deg);
                 filter: drop-shadow(-4px 0 #00f0ff) drop-shadow(4px 0 #d946ef);
             }
 
-            82% {
+            78% {
                 transform: translate(6px, -1px) skewX(3deg);
                 filter: drop-shadow(4px 0 #d946ef) drop-shadow(-4px 0 #00f0ff);
             }
 
-            83% {
+            80% {
                 transform: translate(-3px, 1px) skewX(-1deg);
                 filter: drop-shadow(-3px 0 #00f0ff);
             }
 
-            84%, 100% {
+            82%, 100% {
                 transform: translate(0, 0) skewX(0deg);
                 filter: none;
             }
@@ -271,7 +269,7 @@
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: quoteShimmer 4s linear infinite;
+            animation: quoteShimmer 2s linear infinite; /* Speeded up */
             filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5));
         }
 
@@ -281,31 +279,29 @@
         }
 
         .quote-text.glitch-out {
-            animation: quoteGlitchOut 0.4s forwards;
+            animation: quoteGlitchOut 0.2s forwards; /* Snappy switch */
         }
 
         .quote-text.glitch-in {
-            animation: quoteGlitchIn 0.4s forwards, quoteShimmer 4s linear infinite;
+            animation: quoteGlitchIn 0.2s forwards, quoteShimmer 2s linear infinite;
         }
 
         @keyframes quoteGlitchOut {
             0% { opacity: 1; transform: translate(0, 0) skewX(0deg); }
-            30% { opacity: 0.8; transform: translate(-5px, 2px) skewX(12deg); filter: drop-shadow(-4px 0 #d946ef) drop-shadow(4px 0 #00f0ff); }
-            60% { opacity: 0.4; transform: translate(5px, -2px) skewX(-12deg); filter: drop-shadow(4px 0 #00f0ff) drop-shadow(-4px 0 #a855f7); }
+            50% { opacity: 0.5; transform: translate(-5px, 2px) skewX(12deg); filter: drop-shadow(-4px 0 #d946ef); }
             100% { opacity: 0; transform: translate(0, 0) skewX(0deg); }
         }
 
         @keyframes quoteGlitchIn {
-            0% { opacity: 0; transform: translate(0, 0) skewX(0deg); filter: drop-shadow(-4px 0 #00f0ff) drop-shadow(4px 0 #d946ef); }
-            40% { opacity: 0.6; transform: translate(4px, -2px) skewX(-10deg); }
-            80% { opacity: 0.9; transform: translate(-2px, 1px) skewX(5deg); }
+            0% { opacity: 0; transform: translate(0, 0) skewX(0deg); filter: drop-shadow(-4px 0 #00f0ff); }
+            50% { opacity: 0.6; transform: translate(4px, -2px) skewX(-10deg); }
             100% { opacity: 1; transform: translate(0, 0) skewX(0deg); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Bottom Right Multi-Color Ring Unmute Control -->
+    <!-- Fixed Bottom Right Unmute Button -->
     <div class="audio-wrapper bouncing" id="audioWrapper">
         <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔇 Unmute</button>
     </div>
@@ -351,7 +347,7 @@
             } else {
                 span.className = 'char';
                 span.textContent = char;
-                span.style.setProperty('--delay', `${index * 0.12}s`);
+                span.style.setProperty('--delay', `${index * 0.05}s`); /* Snappier stagger */
             }
             titleEl.appendChild(span);
         });
@@ -426,7 +422,7 @@
 
             setTimeout(() => {
                 titleEl.classList.remove('title-spin-jump');
-            }, 850);
+            }, 450);
 
             const rect = titleEl.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
@@ -488,10 +484,10 @@
                 quoteDisplay.textContent = quotes[currentQuoteIndex];
                 quoteDisplay.classList.remove('glitch-out');
                 quoteDisplay.classList.add('glitch-in');
-            }, 400);
+            }, 200);
         }
 
-        setInterval(rotateQuote, 6000);
+        setInterval(rotateQuote, 4000);
 
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
@@ -523,7 +519,7 @@
         let stars = [];
         let effects = [];
         const numStars = 180;
-        const speed = 0.8;
+        const speed = 1.2; /* Faster background stars */
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -583,8 +579,8 @@
                 this.color = ['#00f0ff', '#d946ef', '#a855f7'][Math.floor(Math.random() * 3)];
             }
             update() {
-                this.radius += 3;
-                this.life -= 0.03;
+                this.radius += 5;
+                this.life -= 0.05;
             }
             draw() {
                 if (this.life <= 0) return;
@@ -606,7 +602,7 @@
                 this.x = x;
                 this.y = y;
                 const angle = Math.random() * Math.PI * 2;
-                const spd = Math.random() * 4 + 1.5;
+                const spd = Math.random() * 6 + 2;
                 this.vx = Math.cos(angle) * spd;
                 this.vy = Math.sin(angle) * spd;
                 this.size = Math.random() * 3 + 1;
@@ -616,7 +612,7 @@
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.life -= 0.03;
+                this.life -= 0.05;
             }
             draw() {
                 if (this.life <= 0) return;
@@ -637,15 +633,15 @@
                 this.x = x;
                 this.y = y;
                 const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.8;
-                const speed = Math.random() * 7 + 5;
+                const speed = Math.random() * 9 + 6;
                 this.vx = Math.cos(angle) * speed;
                 this.vy = Math.sin(angle) * speed;
-                this.gravity = 0.25;
+                this.gravity = 0.35;
                 this.items = ['🎓', '📚', '✏️', '💡', '📐', '📝', '🔬'];
                 this.symbol = this.items[Math.floor(Math.random() * this.items.length)];
                 this.size = Math.floor(Math.random() * 12) + 20;
                 this.rotation = Math.random() * Math.PI * 2;
-                this.vRot = (Math.random() - 0.5) * 0.2;
+                this.vRot = (Math.random() - 0.5) * 0.3;
                 this.life = 1;
             }
             update() {
@@ -653,7 +649,7 @@
                 this.y += this.vy;
                 this.vy += this.gravity;
                 this.rotation += this.vRot;
-                this.life -= 0.015;
+                this.life -= 0.025;
             }
             draw() {
                 if (this.life <= 0) return;
