@@ -41,70 +41,86 @@
             max-width: 760px;
             text-align: center;
             padding: 10px;
-            perspective: 1000px;
         }
 
-        /* Fixed Title CSS */
+        /* Title CSS Fix & High-Intensity Glitch */
         h1 {
-            font-size: clamp(1.1rem, 5.5vw, 2.4rem);
+            font-size: 2.2rem;
             font-weight: 900;
-            white-space: nowrap;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             margin-bottom: 30px;
+            text-align: center;
+            display: block;
+            width: 100%;
+            
+            /* Fallback color for mobile desktop mode rendering bugs */
+            color: #00f0ff;
+            
+            /* Cross-browser gradient text */
             background: linear-gradient(90deg, #ff007f, #a855f7, #00f0ff, #3b82f6, #ff007f);
             background-size: 300% 300%;
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: rainbowShift 4s linear infinite, mainGlitchSequence 7s infinite ease-in-out;
-            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
+            
+            /* Animations */
+            animation: rainbowShift 4s linear infinite, strongGlitchSequence 4s infinite ease-in-out;
+            filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.8));
             cursor: pointer;
-            display: inline-block;
         }
 
-        /* Individual Letter Wave Animation - Alternates cleanly with Glitch */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Wave Animation per Letter */
         h1 span {
             display: inline-block;
-            animation: waveJump 7s ease-in-out infinite;
+            animation: waveJump 4s ease-in-out infinite;
             animation-delay: var(--delay);
         }
 
-        /* Preserves spacing between words */
         h1 span.space {
             width: 0.35em;
         }
 
-        /* Wave Jump runs from 0% to 20% of the 7s cycle */
         @keyframes waveJump {
-            0% { transform: translateY(0); }
-            5% { transform: translateY(-16px); }
-            12%, 100% { transform: translateY(0); }
+            0%, 100% { transform: translateY(0); }
+            10% { transform: translateY(-14px); }
+            20% { transform: translateY(0); }
         }
 
-        /* Clean Glitch Effect (Runs safely without collapsing text layout) */
-        @keyframes mainGlitchSequence {
-            0%, 50%, 70%, 100% {
+        /* Aggressive & Frequent Glitch Sequence */
+        @keyframes strongGlitchSequence {
+            0%, 40%, 60%, 100% {
                 transform: translate(0, 0) skewX(0deg);
-                filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
+                filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.8));
+            }
+            41% {
+                transform: translate(-8px, 4px) skewX(-12deg);
+                filter: drop-shadow(-6px 0 #00f0ff) drop-shadow(6px 0 #ff007f);
+            }
+            43% {
+                transform: translate(8px, -4px) skewX(12deg);
+                filter: drop-shadow(6px -3px #ff007f) drop-shadow(-6px 3px #00f0ff);
+            }
+            45% {
+                transform: translate(-10px, 2px) skewX(-18deg);
+                filter: drop-shadow(-8px 0 #a855f7);
+            }
+            47% {
+                transform: translate(10px, -2px) skewX(18deg);
+                filter: drop-shadow(8px 0 #00f0ff);
+            }
+            49% {
+                transform: translate(-4px, 5px) skewX(-6deg);
+                filter: drop-shadow(-4px -4px #ff007f);
             }
             52% {
-                transform: translate(-4px, 2px) skewX(-4deg);
-                filter: drop-shadow(-3px 0 #00f0ff);
-            }
-            55% {
-                transform: translate(4px, -2px) skewX(4deg);
-                filter: drop-shadow(3px 0 #ff007f);
-            }
-            58% {
-                transform: translate(-3px, -1px) skewX(-2deg);
-                filter: drop-shadow(-2px 2px #a855f7);
-            }
-            62% {
-                transform: translate(3px, 1px) skewX(2deg);
-                filter: drop-shadow(2px -2px #00f0ff);
-            }
-            65% {
-                transform: translate(-1px, 2px);
-                filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
+                transform: translate(0, 0) skewX(0deg);
+                filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.8));
             }
         }
 
@@ -342,7 +358,6 @@
                 this.x = x;
                 this.y = y;
                 this.radius = 5;
-                this.maxRadius = 55;
                 this.life = 1;
                 this.color = ['#00f0ff', '#ff007f', '#a855f7'][Math.floor(Math.random() * 3)];
             }
