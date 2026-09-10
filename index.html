@@ -34,6 +34,27 @@
             z-index: 1;
         }
 
+        /* Top Unmute/Mute Toggle Control */
+        .audio-control {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            background: rgba(13, 12, 28, 0.7);
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            color: #00f0ff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .container {
             position: relative;
             z-index: 2;
@@ -46,14 +67,17 @@
             align-items: center;
         }
 
-        /* Title Container Setup */
+        /* Title Container - Responsive Flex Layout */
         h1 {
             font-size: clamp(1.3rem, 4.5vw, 2.2rem);
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 30px;
             text-align: center;
-            display: block;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
             width: 100%;
             color: #ffffff;
             background: linear-gradient(90deg, #ff007f, #a855f7, #00f0ff, #3b82f6, #ff007f);
@@ -64,10 +88,8 @@
             animation: rainbowShift 6s linear infinite;
             filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             cursor: pointer;
-            white-space: nowrap;
         }
 
-        /* Individual Title Letters */
         h1 .char {
             display: inline-block;
             animation: combinedSequence 9s ease-in-out infinite;
@@ -177,10 +199,10 @@
             font-weight: 600;
         }
 
-        /* Gold Glowing Glitch Quote Container */
+        /* Theme-Matched Animated Quotes */
         .quote-container {
             margin-top: 35px;
-            min-height: 48px;
+            min-height: 52px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -192,47 +214,51 @@
             font-family: 'Courier New', Courier, monospace;
             font-size: clamp(0.75rem, 2.5vw, 0.95rem);
             font-weight: 700;
-            color: #ffd700;
             text-align: center;
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 18px rgba(212, 175, 55, 0.6);
-            opacity: 1;
-            transition: opacity 0.3s ease;
+            line-height: 1.4;
+            
+            /* Moving Neon Shimmer Gradient */
+            background: linear-gradient(90deg, #00f0ff, #a855f7, #ff007f, #00f0ff);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: quoteShimmer 4s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5));
         }
 
-        /* Transition Animations for Quote Changes */
+        @keyframes quoteShimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* Glitch Transitions */
         .quote-text.glitch-out {
             animation: quoteGlitchOut 0.4s forwards;
         }
 
         .quote-text.glitch-in {
-            animation: quoteGlitchIn 0.4s forwards;
+            animation: quoteGlitchIn 0.4s forwards, quoteShimmer 4s linear infinite;
         }
 
         @keyframes quoteGlitchOut {
             0% {
                 opacity: 1;
                 transform: translate(0, 0) skewX(0deg);
-                filter: drop-shadow(0 0 8px #ffd700);
             }
-            25% {
+            30% {
                 opacity: 0.8;
-                transform: translate(-4px, 2px) skewX(10deg);
+                transform: translate(-5px, 2px) skewX(12deg);
                 filter: drop-shadow(-4px 0 #ff007f) drop-shadow(4px 0 #00f0ff);
             }
-            50% {
-                opacity: 0.5;
-                transform: translate(4px, -2px) skewX(-10deg);
-                filter: drop-shadow(4px 0 #00f0ff) drop-shadow(-4px 0 #ffd700);
-            }
-            75% {
-                opacity: 0.2;
-                transform: translate(-2px, 1px) skewX(5deg);
-                filter: drop-shadow(-2px 0 #a855f7);
+            60% {
+                opacity: 0.4;
+                transform: translate(5px, -2px) skewX(-12deg);
+                filter: drop-shadow(4px 0 #00f0ff) drop-shadow(-4px 0 #a855f7);
             }
             100% {
                 opacity: 0;
                 transform: translate(0, 0) skewX(0deg);
-                filter: none;
             }
         }
 
@@ -242,25 +268,24 @@
                 transform: translate(0, 0) skewX(0deg);
                 filter: drop-shadow(-4px 0 #00f0ff) drop-shadow(4px 0 #ff007f);
             }
-            30% {
-                opacity: 0.5;
-                transform: translate(3px, -2px) skewX(-8deg);
-                filter: drop-shadow(3px 0 #ffd700);
+            40% {
+                opacity: 0.6;
+                transform: translate(4px, -2px) skewX(-10deg);
             }
-            60% {
-                opacity: 0.8;
-                transform: translate(-3px, 1px) skewX(6deg);
-                filter: drop-shadow(-3px 0 #00f0ff);
+            80% {
+                opacity: 0.9;
+                transform: translate(-2px, 1px) skewX(5deg);
             }
             100% {
                 opacity: 1;
                 transform: translate(0, 0) skewX(0deg);
-                filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
             }
         }
     </style>
 </head>
 <body>
+
+    <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔊 Sound ON</button>
 
     <canvas id="starfieldCanvas"></canvas>
 
@@ -291,7 +316,7 @@
     </div>
 
     <script>
-        // Character Spanning Logic
+        // Restored Title Spanning Logic
         const titleEl = document.getElementById('title');
         const text = titleEl.textContent;
         titleEl.textContent = '';
@@ -348,27 +373,27 @@
             }, 400);
         }
 
-        // Change quote every 6 seconds
         setInterval(rotateQuote, 6000);
 
-        // Web Audio Synthesizer with Updated Volume Levels
+        // Web Audio Synthesizer with Sound Controls & Requested Volumes
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
         let bgMusicOsc = null;
         let bgMusicGain = null;
+        let isMuted = false;
 
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new AudioContext();
                 
-                // Continuous Subtle Background Music (Volume: 0.06)
+                // Continuous Background Music (Volume: 0.06)
                 bgMusicOsc = audioCtx.createOscillator();
                 bgMusicGain = audioCtx.createGain();
 
                 bgMusicOsc.type = 'sine';
-                bgMusicOsc.frequency.setValueAtTime(110, audioCtx.currentTime); // A2 note
+                bgMusicOsc.frequency.setValueAtTime(110, audioCtx.currentTime);
 
-                bgMusicGain.gain.setValueAtTime(0.06, audioCtx.currentTime); // Volume set to 0.06
+                bgMusicGain.gain.setValueAtTime(0.06, audioCtx.currentTime);
 
                 bgMusicOsc.connect(bgMusicGain);
                 bgMusicGain.connect(audioCtx.destination);
@@ -379,7 +404,22 @@
             }
         }
 
+        function toggleAudio() {
+            initAudio();
+            const btn = document.getElementById('audioBtn');
+            if (isMuted) {
+                bgMusicGain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                btn.innerHTML = "🔊 Sound ON";
+                isMuted = false;
+            } else {
+                bgMusicGain.gain.setValueAtTime(0, audioCtx.currentTime);
+                btn.innerHTML = "🔇 Sound OFF";
+                isMuted = true;
+            }
+        }
+
         function playSound(freq = 520, targetVolume = 0.05) {
+            if (isMuted) return;
             initAudio();
 
             const osc = audioCtx.createOscillator();
@@ -423,11 +463,12 @@
             const y = rect.top + rect.height / 2;
             spawnInteraction(x, y);
             
-            // Card/Box Tap Sound Volume: 0.05
+            // Card Tap Sound Volume: 0.05
             playSound(soundFreq, 0.05);
         }
 
         window.addEventListener('click', (e) => {
+            if (e.target.id === 'audioBtn') return;
             spawnInteraction(e.clientX, e.clientY);
             
             // Background Tap Sound Volume: 0.05
@@ -458,7 +499,7 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Canvas Particles
+        // Canvas Particle Background
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
