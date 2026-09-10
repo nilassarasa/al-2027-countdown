@@ -34,7 +34,7 @@
             z-index: 1;
         }
 
-        /* Top Unmute/Mute Toggle Control */
+        /* Sound Toggle Button */
         .audio-control {
             position: absolute;
             top: 20px;
@@ -67,7 +67,7 @@
             align-items: center;
         }
 
-        /* Title Container - Responsive Flex Layout */
+        /* Title Container Setup */
         h1 {
             font-size: clamp(1.3rem, 4.5vw, 2.2rem);
             font-weight: 900;
@@ -90,27 +90,33 @@
             cursor: pointer;
         }
 
+        /* Individual Letters */
         h1 .char {
             display: inline-block;
             animation: combinedSequence 9s ease-in-out infinite;
             animation-delay: var(--delay);
         }
 
+        /* Spacing Fix for Mobile/Desktop */
         h1 .space {
             display: inline-block;
             width: 0.35em;
         }
 
+        /* Combined Wave Jump + Pause + Wavy Glitch + Pause Sequence */
         @keyframes combinedSequence {
+            /* 1. Letter-by-Letter Wave Jump (0% to 35%) */
             0% { transform: translateY(0) skewX(0deg); filter: none; }
             8% { transform: translateY(-16px) skewX(0deg); }
             16% { transform: translateY(0) skewX(0deg); }
             
+            /* 2. Short Pause (35% to 50%) */
             35%, 50% { 
                 transform: translateY(0) skewX(0deg);
                 filter: none;
             }
 
+            /* 3. Wavy Soft Glitch (50% to 70%) */
             53% {
                 transform: translateY(-3px) skewX(-3deg);
                 filter: drop-shadow(-3px 0 #00f0ff);
@@ -128,12 +134,14 @@
                 filter: drop-shadow(2px 0 #00f0ff);
             }
 
+            /* 4. Final Pause before repeating (70% to 100%) */
             70%, 100% {
                 transform: translateY(0) skewX(0deg);
                 filter: none;
             }
         }
 
+        /* Manual Jump/Spin Click Animation */
         h1.jump-spin-effect {
             animation: rainbowShift 4s linear infinite, titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -199,7 +207,7 @@
             font-weight: 600;
         }
 
-        /* Theme-Matched Animated Quotes */
+        /* Animated Glowing Quotes */
         .quote-container {
             margin-top: 35px;
             min-height: 52px;
@@ -217,7 +225,7 @@
             text-align: center;
             line-height: 1.4;
             
-            /* Moving Neon Shimmer Gradient */
+            /* Cyan & Purple Moving Shimmer Gradient */
             background: linear-gradient(90deg, #00f0ff, #a855f7, #ff007f, #00f0ff);
             background-size: 200% auto;
             background-clip: text;
@@ -316,7 +324,7 @@
     </div>
 
     <script>
-        // Restored Title Spanning Logic
+        // Character Spanning Logic
         const titleEl = document.getElementById('title');
         const text = titleEl.textContent;
         titleEl.textContent = '';
@@ -328,6 +336,7 @@
             } else {
                 span.className = 'char';
                 span.textContent = char;
+                // Stagger letter jumps by 0.08s
                 span.style.setProperty('--delay', `${index * 0.08}s`);
             }
             titleEl.appendChild(span);
@@ -375,7 +384,7 @@
 
         setInterval(rotateQuote, 6000);
 
-        // Web Audio Synthesizer with Sound Controls & Requested Volumes
+        // Web Audio Synthesizer with Sound Controls
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
         let bgMusicOsc = null;
@@ -386,14 +395,14 @@
             if (!audioCtx) {
                 audioCtx = new AudioContext();
                 
-                // Continuous Background Music (Volume: 0.06)
+                // Subtle Ambient Background Drone
                 bgMusicOsc = audioCtx.createOscillator();
                 bgMusicGain = audioCtx.createGain();
 
                 bgMusicOsc.type = 'sine';
                 bgMusicOsc.frequency.setValueAtTime(110, audioCtx.currentTime);
 
-                bgMusicGain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                bgMusicGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
 
                 bgMusicOsc.connect(bgMusicGain);
                 bgMusicGain.connect(audioCtx.destination);
@@ -408,7 +417,7 @@
             initAudio();
             const btn = document.getElementById('audioBtn');
             if (isMuted) {
-                bgMusicGain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                bgMusicGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
                 btn.innerHTML = "🔊 Sound ON";
                 isMuted = false;
             } else {
@@ -418,7 +427,7 @@
             }
         }
 
-        function playSound(freq = 520, targetVolume = 0.05) {
+        function playFuturisticSound(freq = 520) {
             if (isMuted) return;
             initAudio();
 
@@ -427,10 +436,10 @@
 
             osc.type = 'sine';
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(freq * 1.5, audioCtx.currentTime + 0.12);
+            osc.frequency.exponentialRampToValueAtTime(freq * 1.8, audioCtx.currentTime + 0.12);
 
-            gain.gain.setValueAtTime(targetVolume, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+            gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
@@ -451,29 +460,8 @@
 
             spawnInteraction(centerX, centerY);
             spawnEduItems(centerX, centerY);
-            
-            // Title Tap Sound Volume: 0.05
-            playSound(1200, 0.05);
+            playFuturisticSound(1200);
         }
-
-        function triggerCardEffect(e, soundFreq) {
-            e.stopPropagation();
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = rect.left + rect.width / 2;
-            const y = rect.top + rect.height / 2;
-            spawnInteraction(x, y);
-            
-            // Card Tap Sound Volume: 0.05
-            playSound(soundFreq, 0.05);
-        }
-
-        window.addEventListener('click', (e) => {
-            if (e.target.id === 'audioBtn') return;
-            spawnInteraction(e.clientX, e.clientY);
-            
-            // Background Tap Sound Volume: 0.05
-            playSound(480, 0.05);
-        });
 
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
@@ -499,7 +487,6 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Canvas Particle Background
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -681,6 +668,21 @@
             });
 
             requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target.id === 'audioBtn') return;
+            spawnInteraction(e.clientX, e.clientY);
+            playFuturisticSound(480);
+        });
+
+        function triggerCardEffect(e, soundFreq) {
+            e.stopPropagation();
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            spawnInteraction(x, y);
+            playFuturisticSound(soundFreq);
         }
 
         resizeCanvas();
