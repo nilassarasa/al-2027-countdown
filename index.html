@@ -23,7 +23,6 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            perspective: 1000px;
         }
 
         canvas {
@@ -35,50 +34,35 @@
             z-index: 1;
         }
 
-        /* Fixed Unmute Button at Bottom Right Corner */
-        .audio-wrapper {
-            position: fixed !important;
-            bottom: 25px !important;
-            right: 25px !important;
-            z-index: 999999 !important;
-            width: 130px;
-            height: 42px;
-            border-radius: 30px;
-            padding: 3px;
-            background: conic-gradient(from 0deg, #00f0ff, #d946ef, #ff007f, #00f0ff);
-            animation: spinRing 1s linear infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
-            cursor: pointer;
-        }
-
-        @keyframes spinRing {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        /* Bottom Right Unmute Control */
         .audio-control {
-            width: 100%;
-            height: 100%;
-            background: #0d0c1c;
-            border: none;
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            background: rgba(13, 12, 28, 0.85);
+            border: 2px solid #00f0ff;
             color: #00f0ff;
-            border-radius: 27px;
-            font-size: 0.85rem;
-            font-weight: 800;
+            padding: 12px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
             cursor: pointer;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 5px;
-            animation: unspinText 1s linear infinite;
+            gap: 8px;
+            transition: transform 0.2s ease;
         }
 
-        @keyframes unspinText {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(-360deg); }
+        .audio-control.bouncing {
+            animation: bouncePulse 1.2s infinite ease-in-out;
+        }
+
+        @keyframes bouncePulse {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-12px) scale(1.05); box-shadow: 0 0 25px rgba(0, 240, 255, 0.8); }
         }
 
         .container {
@@ -93,6 +77,7 @@
             align-items: center;
         }
 
+        /* Title Container - Animates full-title glitch & smooth horizontal shake */
         .title-line {
             display: flex;
             justify-content: center;
@@ -105,60 +90,95 @@
             letter-spacing: 2px;
             width: 100%;
             position: relative;
-            transform-style: preserve-3d;
-            animation: fullTitleGlitchShake 3s ease-in-out infinite;
-        }
-
-        .title-line.title-spin-jump {
-            animation: titleDoubleSpinJump 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
-        }
-
-        @keyframes titleDoubleSpinJump {
-            0% { transform: translateY(0) rotateY(0deg) scale(1); }
-            50% { transform: translateY(-40px) rotateY(360deg) scale(1.2); filter: drop-shadow(0 0 20px #00f0ff) drop-shadow(0 0 35px #d946ef); }
-            100% { transform: translateY(0) rotateY(720deg) scale(1); }
+            animation: fullTitleGlitchShake 8s ease-in-out infinite;
         }
 
         .title-line .space {
             width: 0.4em;
         }
 
+        /* Individual Letters - Sequential Wave Jump */
         .title-line .char {
             display: inline-block;
             color: #ffffff;
-            animation: letterJumpWave 3s ease-in-out infinite;
+            animation: letterJumpWave 8s ease-in-out infinite;
             animation-delay: var(--delay);
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
         }
 
+        /* 1. Letter Wave Jump Sequence */
         @keyframes letterJumpWave {
             0% {
                 transform: translateY(0) scale(1);
                 color: #ffffff;
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
             }
             8% {
-                transform: translateY(-16px) scale(1.15);
-                color: #00f0ff;
-                text-shadow: 0 0 12px #00f0ff, 0 0 24px #00f0ff;
+                transform: translateY(-22px) scale(1.15);
+                color: #00f0ff; /* Light Blue Glow */
+                text-shadow: 
+                    0 0 12px #00f0ff,
+                    0 0 24px #ff007f, /* Pinky-Purple Glow */
+                    0 0 36px #a855f7;
             }
-            16% {
-                transform: translateY(-5px) scale(1.08);
-                color: #d946ef;
-                text-shadow: 0 0 14px #d946ef, 0 0 28px #d946ef;
-            }
-            24%, 100% {
+            16%, 100% {
                 transform: translateY(0) scale(1);
                 color: #ffffff;
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
             }
         }
 
+        /* 2. Full Title Glitch & Smooth Shake (No text slicing bugs) */
         @keyframes fullTitleGlitchShake {
-            0%, 70% { transform: translate(0, 0) skewX(0deg); filter: none; }
-            72% { transform: translate(-5px, 1px) skewX(-3deg); filter: drop-shadow(-4px 0 #00f0ff) drop-shadow(4px 0 #d946ef); }
-            75% { transform: translate(5px, -1px) skewX(3deg); filter: drop-shadow(4px 0 #d946ef) drop-shadow(-4px 0 #00f0ff); }
-            78%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; }
+            0%, 60% {
+                transform: translate(0, 0) skewX(0deg);
+                filter: none;
+            }
+
+            /* Glitch Burst 1: Cyan/Pink Shift & Shake Left */
+            61% {
+                transform: translate(-8px, 1px) skewX(-4deg);
+                filter: drop-shadow(-5px 0 #00f0ff) drop-shadow(5px 0 #ff007f);
+            }
+
+            /* Glitch Burst 2: Purple/Cyan Shift & Shake Right */
+            63% {
+                transform: translate(8px, -2px) skewX(5deg);
+                filter: drop-shadow(6px 0 #a855f7) drop-shadow(-6px 0 #00f0ff);
+            }
+
+            /* Smooth Vibration Shake 1 */
+            65% {
+                transform: translate(-4px, 1px) skewX(-2deg);
+                filter: drop-shadow(-4px 0 #ff007f) drop-shadow(4px 0 #00f0ff);
+            }
+
+            /* Smooth Vibration Shake 2 */
+            67% {
+                transform: translate(5px, -1px) skewX(3deg);
+                filter: drop-shadow(4px 0 #00f0ff) drop-shadow(-4px 0 #a855f7);
+            }
+
+            /* Glitch Burst 3: Pink Shift & Shake Left */
+            69% {
+                transform: translate(-6px, 2px) skewX(-3deg);
+                filter: drop-shadow(-5px 0 #ff007f) drop-shadow(3px 0 #00f0ff);
+            }
+
+            /* Smooth Vibration Shake 3 */
+            71% {
+                transform: translate(3px, -1px) skewX(1deg);
+                filter: drop-shadow(3px 0 #00f0ff);
+            }
+
+            /* Clean Reset */
+            73%, 100% {
+                transform: translate(0, 0) skewX(0deg);
+                filter: none;
+            }
         }
 
+        /* Countdown Cards Layout */
         .countdown {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -167,7 +187,9 @@
         }
 
         @media (max-width: 600px) {
-            .countdown { grid-template-columns: repeat(2, 1fr); }
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .box {
@@ -179,13 +201,21 @@
             padding: 22px 8px;
             text-align: center;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
+        }
+
+        .box:active {
+            transform: scale(0.92);
+            border-color: #00f0ff;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
         }
 
         .number {
             font-size: clamp(2rem, 7.5vw, 3rem);
             font-weight: 800;
             color: #ffffff;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
             line-height: 1;
         }
 
@@ -198,6 +228,7 @@
             font-weight: 600;
         }
 
+        /* Quotes Styling */
         .quote-container {
             margin-top: 35px;
             min-height: 52px;
@@ -205,6 +236,7 @@
             justify-content: center;
             align-items: center;
             width: 100%;
+            padding: 0 10px;
         }
 
         .quote-text {
@@ -212,30 +244,52 @@
             font-size: clamp(0.75rem, 2.5vw, 0.95rem);
             font-weight: 700;
             text-align: center;
-            background: linear-gradient(90deg, #00f0ff, #a855f7, #d946ef, #00f0ff);
+            line-height: 1.4;
+            background: linear-gradient(90deg, #00f0ff, #a855f7, #ff007f, #00f0ff);
             background-size: 200% auto;
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: quoteShimmer 2s linear infinite;
+            animation: quoteShimmer 4s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5));
         }
 
         @keyframes quoteShimmer {
             0% { background-position: 0% center; }
             100% { background-position: 200% center; }
         }
+
+        .quote-text.glitch-out {
+            animation: quoteGlitchOut 0.4s forwards;
+        }
+
+        .quote-text.glitch-in {
+            animation: quoteGlitchIn 0.4s forwards, quoteShimmer 4s linear infinite;
+        }
+
+        @keyframes quoteGlitchOut {
+            0% { opacity: 1; transform: translate(0, 0) skewX(0deg); }
+            30% { opacity: 0.8; transform: translate(-5px, 2px) skewX(12deg); filter: drop-shadow(-4px 0 #ff007f) drop-shadow(4px 0 #00f0ff); }
+            60% { opacity: 0.4; transform: translate(5px, -2px) skewX(-12deg); filter: drop-shadow(4px 0 #00f0ff) drop-shadow(-4px 0 #a855f7); }
+            100% { opacity: 0; transform: translate(0, 0) skewX(0deg); }
+        }
+
+        @keyframes quoteGlitchIn {
+            0% { opacity: 0; transform: translate(0, 0) skewX(0deg); filter: drop-shadow(-4px 0 #00f0ff) drop-shadow(4px 0 #ff007f); }
+            40% { opacity: 0.6; transform: translate(4px, -2px) skewX(-10deg); }
+            80% { opacity: 0.9; transform: translate(-2px, 1px) skewX(5deg); }
+            100% { opacity: 1; transform: translate(0, 0) skewX(0deg); }
+        }
     </style>
 </head>
 <body>
 
-    <!-- UNMUTE BUTTON -->
-    <div class="audio-wrapper" id="audioWrapper" onclick="toggleAudio()">
-        <button class="audio-control" id="audioBtn">🔇 Unmute</button>
-    </div>
+    <button class="audio-control bouncing" id="audioBtn" onclick="toggleAudio()">🔇 Tap to Unmute</button>
 
     <canvas id="starfieldCanvas"></canvas>
 
     <div class="container">
+        <!-- Single Line Title Container -->
         <div class="title-line" id="titleLine" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</div>
 
         <div class="countdown">
@@ -263,6 +317,7 @@
     </div>
 
     <script>
+        // Split title into individual spans with incremental animation delays
         const titleEl = document.getElementById('titleLine');
         const titleText = titleEl.textContent;
         titleEl.textContent = '';
@@ -274,15 +329,53 @@
             } else {
                 span.className = 'char';
                 span.textContent = char;
-                span.style.setProperty('--delay', `${index * 0.04}s`);
+                span.style.setProperty('--delay', `${index * 0.08}s`);
             }
             titleEl.appendChild(span);
         });
 
-        // Online Audio source fallback thiyena audio setup එක
-        const bgAudio = new Audio("https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3");
-        bgAudio.loop = true;
-        bgAudio.volume = 0.5;
+        // Background Tracklist
+        const bgPlaylist = [
+            "YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a",
+            "YTDown.com_YouTube_NNX-LXSY-KONOSOO-No-Copyright-Thanks-NNX_Media_MOsQFsa6ZzI_005_48k.m4a",
+            "YTDown.com_YouTube_NNX-LXSY-HEMENESY-No-Copyright_Media_1fVQrSZV31k_005_48k.m4a",
+            "YTDown.com_YouTube_FULL-BASS-REMIX-Linkin-Park-In-The-End-N_Media_8YoHeuN0v0k_004_48k(1).m4a"
+        ];
+
+        let currentTrackIndex = Math.floor(Math.random() * bgPlaylist.length);
+        const bgAudio = new Audio();
+        bgAudio.volume = 0.06;
+
+        function loadTrack(index) {
+            bgAudio.src = bgPlaylist[index];
+            bgAudio.load();
+        }
+
+        bgAudio.addEventListener('ended', () => {
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * bgPlaylist.length);
+            } while (nextIndex === currentTrackIndex && bgPlaylist.length > 1);
+            currentTrackIndex = nextIndex;
+            loadTrack(currentTrackIndex);
+            bgAudio.play();
+        });
+
+        loadTrack(currentTrackIndex);
+
+        // Sound Effects (Volume: 0.05)
+        const soundBg = new Audio("bg.mp3");
+        const soundClick = new Audio("click.mp3");
+        const soundTitle = new Audio("title.mp3");
+
+        soundBg.volume = 0.05;
+        soundClick.volume = 0.05;
+        soundTitle.volume = 0.05;
+
+        function playFx(audioObj) {
+            audioObj.currentTime = 0;
+            audioObj.play().catch(() => {});
+        }
 
         let isPlaying = false;
 
@@ -291,46 +384,88 @@
             if (!isPlaying) {
                 bgAudio.play().then(() => {
                     isPlaying = true;
-                    btn.innerHTML = "🔊 Playing";
-                }).catch(err => {
-                    console.log("Audio Error: ", err);
-                    alert("Audio file failed to load! Click screen and try again.");
-                });
+                    btn.innerHTML = "🔊 Sound ON";
+                    btn.classList.remove('bouncing');
+                }).catch(err => console.log("Audio play blocked:", err));
             } else {
                 bgAudio.pause();
                 isPlaying = false;
-                btn.innerHTML = "🔇 Unmute";
+                btn.innerHTML = "🔇 Sound OFF";
+                btn.classList.add('bouncing');
             }
         }
 
         function triggerTitleAction(e) {
             e.stopPropagation();
-            titleEl.classList.remove('title-spin-jump');
-            void titleEl.offsetWidth;
-            titleEl.classList.add('title-spin-jump');
-            setTimeout(() => titleEl.classList.remove('title-spin-jump'), 400);
+            playFx(soundTitle);
+
+            const rect = titleEl.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            spawnInteraction(centerX, centerY);
+            spawnEduItems(centerX, centerY);
         }
 
         function triggerCardEffect(e) {
             e.stopPropagation();
+            playFx(soundClick);
+
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            spawnInteraction(x, y);
         }
 
+        window.addEventListener('click', (e) => {
+            if (e.target.id === 'audioBtn') return;
+            playFx(soundBg);
+            spawnInteraction(e.clientX, e.clientY);
+        });
+
+        // Quotes Array
         const quotes = [
-            "~ Time is an illusion ~ ⏳ ✨",
-            "~ Lost time is never found again ~ ⌛",
-            "~ The problem is, you think you have time ~ 👁️",
-            "~ Realize that now, in this moment, time stops for nothing ~ 🏃 ✨"
+            "~ Time is an illusion ~ ⏳ ✨ 🌌 Douglas Adams",
+            "~ Lost time is never found again ~ ⌛ 🪙 🔑 Benjamin Franklin",
+            "~ The problem is, you think you have time ~ 👁️ 🍃 Jack Kornfield",
+            "~ Time moves in one direction, memory in another ~ 🧠 🕯️ William Gibson",
+            "~ Time is the most valuable thing a man can spend ~ 💎 ⚖️ Theophrastus",
+            "~ Time flies over us, but leaves its shadow behind ~ 🕊️ ⛅ Nathaniel Hawthorne",
+            "~ Time is a storm in which we are all lost ~ ⛈️ 🌪️ William Carlos Williams",
+            "~ How did it get so late so soon? ~ 🌙 🦉 Dr. Seuss",
+            "~ Time is a dressmaker specializing in alterations ~ 🪡 🧵 Faith Baldwin",
+            "~ Time, which strengthens friendship, weakens love ~ 🤝 🥀 🖤 Jean de La Bruyère",
+            "~ Your time is limited, so don't waste it living someone else's life ~ 🚀 💡 🌟 Steve Jobs",
+            "~ They always say time changes things, but you actually have to change them yourself ~ ⚡ 🎨 Andy Warhol",
+            "~ Time is a created thing. To say 'I don't have time' is like saying 'I don't want to' ~ 🛠️ ☯️ Lao Tzu",
+            "~ The two most powerful warriors are patience and time ~ ⚔️ 🛡️ Leo Tolstoy",
+            "~ Better three hours too soon than a minute too late ~ ⏰ 🗝️ William Shakespeare",
+            "~ Time is what we want most, but what we use worst ~ ⏳ 🗑️ William Penn",
+            "~ The future is something which everyone reaches at the rate of sixty minutes an hour ~ 🚶 🧭 C.S. Lewis",
+            "~ Punctuality is the thief of time ~ 🕵️ 🎩 Oscar Wilde",
+            "~ Realize that now, in this moment, time is stopping for nothing ~ 📍 🏃 ✨ Steve Maraboli",
+            "~ Time slips away like sand through an hourglass ~ 🏖️ ⌛ 🌊 Traditional Proverb"
         ];
 
         let currentQuoteIndex = 0;
         const quoteDisplay = document.getElementById('quoteDisplay');
         quoteDisplay.textContent = quotes[currentQuoteIndex];
 
-        setInterval(() => {
-            currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
-            quoteDisplay.textContent = quotes[currentQuoteIndex];
-        }, 3000);
+        function rotateQuote() {
+            quoteDisplay.classList.remove('glitch-in');
+            quoteDisplay.classList.add('glitch-out');
 
+            setTimeout(() => {
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+                quoteDisplay.textContent = quotes[currentQuoteIndex];
+                quoteDisplay.classList.remove('glitch-out');
+                quoteDisplay.classList.add('glitch-in');
+            }, 400);
+        }
+
+        setInterval(rotateQuote, 6000);
+
+        // Countdown Timer Logic
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
         function updateCountdown() {
@@ -355,41 +490,190 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Canvas Stars Setup
+        // Canvas Particle Background
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
+
         let stars = [];
+        let effects = [];
+        const numStars = 180;
+        const speed = 0.8;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            initStars();
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        class Star {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = (Math.random() - 0.5) * canvas.width * 2;
+                this.y = (Math.random() - 0.5) * canvas.height * 2;
+                this.z = Math.random() * canvas.width;
+                this.color = ['#ff007f', '#a855f7', '#00f0ff', '#ffffff'][Math.floor(Math.random() * 4)];
+            }
+            update() {
+                this.z -= speed;
+                if (this.z <= 0) {
+                    this.reset();
+                    this.z = canvas.width;
+                }
+            }
+            draw() {
+                const k = 128 / this.z;
+                const px = this.x * k + canvas.width / 2;
+                const py = this.y * k + canvas.height / 2;
+
+                if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+                    const size = Math.max(0.1, (1 - this.z / canvas.width) * 2.5);
+                    const alpha = Math.min(1, (1 - this.z / canvas.width) * 1.2);
+
+                    ctx.save();
+                    ctx.globalAlpha = alpha;
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(px, py, size, 0, Math.PI * 2);
+                    ctx.shadowBlur = 6;
+                    ctx.shadowColor = this.color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+        }
+
+        function initStars() {
             stars = [];
-            for (let i = 0; i < 150; i++) {
-                stars.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: Math.random() * 2,
-                    speed: Math.random() * 0.5 + 0.2
-                });
+            for (let i = 0; i < numStars; i++) stars.push(new Star());
+        }
+
+        class Ring {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 5;
+                this.life = 1;
+                this.color = ['#00f0ff', '#ff007f', '#a855f7'][Math.floor(Math.random() * 3)];
+            }
+            update() {
+                this.radius += 3;
+                this.life -= 0.03;
+            }
+            draw() {
+                if (this.life <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        class Spark {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                const angle = Math.random() * Math.PI * 2;
+                const spd = Math.random() * 4 + 1.5;
+                this.vx = Math.cos(angle) * spd;
+                this.vy = Math.sin(angle) * spd;
+                this.size = Math.random() * 3 + 1;
+                this.color = ['#ff007f', '#a855f7', '#00f0ff', '#ffffff'][Math.floor(Math.random() * 4)];
+                this.life = 1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= 0.03;
+            }
+            draw() {
+                if (this.life <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class EduItem {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.8;
+                const speed = Math.random() * 7 + 5;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.gravity = 0.25;
+                this.items = ['🎓', '📚', '✏️', '💡', '📐', '📝', '🔬'];
+                this.symbol = this.items[Math.floor(Math.random() * this.items.length)];
+                this.size = Math.floor(Math.random() * 12) + 20;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.vRot = (Math.random() - 0.5) * 0.2;
+                this.life = 1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += this.gravity;
+                this.rotation += this.vRot;
+                this.life -= 0.015;
+            }
+            draw() {
+                if (this.life <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.life);
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.font = `${this.size}px sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.symbol, 0, 0);
+                ctx.restore();
+            }
+        }
+
+        function spawnInteraction(x, y) {
+            effects.push(new Ring(x, y));
+            for (let i = 0; i < 22; i++) {
+                effects.push(new Spark(x, y));
+            }
+        }
+
+        function spawnEduItems(x, y) {
+            for (let i = 0; i < 14; i++) {
+                effects.push(new EduItem(x, y));
             }
         }
 
         function animate() {
             ctx.fillStyle = '#020205';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#ffffff';
 
-            stars.forEach(s => {
-                s.y += s.speed;
-                if (s.y > canvas.height) s.y = 0;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                ctx.fill();
+            stars.forEach(star => {
+                star.update();
+                star.draw();
             });
+
+            effects.forEach((e, index) => {
+                e.update();
+                e.draw();
+                if (e.life <= 0) effects.splice(index, 1);
+            });
+
             requestAnimationFrame(animate);
         }
 
-        window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
         animate();
     </script>
