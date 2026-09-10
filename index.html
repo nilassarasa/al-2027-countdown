@@ -72,7 +72,7 @@
             width: 0.35em;
         }
 
-        /* Glitch Slice 1 (Cyan Overlay) - Fires during Glitch Phase (50%-70%) */
+        /* Glitch Slice 1 (Cyan Overlay) */
         h1::before {
             content: attr(data-text);
             position: absolute;
@@ -88,7 +88,7 @@
             pointer-events: none;
         }
 
-        /* Glitch Slice 2 (Magenta Overlay) - Fires during Glitch Phase (50%-70%) */
+        /* Glitch Slice 2 (Magenta Overlay) */
         h1::after {
             content: attr(data-text);
             position: absolute;
@@ -104,9 +104,8 @@
             pointer-events: none;
         }
 
-        /* Keyframes for Jump Wave + Multicolor + Light Blue Glow + Pauses */
+        /* Keyframes for Jump Wave + Light Blue Glow */
         @keyframes combinedCycle {
-            /* 1. Jumping Letters Wave with Multi-Color & Light Blue Glow (0% - 35%) */
             0% {
                 transform: translateY(0);
                 color: #ffffff;
@@ -114,28 +113,22 @@
             }
             10% {
                 transform: translateY(-18px);
-                color: #00f0ff; /* Vibrant light blue header highlight */
-                text-shadow: 0 0 15px #00f0ff, 0 0 25px #00f0ff, 0 0 35px #3b82f6; /* Bright Light Blue Effect */
+                color: #00f0ff;
+                text-shadow: 0 0 15px #00f0ff, 0 0 25px #00f0ff, 0 0 35px #3b82f6;
             }
             20% {
                 transform: translateY(0);
                 color: #a855f7;
                 text-shadow: 0 0 12px #ff007f;
             }
-
-            /* 2. Break / Pause (35% - 50%) */
             35%, 50% {
                 transform: translateY(0);
                 color: #ffffff;
                 text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
             }
-
-            /* 3. Base behavior during Glitch Phase (50% - 70%) */
             50.1%, 70% {
                 color: #ffffff;
             }
-
-            /* 4. Final Break before repeat (70% - 100%) */
             70.1%, 100% {
                 transform: translateY(0);
                 color: #ffffff;
@@ -143,7 +136,7 @@
             }
         }
 
-        /* Glitch Layer Keyframes - Cyan Slice (50% - 70%) */
+        /* Glitch Layer Keyframes - Cyan Slice */
         @keyframes glitchCyan {
             0%, 50%, 70.1%, 100% {
                 opacity: 0;
@@ -174,7 +167,7 @@
             }
         }
 
-        /* Glitch Layer Keyframes - Magenta Slice (50% - 70%) */
+        /* Glitch Layer Keyframes - Magenta Slice */
         @keyframes glitchMagenta {
             0%, 50%, 70.1%, 100% {
                 opacity: 0;
@@ -274,19 +267,19 @@
     <div class="container">
         <h1 id="title" data-text="2027 A/L COUNTDOWN" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</h1>
         <div class="countdown">
-            <div class="box" onclick="triggerCardEffect(event, 600)">
+            <div class="box" onclick="triggerCardEffect(event)">
                 <div class="number" id="days">00</div>
                 <div class="label">Days</div>
             </div>
-            <div class="box" onclick="triggerCardEffect(event, 750)">
+            <div class="box" onclick="triggerCardEffect(event)">
                 <div class="number" id="hours">00</div>
                 <div class="label">Hours</div>
             </div>
-            <div class="box" onclick="triggerCardEffect(event, 900)">
+            <div class="box" onclick="triggerCardEffect(event)">
                 <div class="number" id="minutes">00</div>
                 <div class="label">Minutes</div>
             </div>
-            <div class="box" onclick="triggerCardEffect(event, 1050)">
+            <div class="box" onclick="triggerCardEffect(event)">
                 <div class="number" id="seconds">00</div>
                 <div class="label">Seconds</div>
             </div>
@@ -294,6 +287,17 @@
     </div>
 
     <script>
+        // Preload custom MP3 audio file
+        // Make sure your MP3 file is named 'click.mp3' and placed in the same folder as this HTML file
+        const customSound = new Audio('click.mp3');
+
+        function playCustomSound() {
+            customSound.currentTime = 0; // Rewinds audio so rapid consecutive taps play instantly
+            customSound.play().catch(e => {
+                console.log("Audio play allowed on user interaction");
+            });
+        }
+
         // Wrap Title Characters into Spans safely
         const titleEl = document.getElementById('title');
         const text = titleEl.textContent;
@@ -306,35 +310,10 @@
             } else {
                 span.className = 'char';
                 span.textContent = char;
-                // Delay letter jumps by 0.08s
                 span.style.setProperty('--delay', `${index * 0.08}s`);
             }
             titleEl.appendChild(span);
         });
-
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx = null;
-
-        function playFuturisticSound(freq = 520) {
-            if (!audioCtx) audioCtx = new AudioContext();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(freq * 1.8, audioCtx.currentTime + 0.12);
-
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.12);
-        }
 
         function triggerTitleAction(e) {
             e.stopPropagation();
@@ -348,7 +327,7 @@
 
             spawnInteraction(centerX, centerY);
             spawnEduItems(centerX, centerY);
-            playFuturisticSound(1200);
+            playCustomSound();
         }
 
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
@@ -560,16 +539,16 @@
 
         window.addEventListener('click', (e) => {
             spawnInteraction(e.clientX, e.clientY);
-            playFuturisticSound(480);
+            playCustomSound();
         });
 
-        function triggerCardEffect(e, soundFreq) {
+        function triggerCardEffect(e) {
             e.stopPropagation();
             const rect = e.currentTarget.getBoundingClientRect();
             const x = rect.left + rect.width / 2;
             const y = rect.top + rect.height / 2;
             spawnInteraction(x, y);
-            playFuturisticSound(soundFreq);
+            playCustomSound();
         }
 
         resizeCanvas();
