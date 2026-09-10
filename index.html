@@ -43,75 +43,113 @@
             padding: 10px;
         }
 
-        /* Title Main Setup */
+        /* Pure CSS Cyberpunk Glitch Title */
         h1 {
-            font-size: clamp(1.2rem, 4.2vw, 2.2rem);
+            font-size: clamp(1.4rem, 4.5vw, 2.2rem);
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 30px;
             text-align: center;
-            display: block;
-            width: 100%;
+            display: inline-block;
+            position: relative;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
             cursor: pointer;
-            white-space: nowrap;
         }
 
-        /* Letters Styling & Animation */
-        h1 .char {
-            display: inline-block;
-            color: #e0e7ff;
-            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 20px rgba(0, 240, 255, 0.5);
-            animation: waveGlitchSequence 9s ease-in-out infinite;
-            animation-delay: var(--delay);
+        /* Glitch Layer 1 (Cyan Channel) */
+        h1::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: #00f0ff;
+            background: #020205;
+            clip-path: inset(0 0 0 0);
+            opacity: 0;
+            animation: glitchCyan 6s infinite;
         }
 
-        /* Mobile Space Element */
-        h1 .space {
-            display: inline-block;
-            width: 0.35em;
+        /* Glitch Layer 2 (Magenta/Pink Channel) */
+        h1::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: #ff007f;
+            background: #020205;
+            clip-path: inset(0 0 0 0);
+            opacity: 0;
+            animation: glitchMagenta 6s infinite;
         }
 
-        /* 9-Second Loop: Jump -> Pause -> Soft Glitch -> Pause */
-        @keyframes waveGlitchSequence {
-            /* Phase 1: Letter Jump Wave (0% - 35%) */
-            0% { transform: translateY(0); }
-            10% { transform: translateY(-16px); color: #00f0ff; text-shadow: 0 0 15px #00f0ff; }
-            20% { transform: translateY(0); color: #e0e7ff; }
-
-            /* Phase 2: First Pause (35% - 50%) */
-            35%, 50% {
-                transform: translateY(0) skewX(0deg);
-                color: #e0e7ff;
-                text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+        /* Cyan Layer Slice Keyframes */
+        @keyframes glitchCyan {
+            0%, 50%, 100% {
+                opacity: 0;
+                transform: translate(0);
             }
-
-            /* Phase 3: Smooth Wavy Soft Glitch (50% - 70%) */
-            53% {
-                transform: translateY(-2px) skewX(-2deg);
-                text-shadow: -3px 0 #00f0ff, 3px 0 #ff007f;
+            52% {
+                opacity: 0.9;
+                transform: translate(-3px, -2px);
+                clip-path: inset(20% 0 60% 0);
+            }
+            54% {
+                opacity: 0.9;
+                transform: translate(2px, 1px);
+                clip-path: inset(50% 0 20% 0);
+            }
+            56% {
+                opacity: 0.9;
+                transform: translate(-2px, 2px);
+                clip-path: inset(10% 0 75% 0);
             }
             58% {
-                transform: translateY(2px) skewX(2deg);
-                text-shadow: 3px 0 #00f0ff, -3px 0 #ff007f;
+                opacity: 0.9;
+                transform: translate(3px, -1px);
+                clip-path: inset(70% 0 10% 0);
             }
-            63% {
-                transform: translateY(-1px) skewX(-1deg);
-                text-shadow: -2px 1px #a855f7;
-            }
-            68% {
-                transform: translateY(1px) skewX(1deg);
-                text-shadow: 2px -1px #00f0ff;
-            }
-
-            /* Phase 4: Final Pause before restarting (70% - 100%) */
-            70%, 100% {
-                transform: translateY(0) skewX(0deg);
-                color: #e0e7ff;
-                text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+            60% {
+                opacity: 0;
             }
         }
 
-        /* Title Spin Action on Click */
+        /* Magenta Layer Slice Keyframes */
+        @keyframes glitchMagenta {
+            0%, 50%, 100% {
+                opacity: 0;
+                transform: translate(0);
+            }
+            52% {
+                opacity: 0.9;
+                transform: translate(3px, 1px);
+                clip-path: inset(60% 0 15% 0);
+            }
+            54% {
+                opacity: 0.9;
+                transform: translate(-2px, -2px);
+                clip-path: inset(15% 0 65% 0);
+            }
+            56% {
+                opacity: 0.9;
+                transform: translate(2px, -1px);
+                clip-path: inset(80% 0 5% 0);
+            }
+            58% {
+                opacity: 0.9;
+                transform: translate(-3px, 2px);
+                clip-path: inset(5% 0 85% 0);
+            }
+            60% {
+                opacity: 0;
+            }
+        }
+
+        /* Click Jump/Spin Effect */
         h1.jump-spin-effect {
             animation: titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -178,7 +216,7 @@
     <canvas id="starfieldCanvas"></canvas>
 
     <div class="container">
-        <h1 id="title" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</h1>
+        <h1 id="title" data-text="2027 A/L COUNTDOWN" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</h1>
         <div class="countdown">
             <div class="box" onclick="triggerCardEffect(event, 600)">
                 <div class="number" id="days">00</div>
@@ -200,23 +238,7 @@
     </div>
 
     <script>
-        // Safely wrap text in letter spans
         const titleEl = document.getElementById('title');
-        const text = titleEl.textContent;
-        titleEl.textContent = '';
-
-        text.split('').forEach((char, index) => {
-            const span = document.createElement('span');
-            if (char === ' ') {
-                span.className = 'space';
-            } else {
-                span.className = 'char';
-                span.textContent = char;
-                // Delay each character's jump wave
-                span.style.setProperty('--delay', `${index * 0.08}s`);
-            }
-            titleEl.appendChild(span);
-        });
 
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
