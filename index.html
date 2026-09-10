@@ -34,7 +34,7 @@
             z-index: 1;
         }
 
-        /* Bottom Right Unmute/Mute Toggle Control with Bouncing Effect */
+        /* Bottom Right Unmute/Mute Toggle Control */
         .audio-control {
             position: fixed;
             bottom: 24px;
@@ -82,7 +82,7 @@
             align-items: center;
         }
 
-        /* Responsive Title Layout */
+        /* Title Layout & Keyframe Logic */
         h1 {
             font-size: clamp(1.3rem, 4.5vw, 2.2rem);
             font-weight: 900;
@@ -95,20 +95,19 @@
             align-items: center;
             width: 100%;
             color: #ffffff;
-            background: linear-gradient(90deg, #ff007f, #a855f7, #00f0ff, #3b82f6, #ff007f);
-            background-size: 300% 300%;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: rainbowShift 6s linear infinite;
-            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             cursor: pointer;
         }
 
         h1 .char {
             display: inline-block;
-            animation: combinedSequence 9s ease-in-out infinite;
+            background: linear-gradient(90deg, #a855f7, #00f0ff, #ffffff, #00f0ff, #a855f7);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: lightBlueSweep 3s linear infinite, continuousTitleSequence 8s ease-in-out infinite;
             animation-delay: var(--delay);
+            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
         }
 
         h1 .space {
@@ -116,52 +115,68 @@
             width: 0.35em;
         }
 
-        @keyframes combinedSequence {
-            0% { transform: translateY(0) skewX(0deg); filter: none; }
-            8% { transform: translateY(-16px) skewX(0deg); }
-            16% { transform: translateY(0) skewX(0deg); }
-            
-            35%, 50% { 
+        /* Moving Light Blue Color Sweep Effect */
+        @keyframes lightBlueSweep {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* Sequenced Animation: Wave Jump -> Hold -> Glitch -> Loop */
+        @keyframes continuousTitleSequence {
+            /* 1. Jumping Wave Effect (0% to 25%) */
+            0% {
                 transform: translateY(0) skewX(0deg);
-                filter: none;
+                filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
+            }
+            10% {
+                transform: translateY(-18px) scale(1.1);
+                filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.9));
+            }
+            20% {
+                transform: translateY(0) scale(1);
+                filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
             }
 
-            53% {
-                transform: translateY(-3px) skewX(-3deg);
-                filter: drop-shadow(-3px 0 #00f0ff);
+            /* 2. Pause / Hold State (25% to 55%) */
+            25%, 55% {
+                transform: translateY(0) skewX(0deg);
+                filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
             }
-            58% {
-                transform: translateY(3px) skewX(3deg);
-                filter: drop-shadow(3px 0 #ff007f);
+
+            /* 3. Glitch Phase (56% to 70%) */
+            56% {
+                transform: translateY(-3px) skewX(-12deg);
+                filter: drop-shadow(-4px 0 #00f0ff) drop-shadow(4px 0 #ff007f);
             }
-            63% {
-                transform: translateY(-2px) skewX(-2deg);
-                filter: drop-shadow(-2px 1px #a855f7);
+            60% {
+                transform: translateY(3px) skewX(12deg);
+                filter: drop-shadow(4px 0 #ff007f) drop-shadow(-4px 0 #00f0ff);
+            }
+            64% {
+                transform: translateY(-2px) skewX(-8deg);
+                filter: drop-shadow(-3px 0 #a855f7);
             }
             68% {
-                transform: translateY(1px) skewX(1deg);
+                transform: translateY(1px) skewX(4deg);
                 filter: drop-shadow(2px 0 #00f0ff);
             }
 
-            70%, 100% {
+            /* 4. Reset Back to Normal (71% to 100%) */
+            71%, 100% {
                 transform: translateY(0) skewX(0deg);
-                filter: none;
+                filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
             }
         }
 
-        h1.jump-spin-effect {
-            animation: rainbowShift 4s linear infinite, titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* Touch Jump-Spin Effect */
+        h1.jump-spin-effect .char {
+            animation: titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @keyframes titleJumpSpin {
             0% { transform: translateY(0) rotateY(0deg) scale(1); }
             40% { transform: translateY(-35px) rotateY(180deg) scale(1.2); }
             100% { transform: translateY(0) rotateY(360deg) scale(1); }
-        }
-
-        @keyframes rainbowShift {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 300% 50%; }
         }
 
         /* Countdown Cards Layout */
@@ -214,7 +229,7 @@
             font-weight: 600;
         }
 
-        /* Quotes with Animated Shimmer Gradient */
+        /* Quotes Styling */
         .quote-container {
             margin-top: 35px;
             min-height: 52px;
@@ -302,7 +317,7 @@
     </div>
 
     <script>
-        // Restored Title Letter Spanning Logic
+        // Title Letter Spanning with Delays
         const titleEl = document.getElementById('title');
         const text = titleEl.textContent;
         titleEl.textContent = '';
@@ -319,7 +334,7 @@
             titleEl.appendChild(span);
         });
 
-        // Background Tracklist (Random initial selection & auto-looping next track)
+        // Background Tracklist
         const bgPlaylist = [
             "YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a",
             "YTDown.com_YouTube_NNX-LXSY-KONOSOO-No-Copyright-Thanks-NNX_Media_MOsQFsa6ZzI_005_48k.m4a",
@@ -336,7 +351,6 @@
             bgAudio.load();
         }
 
-        // Play next random track on song completion
         bgAudio.addEventListener('ended', () => {
             let nextIndex;
             do {
@@ -349,7 +363,7 @@
 
         loadTrack(currentTrackIndex);
 
-        // Audio Effects setup (Volume: 0.05)
+        // Sound Effects (Volume: 0.05)
         const soundBg = new Audio("bg.mp3");
         const soundClick = new Audio("click.mp3");
         const soundTitle = new Audio("title.mp3");
@@ -381,7 +395,6 @@
             }
         }
 
-        // Interaction Handlers with sound effects
         function triggerTitleAction(e) {
             e.stopPropagation();
             playFx(soundTitle);
@@ -414,7 +427,7 @@
             spawnInteraction(e.clientX, e.clientY);
         });
 
-        // Quotes System
+        // Quotes Array
         const quotes = [
             "~ Time is an illusion ~ ⏳ ✨ 🌌 Douglas Adams",
             "~ Lost time is never found again ~ ⌛ 🪙 🔑 Benjamin Franklin",
@@ -481,7 +494,7 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Canvas Particle & Spark Background
+        // Canvas Starfield & Particle Background
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
