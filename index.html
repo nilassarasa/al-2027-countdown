@@ -41,172 +41,90 @@
             max-width: 760px;
             text-align: center;
             padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Title Outer Box Setup */
+        /* Title Container Setup */
         h1 {
-            font-size: clamp(1.2rem, 4.2vw, 2.2rem);
+            font-size: clamp(1.3rem, 4.5vw, 2.2rem);
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 30px;
             text-align: center;
-            display: inline-block;
-            position: relative;
+            display: block;
+            width: 100%;
+            color: #ffffff;
+            background: linear-gradient(90deg, #ff007f, #a855f7, #00f0ff, #3b82f6, #ff007f);
+            background-size: 300% 300%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbowShift 6s linear infinite;
+            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
             cursor: pointer;
             white-space: nowrap;
-            line-height: 1.4;
         }
 
-        /* Individual Spanned Characters for Wave Jump */
+        /* Individual Title Letters */
         h1 .char {
             display: inline-block;
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
-            animation: combinedCycle 8s ease-in-out infinite;
+            animation: combinedSequence 9s ease-in-out infinite;
             animation-delay: var(--delay);
         }
 
-        /* Spaces Fix for Mobile WebKit */
         h1 .space {
             display: inline-block;
             width: 0.35em;
         }
 
-        /* Glitch Slice 1 (Cyan Overlay) */
-        h1::before {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            color: #00f0ff;
-            background: #020205;
-            clip-path: inset(0 0 0 0);
-            opacity: 0;
-            animation: glitchCyan 8s infinite;
-            pointer-events: none;
-        }
+        @keyframes combinedSequence {
+            0% { transform: translateY(0) skewX(0deg); filter: none; }
+            8% { transform: translateY(-16px) skewX(0deg); }
+            16% { transform: translateY(0) skewX(0deg); }
+            
+            35%, 50% { 
+                transform: translateY(0) skewX(0deg);
+                filter: none;
+            }
 
-        /* Glitch Slice 2 (Magenta Overlay) */
-        h1::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            color: #ff007f;
-            background: #020205;
-            clip-path: inset(0 0 0 0);
-            opacity: 0;
-            animation: glitchMagenta 8s infinite;
-            pointer-events: none;
-        }
-
-        /* Keyframes for Jump Wave + Light Blue Glow */
-        @keyframes combinedCycle {
-            0% {
-                transform: translateY(0);
-                color: #ffffff;
-                text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
-            }
-            10% {
-                transform: translateY(-18px);
-                color: #00f0ff;
-                text-shadow: 0 0 15px #00f0ff, 0 0 25px #00f0ff, 0 0 35px #3b82f6;
-            }
-            20% {
-                transform: translateY(0);
-                color: #a855f7;
-                text-shadow: 0 0 12px #ff007f;
-            }
-            35%, 50% {
-                transform: translateY(0);
-                color: #ffffff;
-                text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
-            }
-            50.1%, 70% {
-                color: #ffffff;
-            }
-            70.1%, 100% {
-                transform: translateY(0);
-                color: #ffffff;
-                text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
-            }
-        }
-
-        /* Glitch Layer Keyframes - Cyan Slice */
-        @keyframes glitchCyan {
-            0%, 50%, 70.1%, 100% {
-                opacity: 0;
-                transform: translate(0);
-            }
-            52% {
-                opacity: 0.95;
-                transform: translate(-3px, -2px);
-                clip-path: inset(20% 0 60% 0);
-            }
-            55% {
-                opacity: 0.95;
-                transform: translate(2px, 1px);
-                clip-path: inset(50% 0 20% 0);
+            53% {
+                transform: translateY(-3px) skewX(-3deg);
+                filter: drop-shadow(-3px 0 #00f0ff);
             }
             58% {
-                opacity: 0.95;
-                transform: translate(-2px, 2px);
-                clip-path: inset(10% 0 75% 0);
+                transform: translateY(3px) skewX(3deg);
+                filter: drop-shadow(3px 0 #ff007f);
             }
-            62% {
-                opacity: 0.95;
-                transform: translate(3px, -1px);
-                clip-path: inset(70% 0 10% 0);
+            63% {
+                transform: translateY(-2px) skewX(-2deg);
+                filter: drop-shadow(-2px 1px #a855f7);
             }
-            65% {
-                opacity: 0;
+            68% {
+                transform: translateY(1px) skewX(1deg);
+                filter: drop-shadow(2px 0 #00f0ff);
+            }
+
+            70%, 100% {
+                transform: translateY(0) skewX(0deg);
+                filter: none;
             }
         }
 
-        /* Glitch Layer Keyframes - Magenta Slice */
-        @keyframes glitchMagenta {
-            0%, 50%, 70.1%, 100% {
-                opacity: 0;
-                transform: translate(0);
-            }
-            52% {
-                opacity: 0.95;
-                transform: translate(3px, 1px);
-                clip-path: inset(60% 0 15% 0);
-            }
-            55% {
-                opacity: 0.95;
-                transform: translate(-2px, -2px);
-                clip-path: inset(15% 0 65% 0);
-            }
-            58% {
-                opacity: 0.95;
-                transform: translate(2px, -1px);
-                clip-path: inset(80% 0 5% 0);
-            }
-            62% {
-                opacity: 0.95;
-                transform: translate(-3px, 2px);
-                clip-path: inset(5% 0 85% 0);
-            }
-            65% {
-                opacity: 0;
-            }
-        }
-
-        /* Manual Spin Effect on User Click */
         h1.jump-spin-effect {
-            animation: titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: rainbowShift 4s linear infinite, titleJumpSpin 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @keyframes titleJumpSpin {
             0% { transform: translateY(0) rotateY(0deg) scale(1); }
-            40% { transform: translateY(-30px) rotateY(180deg) scale(1.15); }
+            40% { transform: translateY(-35px) rotateY(180deg) scale(1.2); }
             100% { transform: translateY(0) rotateY(360deg) scale(1); }
+        }
+
+        @keyframes rainbowShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
         }
 
         /* Countdown Grid Setup */
@@ -259,40 +177,86 @@
             font-weight: 600;
         }
 
-        /* Bottom-Right Floating Mute/Audio Button with Jumping Animation */
-        #audioToggleBtn {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            z-index: 1000;
-            background: rgba(13, 12, 28, 0.85);
-            backdrop-filter: blur(12px);
-            border: 2px solid #a855f7;
-            color: #ffffff;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
+        /* Gold Glowing Glitch Quote Container */
+        .quote-container {
+            margin-top: 35px;
+            min-height: 48px;
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.5);
-            font-size: 1.4rem;
-            transition: transform 0.2s ease, background 0.3s ease;
+            width: 100%;
+            padding: 0 10px;
         }
 
-        /* Continuous Jumping Animation until unmuted */
-        .jumping-icon {
-            animation: iconJump 0.8s ease-in-out infinite;
+        .quote-text {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: clamp(0.75rem, 2.5vw, 0.95rem);
+            font-weight: 700;
+            color: #ffd700;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 18px rgba(212, 175, 55, 0.6);
+            opacity: 1;
+            transition: opacity 0.3s ease;
         }
 
-        @keyframes iconJump {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); box-shadow: 0 12px 25px rgba(0, 240, 255, 0.8); border-color: #00f0ff; }
+        /* Transition Animations for Quote Changes */
+        .quote-text.glitch-out {
+            animation: quoteGlitchOut 0.4s forwards;
         }
 
-        #audioToggleBtn:hover {
-            transform: scale(1.1);
+        .quote-text.glitch-in {
+            animation: quoteGlitchIn 0.4s forwards;
+        }
+
+        @keyframes quoteGlitchOut {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) skewX(0deg);
+                filter: drop-shadow(0 0 8px #ffd700);
+            }
+            25% {
+                opacity: 0.8;
+                transform: translate(-4px, 2px) skewX(10deg);
+                filter: drop-shadow(-4px 0 #ff007f) drop-shadow(4px 0 #00f0ff);
+            }
+            50% {
+                opacity: 0.5;
+                transform: translate(4px, -2px) skewX(-10deg);
+                filter: drop-shadow(4px 0 #00f0ff) drop-shadow(-4px 0 #ffd700);
+            }
+            75% {
+                opacity: 0.2;
+                transform: translate(-2px, 1px) skewX(5deg);
+                filter: drop-shadow(-2px 0 #a855f7);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(0, 0) skewX(0deg);
+                filter: none;
+            }
+        }
+
+        @keyframes quoteGlitchIn {
+            0% {
+                opacity: 0;
+                transform: translate(0, 0) skewX(0deg);
+                filter: drop-shadow(-4px 0 #00f0ff) drop-shadow(4px 0 #ff007f);
+            }
+            30% {
+                opacity: 0.5;
+                transform: translate(3px, -2px) skewX(-8deg);
+                filter: drop-shadow(3px 0 #ffd700);
+            }
+            60% {
+                opacity: 0.8;
+                transform: translate(-3px, 1px) skewX(6deg);
+                filter: drop-shadow(-3px 0 #00f0ff);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(0, 0) skewX(0deg);
+                filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+            }
         }
     </style>
 </head>
@@ -300,105 +264,34 @@
 
     <canvas id="starfieldCanvas"></canvas>
 
-    <!-- Floating Mute/Unmute Button -->
-    <div id="audioToggleBtn" class="jumping-icon" onclick="toggleAudio()" title="Click to Unmute Music">🔇</div>
-
     <div class="container">
-        <h1 id="title" data-text="2027 A/L COUNTDOWN" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</h1>
+        <h1 id="title" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</h1>
         <div class="countdown">
-            <div class="box" onclick="triggerCardEffect(event)">
+            <div class="box" onclick="triggerCardEffect(event, 600)">
                 <div class="number" id="days">00</div>
                 <div class="label">Days</div>
             </div>
-            <div class="box" onclick="triggerCardEffect(event)">
+            <div class="box" onclick="triggerCardEffect(event, 750)">
                 <div class="number" id="hours">00</div>
                 <div class="label">Hours</div>
             </div>
-            <div class="box" onclick="triggerCardEffect(event)">
+            <div class="box" onclick="triggerCardEffect(event, 900)">
                 <div class="number" id="minutes">00</div>
                 <div class="label">Minutes</div>
             </div>
-            <div class="box" onclick="triggerCardEffect(event)">
+            <div class="box" onclick="triggerCardEffect(event, 1050)">
                 <div class="number" id="seconds">00</div>
                 <div class="label">Seconds</div>
             </div>
         </div>
+
+        <div class="quote-container">
+            <div class="quote-text" id="quoteDisplay"></div>
+        </div>
     </div>
 
     <script>
-        // Array of your M4A background music files
-        const bgTracks = [
-            'YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a',
-            'YTDown.com_YouTube_NNX-LXSY-HEMENESY-No-Copyright_Media_1fVQrSZV31k_005_48k.m4a',
-            'YTDown.com_YouTube_NNX-LXSY-KONOSOO-No-Copyright-Thanks-NNX_Media_MOsQFsa6ZzI_005_48k.m4a',
-            'YTDown.com_YouTube_FULL-BASS-REMIX-Linkin-Park-In-The-End-N_Media_8YoHeuN0v0k_004_48k(1).m4a'
-        ];
-
-        let currentTrackIndex = Math.floor(Math.random() * bgTracks.length);
-
-        // 1. Background Music setup
-        const bgMusic = new Audio(bgTracks[currentTrackIndex]);
-        bgMusic.volume = 0.06; 
-
-        // Automatically play next random track when current one ends
-        bgMusic.addEventListener('ended', () => {
-            let nextIndex;
-            do {
-                nextIndex = Math.floor(Math.random() * bgTracks.length);
-            } while (nextIndex === currentTrackIndex && bgTracks.length > 1); // Avoid repeating the exact same track consecutively if possible
-            
-            currentTrackIndex = nextIndex;
-            bgMusic.src = bgTracks[currentTrackIndex];
-            bgMusic.play().catch(e => console.log("Auto-play next track error"));
-        });
-
-        // 2. Background Tap Sound setup (bg.mp3)
-        const tapSound = new Audio('bg.mp3');
-        tapSound.volume = 0.05;
-
-        // 3. Sound for Title
-        const titleSound = new Audio('title.mp3'); 
-        titleSound.volume = 0.05;
-
-        // 4. Sound for 4 Countdown Tabs (click.mp3)
-        const tabSound = new Audio('click.mp3'); 
-        tabSound.volume = 0.05;
-
-        let isMuted = true;
-
-        // Toggle Audio on Floating Button Click
-        function toggleAudio() {
-            const btn = document.getElementById('audioToggleBtn');
-            if (isMuted) {
-                bgMusic.play().then(() => {
-                    isMuted = false;
-                    btn.textContent = '🔊';
-                    btn.classList.remove('jumping-icon'); // Stops jumping when unmuted
-                }).catch(e => console.log("Audio play blocked"));
-            } else {
-                bgMusic.pause();
-                isMuted = true;
-                btn.textContent = '🔇';
-                btn.classList.add('jumping-icon'); // Starts jumping again when muted
-            }
-        }
-
-        function playTapSound() {
-            tapSound.currentTime = 0;
-            tapSound.play().catch(e => {});
-        }
-
-        function playTitleSound() {
-            titleSound.currentTime = 0;
-            titleSound.play().catch(e => {});
-        }
-
-        function playTabSound() {
-            tabSound.currentTime = 0;
-            tabSound.play().catch(e => {});
-        }
-
-        // Wrap Title Characters into Spans safely
+        // Character Spanning Logic
         const titleEl = document.getElementById('title');
         const text = titleEl.textContent;
         titleEl.textContent = '';
@@ -415,7 +308,97 @@
             titleEl.appendChild(span);
         });
 
-        // Title click handler
+        // Quotes Array
+        const quotes = [
+            "~ Time is an illusion ~ ⏳ ✨ 🌌 Douglas Adams",
+            "~ Lost time is never found again ~ ⌛ 🪙 🔑 Benjamin Franklin",
+            "~ The problem is, you think you have time ~ 👁️ 🍃 Jack Kornfield",
+            "~ Time moves in one direction, memory in another ~ 🧠 🕯️ William Gibson",
+            "~ Time is the most valuable thing a man can spend ~ 💎 ⚖️ Theophrastus",
+            "~ Time flies over us, but leaves its shadow behind ~ 🕊️ ⛅ Nathaniel Hawthorne",
+            "~ Time is a storm in which we are all lost ~ ⛈️ 🌪️ William Carlos Williams",
+            "~ How did it get so late so soon? ~ 🌙 🦉 Dr. Seuss",
+            "~ Time is a dressmaker specializing in alterations ~ 🪡 🧵 Faith Baldwin",
+            "~ Time, which strengthens friendship, weakens love ~ 🤝 🥀 🖤 Jean de La Bruyère",
+            "~ Your time is limited, so don't waste it living someone else's life ~ 🚀 💡 🌟 Steve Jobs",
+            "~ They always say time changes things, but you actually have to change them yourself ~ ⚡ 🎨 Andy Warhol",
+            "~ Time is a created thing. To say 'I don't have time' is like saying 'I don't want to' ~ 🛠️ ☯️ Lao Tzu",
+            "~ The two most powerful warriors are patience and time ~ ⚔️ 🛡️ Leo Tolstoy",
+            "~ Better three hours too soon than a minute too late ~ ⏰ 🗝️ William Shakespeare",
+            "~ Time is what we want most, but what we use worst ~ ⏳ 🗑️ William Penn",
+            "~ The future is something which everyone reaches at the rate of sixty minutes an hour ~ 🚶 🧭 C.S. Lewis",
+            "~ Punctuality is the thief of time ~ 🕵️ 🎩 Oscar Wilde",
+            "~ Realize that now, in this moment, time is stopping for nothing ~ 📍 🏃 ✨ Steve Maraboli",
+            "~ Time slips away like sand through an hourglass ~ 🏖️ ⌛ 🌊 Traditional Proverb"
+        ];
+
+        let currentQuoteIndex = 0;
+        const quoteDisplay = document.getElementById('quoteDisplay');
+        quoteDisplay.textContent = quotes[currentQuoteIndex];
+
+        function rotateQuote() {
+            quoteDisplay.classList.remove('glitch-in');
+            quoteDisplay.classList.add('glitch-out');
+
+            setTimeout(() => {
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+                quoteDisplay.textContent = quotes[currentQuoteIndex];
+                quoteDisplay.classList.remove('glitch-out');
+                quoteDisplay.classList.add('glitch-in');
+            }, 400);
+        }
+
+        // Change quote every 6 seconds
+        setInterval(rotateQuote, 6000);
+
+        // Web Audio Synthesizer with Updated Volume Levels
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let bgMusicOsc = null;
+        let bgMusicGain = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+                
+                // Continuous Subtle Background Music (Volume: 0.06)
+                bgMusicOsc = audioCtx.createOscillator();
+                bgMusicGain = audioCtx.createGain();
+
+                bgMusicOsc.type = 'sine';
+                bgMusicOsc.frequency.setValueAtTime(110, audioCtx.currentTime); // A2 note
+
+                bgMusicGain.gain.setValueAtTime(0.06, audioCtx.currentTime); // Volume set to 0.06
+
+                bgMusicOsc.connect(bgMusicGain);
+                bgMusicGain.connect(audioCtx.destination);
+                bgMusicOsc.start();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(freq = 520, targetVolume = 0.05) {
+            initAudio();
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(freq * 1.5, audioCtx.currentTime + 0.12);
+
+            gain.gain.setValueAtTime(targetVolume, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.12);
+        }
+
         function triggerTitleAction(e) {
             e.stopPropagation();
             titleEl.classList.remove('jump-spin-effect');
@@ -428,8 +411,28 @@
 
             spawnInteraction(centerX, centerY);
             spawnEduItems(centerX, centerY);
-            playTitleSound();
+            
+            // Title Tap Sound Volume: 0.05
+            playSound(1200, 0.05);
         }
+
+        function triggerCardEffect(e, soundFreq) {
+            e.stopPropagation();
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            spawnInteraction(x, y);
+            
+            // Card/Box Tap Sound Volume: 0.05
+            playSound(soundFreq, 0.05);
+        }
+
+        window.addEventListener('click', (e) => {
+            spawnInteraction(e.clientX, e.clientY);
+            
+            // Background Tap Sound Volume: 0.05
+            playSound(480, 0.05);
+        });
 
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
@@ -455,6 +458,7 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
+        // Canvas Particles
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -636,22 +640,6 @@
             });
 
             requestAnimationFrame(animate);
-        }
-
-        // Global background click listener (plays bg.mp3 tap sound & triggers visual effects)
-        window.addEventListener('click', (e) => {
-            spawnInteraction(e.clientX, e.clientY);
-            playTapSound(); 
-        });
-
-        // Tab cards click listener (plays click.mp3)
-        function triggerCardEffect(e) {
-            e.stopPropagation(); 
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = rect.left + rect.width / 2;
-            const y = rect.top + rect.height / 2;
-            spawnInteraction(x, y);
-            playTabSound(); 
         }
 
         resizeCanvas();
