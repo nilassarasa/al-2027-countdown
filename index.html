@@ -491,7 +491,186 @@
             "~ 𝚃𝚒𝚖𝚎, 𝚠𝚑𝚒𝚌𝚑 𝚜𝚝𝚛𝚎𝚗𝚐𝚝𝚑𝚎𝚗𝚜 𝚏𝚛𝚒𝚎𝚗𝚍𝚜𝚑𝚒𝚙, 𝚠𝚎𝚊𝚔𝚎𝚗𝚜 𝚕𝚘𝚟𝚎 🤝 🥀 🖤 ~",
             "~ 𝚈𝚘𝚞𝚛 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚕𝚒𝚖𝚒𝚝𝚎𝚍, 𝚜𝚘 𝚍𝚘𝚗'𝚝 𝚠𝚊𝚜𝚝𝚎 𝚒𝚝 𝚕𝚒𝚟𝚒𝚗𝚐 𝚜𝚘𝚖𝚎𝚘𝚗𝚎 𝚎𝚕𝚜𝚎'𝚜 𝚕𝚒𝚏𝚎 🚀 💡 🌟 ~",
             "~ 𝚃𝚑𝚎𝚢 𝚊𝚕𝚠𝚊𝚢𝚜 𝚜𝚊𝚢 𝚝𝚒𝚖𝚎 𝚌𝚑𝚊𝚗𝚐𝚎𝚜 𝚝𝚑𝚒𝚗𝚐𝚜, 𝚋𝚞𝚝 𝚢𝚘𝚞 𝚊𝚌𝚝𝚞𝚊𝚕𝚕𝚢 𝚑𝚊𝚟𝚎 𝚝𝚘 𝚌𝚑𝚊𝚗𝚐𝚎 𝚝𝚑𝚎𝚖 𝚢𝚘𝚞𝚛𝚜𝚎𝚕𝚏 ⚡ 🎨 ~",
-            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚌𝚛𝚎𝚊𝚝𝚎𝚍 𝚝𝚑𝚒𝚗𝚐. 𝚃𝚘 𝚜𝚊𝚢 '𝙸 𝚍𝚘𝚗'𝚝 ```html
-𝚍𝚘𝚗'𝚝 It looks like your previous context was cut off or not provided in this message. 
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚌𝚛𝚎𝚊𝚝𝚎𝚍 𝚝𝚑𝚒𝚗𝚐. 𝚃𝚘 𝚜𝚊𝚢 '𝙸 𝚍𝚘𝚗'𝚝 have time' 𝚒𝚜 𝚕𝚒𝚔𝚎 𝚜𝚊𝚢𝚒𝚗𝚐 '𝙸 𝚍𝚘𝚗'𝚝 𝚠𝚊𝚗𝚝 𝚝𝚘' 🌱 ☀️ ~"
+        ];
 
-Could you clarify what script, language, or project you need the full code for? Let me know the details or paste the relevant snippet, and I'll generate the complete code for you right away.
+        let quoteIndex = 0;
+        const quoteEl = document.getElementById('quoteDisplay');
+
+        function updateQuote() {
+            quoteEl.classList.remove('glitch-in');
+            quoteEl.classList.add('glitch-out');
+
+            setTimeout(() => {
+                quoteEl.textContent = quotes[quoteIndex];
+                quoteIndex = (quoteIndex + 1) % quotes.length;
+                quoteEl.classList.remove('glitch-out');
+                quoteEl.classList.add('glitch-in');
+            }, 400);
+        }
+
+        updateQuote();
+        setInterval(updateQuote, 7000);
+
+        // Target Date: August 1, 2027
+        const targetDate = new Date('August 1, 2027 00:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference < 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = d < 10 ? '0' + d : d;
+            document.getElementById('hours').textContent = h < 10 ? '0' + h : h;
+            document.getElementById('minutes').textContent = m < 10 ? '0' + m : m;
+            document.getElementById('seconds').textContent = s < 10 ? '0' + s : s;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Interactive Canvas Starfield Background & Effects
+        const canvas = document.getElementById('starfieldCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const stars = [];
+        const numStars = 180;
+
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5 + 0.5,
+                alpha: Math.random(),
+                speed: Math.random() * 0.02 + 0.005
+            });
+        }
+
+        const particles = [];
+        const eduItems = [];
+        const eduSymbols = ['📚', '✏️', '🎓', '🔬', '📐', '🧬', '⚡', '💡', '📖'];
+
+        function spawnInteraction(x, y) {
+            for (let i = 0; i < 20; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 4 + 1;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    radius: Math.random() * 3 + 1,
+                    color: Math.random() > 0.5 ? '#00f0ff' : '#ff007f',
+                    life: 1,
+                    decay: Math.random() * 0.03 + 0.015
+                });
+            }
+        }
+
+        function spawnEduItems(x, y) {
+            for (let i = 0; i < 12; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 2;
+                eduItems.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 1,
+                    symbol: eduSymbols[Math.floor(Math.random() * eduSymbols.length)],
+                    size: Math.random() * 12 + 18,
+                    life: 1,
+                    decay: Math.random() * 0.02 + 0.01,
+                    rot: Math.random() * Math.PI,
+                    vRot: (Math.random() - 0.5) * 0.1
+                });
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Stars
+            stars.forEach(star => {
+                star.alpha += star.speed;
+                if (star.alpha > 1 || star.alpha < 0) {
+                    star.speed = -star.speed;
+                }
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha)})`;
+                ctx.fill();
+            });
+
+            // Draw Sparkle Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= p.decay;
+
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+            }
+
+            // Draw Floating Edu Icons
+            for (let i = eduItems.length - 1; i >= 0; i--) {
+                const item = eduItems[i];
+                item.x += item.vx;
+                item.y += item.vy;
+                item.rot += item.vRot;
+                item.life -= item.decay;
+
+                if (item.life <= 0) {
+                    eduItems.splice(i, 1);
+                    continue;
+                }
+
+                ctx.save();
+                ctx.translate(item.x, item.y);
+                ctx.rotate(item.rot);
+                ctx.font = `${item.size}px sans-serif`;
+                ctx.globalAlpha = item.life;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(item.symbol, 0, 0);
+                ctx.restore();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
