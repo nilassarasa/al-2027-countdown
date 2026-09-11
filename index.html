@@ -131,6 +131,28 @@
             align-items: center;
         }
 
+        /* Circular Profile Image */
+        .profile-container {
+            margin-bottom: 18px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .profile-circle {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #00f0ff;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6), 0 0 30px rgba(168, 85, 247, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-container:hover .profile-circle {
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.9), 0 0 45px rgba(255, 0, 127, 0.7);
+        }
+
         /* Title Container */
         .title-line {
             display: flex;
@@ -345,6 +367,11 @@
     <canvas id="starfieldCanvas"></canvas>
 
     <div class="container">
+        <!-- Image Circle Added Here -->
+        <div class="profile-container" onclick="triggerProfileEffect(event)">
+            <img src="profile.jpg" alt="Profile" class="profile-circle" id="profileImg">
+        </div>
+
         <div class="title-line" id="titleLine" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</div>
 
         <div class="countdown">
@@ -448,6 +475,16 @@
                 wrapper.classList.remove('unmuted');
                 wrapper.classList.add('muted');
             }
+        }
+
+        function triggerProfileEffect(e) {
+            e.stopPropagation();
+            playFx(soundTitle);
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            spawnInteraction(x, y);
+            spawnEduItems(x, y);
         }
 
         function triggerTitleAction(e) {
@@ -611,10 +648,11 @@
             }
         }
 
-        const speed = 1.5; // Speed of incoming particles
+        // Particle speed updated to 1.5
+        const speed = 1.5;
 
         function animate() {
-            ctx.fillStyle = 'rgba(2, 2, 5, 0.4)'; // Slight trail for smooth motion blur
+            ctx.fillStyle = 'rgba(2, 2, 5, 0.4)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             const cx = canvas.width / 2;
