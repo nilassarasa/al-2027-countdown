@@ -77,7 +77,7 @@
             align-items: center;
         }
 
-        /* Title Container - Animates full-title glitch & smooth horizontal shake */
+        /* Title Container */
         .title-line {
             display: flex;
             justify-content: center;
@@ -97,7 +97,7 @@
             width: 0.4em;
         }
 
-        /* Individual Letters - Sequential Wave Jump */
+        /* Individual Letters */
         .title-line .char {
             display: inline-block;
             color: #ffffff;
@@ -106,7 +106,6 @@
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
         }
 
-        /* 1. Letter Wave Jump Sequence */
         @keyframes letterJumpWave {
             0% {
                 transform: translateY(0) scale(1);
@@ -115,10 +114,10 @@
             }
             8% {
                 transform: translateY(-22px) scale(1.15);
-                color: #00f0ff; /* Light Blue Glow */
+                color: #00f0ff;
                 text-shadow: 
                     0 0 12px #00f0ff,
-                    0 0 24px #ff007f, /* Pinky-Purple Glow */
+                    0 0 24px #ff007f,
                     0 0 36px #a855f7;
             }
             16%, 100% {
@@ -128,50 +127,35 @@
             }
         }
 
-        /* 2. Full Title Glitch & Smooth Shake (No text slicing bugs) */
         @keyframes fullTitleGlitchShake {
             0%, 60% {
                 transform: translate(0, 0) skewX(0deg);
                 filter: none;
             }
-
-            /* Glitch Burst 1: Cyan/Pink Shift & Shake Left */
             61% {
                 transform: translate(-8px, 1px) skewX(-4deg);
                 filter: drop-shadow(-5px 0 #00f0ff) drop-shadow(5px 0 #ff007f);
             }
-
-            /* Glitch Burst 2: Purple/Cyan Shift & Shake Right */
             63% {
                 transform: translate(8px, -2px) skewX(5deg);
                 filter: drop-shadow(6px 0 #a855f7) drop-shadow(-6px 0 #00f0ff);
             }
-
-            /* Smooth Vibration Shake 1 */
             65% {
                 transform: translate(-4px, 1px) skewX(-2deg);
                 filter: drop-shadow(-4px 0 #ff007f) drop-shadow(4px 0 #00f0ff);
             }
-
-            /* Smooth Vibration Shake 2 */
             67% {
                 transform: translate(5px, -1px) skewX(3deg);
                 filter: drop-shadow(4px 0 #00f0ff) drop-shadow(-4px 0 #a855f7);
             }
-
-            /* Glitch Burst 3: Pink Shift & Shake Left */
             69% {
                 transform: translate(-6px, 2px) skewX(-3deg);
                 filter: drop-shadow(-5px 0 #ff007f) drop-shadow(3px 0 #00f0ff);
             }
-
-            /* Smooth Vibration Shake 3 */
             71% {
                 transform: translate(3px, -1px) skewX(1deg);
                 filter: drop-shadow(3px 0 #00f0ff);
             }
-
-            /* Clean Reset */
             73%, 100% {
                 transform: translate(0, 0) skewX(0deg);
                 filter: none;
@@ -289,7 +273,6 @@
     <canvas id="starfieldCanvas"></canvas>
 
     <div class="container">
-        <!-- Single Line Title Container -->
         <div class="title-line" id="titleLine" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</div>
 
         <div class="countdown">
@@ -317,7 +300,6 @@
     </div>
 
     <script>
-        // Split title into individual spans with incremental animation delays
         const titleEl = document.getElementById('titleLine');
         const titleText = titleEl.textContent;
         titleEl.textContent = '';
@@ -334,7 +316,6 @@
             titleEl.appendChild(span);
         });
 
-        // Background Tracklist
         const bgPlaylist = [
             "YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a",
             "YTDown.com_YouTube_NNX-LXSY-KONOSOO-No-Copyright-Thanks-NNX_Media_MOsQFsa6ZzI_005_48k.m4a",
@@ -363,7 +344,6 @@
 
         loadTrack(currentTrackIndex);
 
-        // Sound Effects (Volume: 0.05)
         const soundBg = new Audio("bg.mp3");
         const soundClick = new Audio("click.mp3");
         const soundTitle = new Audio("title.mp3");
@@ -425,29 +405,30 @@
 
         // Quotes Array
         const quotes = [
-            "~ Time is an illusion ~ ⏳ ✨ 🌌 Douglas Adams",
-            "~ Lost time is never found again ~ ⌛ 🪙 🔑 Benjamin Franklin",
-            "~ The problem is, you think you have time ~ 👁️ 🍃 Jack Kornfield",
-            "~ Time moves in one direction, memory in another ~ 🧠 🕯️ William Gibson",
-            "~ Time is the most valuable thing a man can spend ~ 💎 ⚖️ Theophrastus",
-            "~ Time flies over us, but leaves its shadow behind ~ 🕊️ ⛅ Nathaniel Hawthorne",
-            "~ Time is a storm in which we are all lost ~ ⛈️ 🌪️ William Carlos Williams",
-            "~ How did it get so late so soon? ~ 🌙 🦉 Dr. Seuss",
-            "~ Time is a dressmaker specializing in alterations ~ 🪡 🧵 Faith Baldwin",
-            "~ Time, which strengthens friendship, weakens love ~ 🤝 🥀 🖤 Jean de La Bruyère",
-            "~ Your time is limited, so don't waste it living someone else's life ~ 🚀 💡 🌟 Steve Jobs",
-            "~ They always say time changes things, but you actually have to change them yourself ~ ⚡ 🎨 Andy Warhol",
-            "~ Time is a created thing. To say 'I don't have time' is like saying 'I don't want to' ~ 🛠️ ☯️ Lao Tzu",
-            "~ The two most powerful warriors are patience and time ~ ⚔️ 🛡️ Leo Tolstoy",
-            "~ Better three hours too soon than a minute too late ~ ⏰ 🗝️ William Shakespeare",
-            "~ Time is what we want most, but what we use worst ~ ⏳ 🗑️ William Penn",
-            "~ The future is something which everyone reaches at the rate of sixty minutes an hour ~ 🚶 🧭 C.S. Lewis",
-            "~ Punctuality is the thief of time ~ 🕵️ 🎩 Oscar Wilde",
-            "~ Realize that now, in this moment, time is stopping for nothing ~ 📍 🏃 ✨ Steve Maraboli",
-            "~ Time slips away like sand through an hourglass ~ 🏖️ ⌛ 🌊 Traditional Proverb"
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊𝚗 𝚒𝚕𝚕𝚞𝚜𝚒𝚘𝚗 ⏳ ✨ 🌌 ~",
+            "~ 𝙻𝚘𝚜𝚝 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚗𝚎𝚟𝚎𝚛 𝚏𝚘𝚞𝚗𝚍 𝚊𝚐𝚊𝚒𝚗 ⌛ 🪙 🔑 ~",
+            "~ 𝚃𝚑𝚎 𝚙𝚛𝚘𝚋𝚕𝚎𝚖 𝚒𝚜, 𝚢𝚘𝚞 𝚝𝚑𝚒𝚗𝚔 𝚢𝚘𝚞 𝚑𝚊𝚟𝚎 𝚝𝚒𝚖𝚎 👁️ 🍃 ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚖𝚘𝚟𝚎𝚜 𝚒𝚗 𝚘𝚗𝚎 𝚍𝚒𝚛𝚎𝚌𝚝𝚒𝚘𝚗, 𝚖𝚎𝚖𝚘𝚛𝚢 𝚒𝚗 𝚊𝚗𝚘𝚝𝚑𝚎𝚛 🧠 🕯️ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚝𝚑𝚎 𝚖𝚘𝚜𝚝 𝚟𝚊𝚕𝚞𝚊𝚋𝚕𝚎 𝚝𝚑𝚒𝚗𝚐 𝚊 𝚖𝚊𝚗 𝚌𝚊𝚗 𝚜𝚙𝚎𝚗𝚍 💎 ⚖️ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚏𝚕𝚒𝚎𝚜 𝚘𝚟𝚎𝚛 𝚞𝚜, 𝚋𝚞𝚝 𝚕𝚎𝚊𝚟𝚎𝚜 𝚒𝚝𝚜 𝚜𝚑𝚊𝚍𝚘𝚠 𝚋𝚎𝚑𝚒𝚗𝚍 🕊️ ⛅ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝚠𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
+            "~ 𝙷𝚘𝚠 𝚍𝚒𝚍 𝚒𝚝 𝚐𝚎𝚝 𝚜𝚘 𝚕𝚊𝚝𝚎 𝚜𝚘 𝚜𝚘𝚘𝚗? 🌙 🦉 ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚍𝚛𝚎𝚜𝚜𝚖𝚊𝚔𝚎𝚛 𝚜𝚙𝚎𝚌𝚒𝚊𝚕𝚒𝚣𝚒𝚗𝚐 𝚒𝚗 𝚊𝚕𝚝𝚎𝚛𝚊𝚝𝚒𝚘𝚗𝚜 🪡 🧵 ~",
+            "~ 𝚃𝚒𝚖𝚎, 𝚠𝚑𝚒𝚌𝚑 𝚜𝚝𝚛𝚎𝚗𝚐𝚝𝚑𝚎𝚗𝚜 𝚏𝚛𝚒𝚎𝚗𝚍𝚜𝚑𝚒𝚙, 𝚠𝚎𝚊𝚔𝚎𝚗𝚜 𝚕𝚘𝚟𝚎 🤝 🥀 🖤 ~",
+            "~ 𝚈𝚘𝚞𝚛 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚕𝚒𝚖𝚒𝚝𝚎𝚍, 𝚜𝚘 𝚍𝚘𝚗'𝚝 𝚠𝚊𝚜𝚝𝚎 𝚒𝚝 𝚕𝚒𝚟𝚒𝚗𝚐 𝚜𝚘𝚖𝚎𝚘𝚗𝚎 𝚎𝚕𝚜𝚎'𝚜 𝚕𝚒𝚏𝚎 🚀 💡 🌟 ~",
+            "~ 𝚃𝚑𝚎𝚢 𝚊𝚕𝚠𝚊𝚢𝚜 𝚜𝚊𝚢 𝚝𝚒𝚖𝚎 𝚌𝚑𝚊𝚗𝚐𝚎𝚜 𝚝𝚑𝚒𝚗𝚐𝚜, 𝚋𝚞𝚝 𝚢𝚘𝚞 𝚊𝚌𝚝𝚞𝚊𝚕𝚕𝚢 𝚑𝚊𝚟𝚎 𝚝𝚘 𝚌𝚑𝚊𝚗𝚐𝚎 𝚝𝚑𝚎𝚖 𝚢𝚘𝚞𝚛𝚜𝚎𝚕𝚏 ⚡ 🎨 ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚌𝚛𝚎𝚊𝚝𝚎𝚍 𝚝𝚑𝚒𝚗𝚐. 𝚃𝚘 𝚜𝚊𝚢 '𝙸 𝚍𝚘𝚗'𝚝 𝚑𝚊𝚟𝚎 𝚝𝚒𝚖𝚎' 𝚒𝚜 𝚕𝚒𝚔𝚎 𝚜𝚊𝚢𝚒𝚗𝚐 '𝙸 𝚍𝚘𝚗'𝚝 𝚠𝚊𝚗𝚝 𝚝𝚘' 🛠️ ☯️ ~",
+            "~ 𝚃𝚑𝚎 𝚝𝚠𝚘 𝚖𝚘𝚜𝚝 𝚙𝚘𝚠𝚎𝚛𝚏𝚞𝚕 𝚠𝚊𝚛𝚛𝚒𝚘𝚛𝚜 𝚊𝚛𝚎 𝚙𝚊𝚝𝚒𝚎𝚗𝚌𝚎 𝚊𝚗𝚍 𝚝𝚒𝚖𝚎 ⚔️ 🛡️ ~",
+            "~ 𝙱𝚎𝚝𝚝𝚎𝚛 𝚝𝚑𝚛𝚎𝚎 𝚑𝚘𝚞𝚛𝚜 𝚝𝚘𝚘 𝚜𝚘𝚘𝚗 𝚝𝚑𝚊𝚗 𝚊 𝚖𝚒𝚗𝚞𝚝𝚎 𝚝𝚘𝚘 𝚕𝚊𝚝𝚎 ⏰ 🗝️ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚠𝚑𝚊𝚝 𝚠𝚎 𝚠𝚊𝚗𝚝 𝚖𝚘𝚜𝚝, 𝚋𝚞𝚝 𝚠𝚑𝚊𝚝 𝚠𝚎 𝚞𝚜𝚎 𝚠𝚘𝚛𝚜𝚝 ⏳ 🗑️ ~",
+            "~ 𝚃𝚑𝚎 𝚏𝚞𝚝𝚞𝚛𝚎 𝚒𝚜 𝚜𝚘𝚖𝚎𝚝𝚑𝚒𝚗𝚐 𝚠𝚑𝚒𝚌𝚑 𝚎𝚟𝚎𝚛𝚢𝚘𝚗𝚎 𝚛𝚎𝚊𝚌𝚑𝚎𝚜 𝚊𝚝 𝚝𝚑𝚎 𝚛𝚊𝚝𝚎 𝚘𝚏 𝚜𝚒𝚡𝚝𝚢 𝚖𝚒𝚗𝚞𝚝𝚎𝚜 𝚊𝚗 𝚑𝚘𝚞𝚛 🚶 🧭 ~",
+            "~ 𝙿𝚞𝚗𝚌𝚝𝚞𝚊𝚕𝚒𝚝𝚢 𝚒𝚜 𝚝𝚑𝚎 𝚝𝚑𝚒𝚎𝚏 𝚘𝚏 𝚝𝚒𝚖𝚎 🕵️ 🎩 ~",
+            "~ 𝚁𝚎𝚊𝚕𝚒𝚣𝚎 𝚝𝚑𝚊𝚝 𝚗𝚘𝚠, 𝚒𝚗 𝚝𝚑𝚒𝚜 𝚖𝚘𝚖𝚎𝚗𝚝, 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚜𝚝𝚘𝚙𝚙𝚒𝚗𝚐 𝚏𝚘𝚛 𝚗𝚘𝚝𝚑𝚒𝚗𝚐 📍 🏃 ✨ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚜𝚕𝚒𝚙𝚜 𝚊𝚠𝚊𝚢 𝚕𝚒𝚔𝚎 𝚜𝚊𝚗𝚍 𝚝𝚑𝚛𝚘𝚞𝚐𝚑 𝚊𝚗 𝚑𝚘𝚞𝚛𝚐𝚕𝚊𝚜𝚜 🏖️ ⌛ 🌊 ~"
         ];
 
-        let currentQuoteIndex = 0;
+        // Pick a random starting quote on page load
+        let currentQuoteIndex = Math.floor(Math.random() * quotes.length);
         const quoteDisplay = document.getElementById('quoteDisplay');
         quoteDisplay.textContent = quotes[currentQuoteIndex];
 
