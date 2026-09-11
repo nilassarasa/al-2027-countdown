@@ -46,6 +46,7 @@
             display: block;
             text-decoration: none;
             transition: transform 0.3s ease;
+            perspective: 1000px;
         }
 
         .top-left-profile img {
@@ -55,12 +56,23 @@
             object-fit: cover;
             border: 2px solid #ff007f;
             box-shadow: 0 0 15px #ff007f, 0 0 30px #ff007f;
-            animation: pinkPulse 2s infinite ease-in-out;
+            /* Added smooth continuous 360-degree rotation along with pink pulse */
+            animation: pinkPulse 2s infinite ease-in-out, spinLogo 10s linear infinite;
             cursor: pointer;
         }
 
         .top-left-profile:hover {
-            transform: scale(1.12);
+            transform: scale(1.15);
+        }
+
+        /* Spinning Rotation Animation */
+        @keyframes spinLogo {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes pinkPulse {
@@ -353,6 +365,7 @@
 </head>
 <body>
 
+    <!-- Top Left Profile Logo with Continuous Spin Animation -->
     <a href="https://www.youtube.com/@CryoneX_Space" target="_blank" rel="noopener noreferrer" class="top-left-profile">
         <img src="channels4_profile.jpg" alt="CryoneX Space YouTube Channel">
     </a>
