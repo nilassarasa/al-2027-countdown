@@ -174,11 +174,20 @@
             width: 92%;
             max-width: 760px;
             text-align: center;
-            padding: 10px;
+            padding: 40px 10px 10px 10px; /* Top padding added so title jump isn't clipped */
             display: flex;
             flex-direction: column;
             align-items: center;
-            perspective: 1000px; /* Provides 3D perspective for full-title rotation */
+            perspective: 1200px;
+            overflow: visible;
+        }
+
+        /* Title Wrapper Container to handle perspective without overflow clipping */
+        .title-wrapper {
+            width: 100%;
+            margin-bottom: 30px;
+            padding-top: 15px;
+            overflow: visible;
         }
 
         /* Title Line Base */
@@ -187,7 +196,6 @@
             justify-content: center;
             align-items: center;
             white-space: nowrap;
-            margin-bottom: 30px;
             cursor: pointer;
             font-size: clamp(1.2rem, 4.2vw, 2.2rem);
             font-weight: 900;
@@ -195,7 +203,9 @@
             width: 100%;
             position: relative;
             transform-style: preserve-3d;
+            backface-visibility: visible;
             animation: fullTitleGlitchShake 8s ease-in-out infinite;
+            will-change: transform;
         }
 
         .title-line .space {
@@ -208,11 +218,12 @@
             animation: letterJumpWave 8s ease-in-out infinite;
             animation-delay: var(--delay);
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+            backface-visibility: visible;
         }
 
-        /* Entire Title Jump & Horizontal Spin Animation */
+        /* Fast Whole Title Jump & Horizontal Spin Animation */
         .title-line.title-spin {
-            animation: wholeTitleJumpAndSpin 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+            animation: wholeTitleJumpAndSpin 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
         }
 
         @keyframes wholeTitleJumpAndSpin {
@@ -221,7 +232,7 @@
                 filter: none;
             }
             50% {
-                transform: translateY(-35px) rotateY(180deg) scale(1.15);
+                transform: translateY(-28px) rotateY(180deg) scale(1.1);
                 filter: drop-shadow(0 0 15px #00f0ff) drop-shadow(0 0 25px #ff007f);
             }
             100% {
@@ -417,7 +428,9 @@
     <canvas id="starfieldCanvas"></canvas>
 
     <div class="container">
-        <div class="title-line" id="titleLine" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</div>
+        <div class="title-wrapper">
+            <div class="title-line" id="titleLine" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</div>
+        </div>
 
         <div class="countdown">
             <div class="box" onclick="triggerCardEffect(event)">
@@ -533,14 +546,14 @@
             spawnInteraction(centerX, centerY);
             spawnEduItems(centerX, centerY);
 
-            /* Trigger Jump & Spin effect on the WHOLE Title container */
+            /* Trigger Snappy Jump & Spin effect */
             titleEl.classList.remove('title-spin');
             void titleEl.offsetWidth; // Reflow reset
             titleEl.classList.add('title-spin');
 
             setTimeout(() => {
                 titleEl.classList.remove('title-spin');
-            }, 900);
+            }, 450);
         }
 
         function triggerCardEffect(e) {
