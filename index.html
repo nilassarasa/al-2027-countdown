@@ -32,6 +32,7 @@
             width: 100%;
             height: 100%;
             z-index: 1;
+            pointer-events: none; /* Allows clicks to pass through to buttons/cards */
         }
 
         /* Top-Left Circular Logo Link with Neon Glow Pulse */
@@ -48,8 +49,7 @@
             box-shadow: 
                 0 0 10px #00f0ff,
                 0 0 20px #00f0ff,
-                0 0 35px rgba(0, 240, 255, 0.6),
-                inset 0 0 10px rgba(0, 0, 0, 0.5);
+                0 0 35px rgba(0, 240, 255, 0.6);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -57,6 +57,7 @@
             animation: logoGlowPulse 2.5s infinite ease-in-out;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-decoration: none;
+            cursor: pointer;
         }
 
         @keyframes logoGlowPulse {
@@ -83,24 +84,11 @@
             box-shadow: 0 0 25px #00ffaa, 0 0 45px #00ffaa;
         }
 
-        .profile-logo-link:active {
-            transform: scale(0.95);
-        }
-
         .profile-logo-link img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
-        }
-
-        @media (max-width: 600px) {
-            .profile-logo-link {
-                top: 16px;
-                left: 16px;
-                width: 52px;
-                height: 52px;
-            }
         }
 
         /* Running Border Sound Button */
@@ -114,6 +102,7 @@
             border-radius: 30px;
             isolation: isolate;
             transition: transform 0.2s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
         .audio-wrapper .border-svg {
@@ -172,7 +161,6 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            will-change: transform;
         }
 
         @keyframes runAround {
@@ -187,7 +175,7 @@
 
         .container {
             position: relative;
-            z-index: 2;
+            z-index: 10;
             width: 92%;
             max-width: 760px;
             text-align: center;
@@ -293,6 +281,12 @@
             .countdown {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .profile-logo-link {
+                top: 16px;
+                left: 16px;
+                width: 52px;
+                height: 52px;
+            }
         }
 
         .box {
@@ -388,10 +382,11 @@
 <body>
 
     <!-- Glowing Top-Left Circular Logo -->
-    <a href="https://www.youtube.com/@CryoneX_Space" target="_blank" class="profile-logo-link" title="Visit CryoneX Space YouTube Channel">
+    <a href="[https://www.youtube.com/@CryoneX_Space](https://www.youtube.com/@CryoneX_Space)" target="_blank" class="profile-logo-link" title="Visit CryoneX Space YouTube Channel">
         <img src="channels4_profile.jpg" alt="CryoneX Space">
     </a>
 
+    <!-- Audio Control Button -->
     <div class="audio-wrapper muted" id="audioWrapper">
         <svg class="border-svg" width="100%" height="100%">
             <defs>
@@ -412,8 +407,10 @@
         <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔇 Sound OFF</button>
     </div>
 
+    <!-- Starfield Particle Canvas -->
     <canvas id="starfieldCanvas"></canvas>
 
+    <!-- Main Content -->
     <div class="container">
         <div class="title-line" id="titleLine" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</div>
 
@@ -469,7 +466,7 @@
 
         let currentTrackIndex = Math.floor(Math.random() * bgPlaylist.length);
         const bgAudio = new Audio();
-        bgAudio.volume = 0.06;
+        bgAudio.volume = 0.08;
 
         function loadTrack(index) {
             bgAudio.src = bgPlaylist[index];
@@ -512,7 +509,7 @@
                     btn.innerHTML = "🔊 Sound ON";
                     wrapper.classList.remove('muted');
                     wrapper.classList.add('unmuted');
-                }).catch(err => console.log("Audio play blocked:", err));
+                }).catch(err => console.log("Audio playback blocked:", err));
             } else {
                 bgAudio.pause();
                 isPlaying = false;
@@ -550,22 +547,19 @@
             spawnInteraction(e.clientX, e.clientY);
         });
 
-        // Quotes Generator
+        // Quotes List
         const quotes = [
-            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊𝚗 𝚒𝚕𝚕𝚞𝚜𝚒𝚘𝚗 ⏳ ✨ 🌌 ~",
-            "~ 𝙻𝚘𝚜𝚝 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚗𝚎𝚟𝚎𝚛 𝚏𝚘𝚞𝚗𝚍 𝚊𝚐𝚊𝚒𝚗 ⌛ 🪙 🔑 ~",
-            "~ 𝚃𝚑𝚎 𝚙𝚛𝚘𝚋𝚕𝚎𝚖 𝚒𝚜, 𝚢𝚘𝚞 𝚝𝚑𝚒𝚗𝚔 𝚢𝚘𝚞 𝚝𝚑𝚒𝚗𝚔 𝚢𝚘𝚞 𝚑𝚊𝚟𝚎 𝚝𝚒𝚖𝚎 👁️ 🍃 ~",
-            "~ 𝚃𝚒𝚖𝚎 𝚖𝚘𝚟𝚎𝚜 𝚒𝚗 𝚘𝚗𝚎 𝚍𝚒𝚛𝚎𝚌𝚝𝚒𝚘𝚗, 𝚖𝚎𝚖𝚘𝚛𝚢 𝚒𝚗 𝚊𝚗𝚘𝚝𝚑𝚎𝚛 🧠 🕯️ ~",
-            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚝𝚑𝚎 𝚖𝚘𝚜𝚝 𝚟𝚊𝚕𝚞𝚊𝚋𝚕𝚎 𝚝𝚑𝚒𝚗𝚐 𝚊 𝚖𝚊𝚗 𝚌𝚊𝚗 𝚜𝚙𝚎𝚗𝚍 💎 ⚖️ ~",
-            "~ 𝚃𝚒𝚖𝚎 𝚏𝚕𝚒𝚎𝚜 𝚘𝚟𝚎𝚛 𝚞𝚜, 𝚋𝚞𝚝 𝚕𝚎𝚊𝚟𝚎𝚜 𝚒𝚝𝚜 𝚜𝚑𝚊𝚍𝚘𝚠 𝚋𝚎𝚑𝚒𝚗𝚍 🕊️ ⛅ ~",
-            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝚠𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
-            "~ 𝙷𝚘𝚠 𝚍𝚒𝚍 𝚒𝚝 𝚐𝚎𝚝 𝚜𝚘 𝚕𝚊𝚝𝚎 𝚜𝚘 𝚜𝚘𝚘𝚗? 🌙 🦉 ~",
-            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚍𝚛𝚎𝚜𝚜𝚖𝚊𝚔𝚎𝚛 𝚜𝚙𝚎𝚌𝚒𝚊𝚕𝚒𝚣𝚒𝚗𝚐 𝚒𝚗 𝚊𝚕𝚝𝚎𝚛𝚊𝚝𝚒𝚘𝚗𝚜 🪡 🧵 ~",
-            "~ 𝚃𝚒𝚖𝚎, 𝚠𝚑𝚒𝚌𝚑 𝚜𝚝𝚛𝚎𝚗𝚐𝚝𝚑𝚎𝚗𝚜 𝚏𝚛𝚒𝚎𝚗𝚍𝚜𝚑𝚒𝚙, 𝚠𝚎𝚊𝚔𝚎𝚗𝚜 𝚕𝚘𝚟𝚎 🤝 🥀 🖤 ~",
-            "~ ```html
-            "~ 𝚃𝚑𝚎 𝚠𝚊𝚢 𝚠𝚎 𝚜𝚙𝚎𝚗𝚍 𝚘𝚞𝚛 𝚝𝚒𝚖𝚎 𝚍𝚎𝚏𝚒𝚗𝚎𝚜 𝚠𝚑𝚘 𝚠𝚎 𝚊𝚛𝚎 ⏳ 🧭 ~",
-            "~ 𝙿𝚊𝚜𝚝, 𝙿𝚛𝚎𝚜𝚎𝚗𝚝, 𝙵𝚞𝚝𝚞𝚛𝚎—𝚊𝚕𝚕 𝚌𝚘𝚕𝚕𝚒𝚍𝚎 𝚒𝚗 𝚝𝚑𝚒𝚜 𝚖𝚘𝚖𝚎𝚗𝚝 💫 ⚡ ~",
-            "~ 𝙲𝚑𝚊𝚜𝚎 𝚝𝚑𝚎 𝚍𝚛𝚎𝚊𝚖, 𝚗𝚘𝚝 𝚝𝚑𝚎 𝚌𝚕𝚘𝚌𝚔 🏃 🌌 ~"
+            "~ Time is an illusion ⏳ ✨ 🌌 ~",
+            "~ Lost time is never found again ⌛ 🪙 🔑 ~",
+            "~ The problem is, you think you have time 👁️ 🍃 ~",
+            "~ Time moves in one direction, memory in another 🧠 🕯️ ~",
+            "~ Time is the most valuable thing a man can spend 💎 ⚖️ ~",
+            "~ Time flies over us, but leaves its shadow behind 🕊️ ⛅ ~",
+            "~ Time is a storm in which we are all lost ⛈️ 🌪️ ~",
+            "~ How did it get so late so soon? 🌙 🦉 ~",
+            "~ The way we spend our time defines who we are ⏳ 🧭 ~",
+            "~ Past, Present, Future—all collide in this moment 💫 ⚡ ~",
+            "~ Chase the dream, not the clock 🏃 🌌 ~"
         ];
 
         let quoteIndex = 0;
@@ -587,7 +581,7 @@
         quoteEl.classList.add('glitch-in');
         setInterval(updateQuote, 7000);
 
-        // Canvas Particle & Interactive Effect
+        // Starfield Canvas Setup
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -602,9 +596,7 @@
         const starCount = 130;
 
         class Star {
-            constructor() {
-                this.reset();
-            }
+            constructor() { this.reset(); }
 
             reset() {
                 this.x = Math.random() * canvas.width;
@@ -619,7 +611,6 @@
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
-
                 if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
                     this.reset();
                 }
@@ -792,7 +783,7 @@
         }
         animate();
 
-        // 2027 A/L Target Timer Logic
+        // Target Date Logic (August 1, 2027)
         const targetDate = new Date("2027-08-01T00:00:00").getTime();
 
         function updateCountdown() {
