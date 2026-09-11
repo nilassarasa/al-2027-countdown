@@ -56,7 +56,6 @@
             object-fit: cover;
             border: 2px solid #ff007f;
             box-shadow: 0 0 15px #ff007f, 0 0 30px #ff007f;
-            /* Combines glowing pulse + 1-turn horizontal coin flip animation */
             animation: pinkPulse 2s infinite ease-in-out, singleFlipPause 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             transform-style: preserve-3d;
@@ -66,16 +65,15 @@
             transform: scale(1.15);
         }
 
-        /* Spins exactly 1 full turn (360deg), holds for ~3 seconds, then repeats */
         @keyframes singleFlipPause {
             0% {
                 transform: rotateY(0deg);
             }
             30% {
-                transform: rotateY(360deg); /* 1 Full Horizontal Turn */
+                transform: rotateY(360deg);
             }
             100% {
-                transform: rotateY(360deg); /* Pause/Wait */
+                transform: rotateY(360deg);
             }
         }
 
@@ -88,7 +86,7 @@
             }
         }
 
-        /* Running Border Button Container */
+        /* Audio Wrapper */
         .audio-wrapper {
             position: fixed;
             bottom: 24px;
@@ -182,6 +180,7 @@
             align-items: center;
         }
 
+        /* Title Line Styling */
         .title-line {
             display: flex;
             justify-content: center;
@@ -194,6 +193,7 @@
             letter-spacing: 2px;
             width: 100%;
             position: relative;
+            perspective: 800px; /* Perspective for letter 3D horizontal spins */
             animation: fullTitleGlitchShake 8s ease-in-out infinite;
         }
 
@@ -207,6 +207,34 @@
             animation: letterJumpWave 8s ease-in-out infinite;
             animation-delay: var(--delay);
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+            transform-style: preserve-3d;
+        }
+
+        /* Touch / Triggered Jump + Horizontal Spin Animation */
+        .title-line .char.touch-spin {
+            animation: letterJumpAndSpin 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+            animation-delay: var(--delay) !important;
+        }
+
+        @keyframes letterJumpAndSpin {
+            0% {
+                transform: translateY(0) rotateY(0deg) scale(1);
+                color: #ffffff;
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                transform: translateY(-28px) rotateY(180deg) scale(1.25);
+                color: #00f0ff;
+                text-shadow: 
+                    0 0 15px #00f0ff,
+                    0 0 30px #ff007f,
+                    0 0 45px #a855f7;
+            }
+            100% {
+                transform: translateY(0) rotateY(360deg) scale(1);
+                color: #ffffff;
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+            }
         }
 
         @keyframes letterJumpWave {
@@ -434,7 +462,7 @@
             } else {
                 span.className = 'char';
                 span.textContent = char;
-                span.style.setProperty('--delay', `${index * 0.08}s`);
+                span.style.setProperty('--delay', `${index * 0.05}s`);
             }
             titleEl.appendChild(span);
         });
@@ -511,6 +539,19 @@
 
             spawnInteraction(centerX, centerY);
             spawnEduItems(centerX, centerY);
+
+            /* Trigger Jump & Spin effect on each title character */
+            const chars = titleEl.querySelectorAll('.char');
+            chars.forEach(char => {
+                char.classList.remove('touch-spin');
+                // Trigger reflow to restart CSS animation if clicked multiple times quickly
+                void char.offsetWidth;
+                char.classList.add('touch-spin');
+            });
+
+            setTimeout(() => {
+                chars.forEach(char => char.classList.remove('touch-spin'));
+            }, 1200);
         }
 
         function triggerCardEffect(e) {
