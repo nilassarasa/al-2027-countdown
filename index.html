@@ -34,35 +34,80 @@
             z-index: 1;
         }
 
-        /* Bottom Right Unmute Control */
-        .audio-control {
+        /* Running Light Audio Control Wrapper */
+        .audio-wrapper {
             position: fixed;
             bottom: 24px;
             right: 24px;
             z-index: 100;
-            background: rgba(13, 12, 28, 0.85);
-            border: 2px solid #00f0ff;
-            color: #00f0ff;
-            padding: 12px 18px;
-            border-radius: 30px;
+            padding: 3px;
+            border-radius: 35px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .audio-wrapper::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: conic-gradient(from 0deg, #ff007f, #00f0ff, #a855f7, #ff007f);
+            animation: rotateBorder 2.5s linear infinite;
+        }
+
+        /* Muted State - Neon Pink/Cyan Pulse */
+        .audio-wrapper.muted {
+            box-shadow: 0 0 18px rgba(255, 0, 127, 0.6);
+            animation: bouncePulse 1.2s infinite ease-in-out;
+        }
+
+        .audio-wrapper.muted::before {
+            background: conic-gradient(from 0deg, #ff007f, #00f0ff, #ff0055, #a855f7, #ff007f);
+            animation: rotateBorder 1.8s linear infinite;
+        }
+
+        /* Unmuted State - Vibrant Emerald/Cyan Flow */
+        .audio-wrapper.unmuted {
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.7);
+        }
+
+        .audio-wrapper.unmuted::before {
+            background: conic-gradient(from 0deg, #00ffaa, #00f0ff, #3b82f6, #00ffaa);
+            animation: rotateBorder 3s linear infinite;
+        }
+
+        .audio-control {
+            position: relative;
+            z-index: 2;
+            background: #0d0c1c;
+            border: none;
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 32px;
             font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: transform 0.2s ease;
+            letter-spacing: 0.5px;
+            width: 100%;
+            height: 100%;
         }
 
-        .audio-control.bouncing {
-            animation: bouncePulse 1.2s infinite ease-in-out;
+        @keyframes rotateBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @keyframes bouncePulse {
             0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-12px) scale(1.05); box-shadow: 0 0 25px rgba(0, 240, 255, 0.8); }
+            50% { transform: translateY(-8px) scale(1.03); box-shadow: 0 0 25px rgba(255, 0, 127, 0.8); }
         }
 
         .container {
@@ -268,7 +313,9 @@
 </head>
 <body>
 
-    <button class="audio-control bouncing" id="audioBtn" onclick="toggleAudio()">🔇 Tap to Unmute</button>
+    <div class="audio-wrapper muted" id="audioWrapper">
+        <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔇 Tap to Unmute</button>
+    </div>
 
     <canvas id="starfieldCanvas"></canvas>
 
@@ -361,17 +408,20 @@
 
         function toggleAudio() {
             const btn = document.getElementById('audioBtn');
+            const wrapper = document.getElementById('audioWrapper');
             if (!isPlaying) {
                 bgAudio.play().then(() => {
                     isPlaying = true;
                     btn.innerHTML = "🔊 Sound ON";
-                    btn.classList.remove('bouncing');
+                    wrapper.classList.remove('muted');
+                    wrapper.classList.add('unmuted');
                 }).catch(err => console.log("Audio play blocked:", err));
             } else {
                 bgAudio.pause();
                 isPlaying = false;
                 btn.innerHTML = "🔇 Sound OFF";
-                btn.classList.add('bouncing');
+                wrapper.classList.remove('unmuted');
+                wrapper.classList.add('muted');
             }
         }
 
@@ -398,12 +448,11 @@
         }
 
         window.addEventListener('click', (e) => {
-            if (e.target.id === 'audioBtn') return;
+            if (e.target.closest('#audioWrapper')) return;
             playFx(soundBg);
             spawnInteraction(e.clientX, e.clientY);
         });
 
-        // Quotes Array
         const quotes = [
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊𝚗 𝚒𝚕𝚕𝚞𝚜𝚒𝚘𝚗 ⏳ ✨ 🌌 ~",
             "~ 𝙻𝚘𝚜𝚝 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚗𝚎𝚟𝚎𝚛 𝚏𝚘𝚞𝚗𝚍 𝚊𝚐𝚊𝚒𝚗 ⌛ 🪙 🔑 ~",
@@ -427,7 +476,6 @@
             "~ 𝚃𝚒𝚖𝚎 𝚜𝚕𝚒𝚙𝚜 𝚊𝚠𝚊𝚢 𝚕𝚒𝚔𝚎 𝚜𝚊𝚗𝚍 𝚝𝚑𝚛𝚘𝚞𝚐𝚑 𝚊𝚗 𝚑𝚘𝚞𝚛𝚐𝚕𝚊𝚜𝚜 🏖️ ⌛ 🌊 ~"
         ];
 
-        // Pick a random starting quote on page load
         let currentQuoteIndex = Math.floor(Math.random() * quotes.length);
         const quoteDisplay = document.getElementById('quoteDisplay');
         quoteDisplay.textContent = quotes[currentQuoteIndex];
@@ -446,7 +494,6 @@
 
         setInterval(rotateQuote, 6000);
 
-        // Countdown Timer Logic
         const examDate = new Date("August 3, 2027 08:30:00").getTime();
 
         function updateCountdown() {
@@ -471,7 +518,6 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Canvas Particle Background
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
