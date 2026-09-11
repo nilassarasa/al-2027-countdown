@@ -34,75 +34,83 @@
             z-index: 1;
         }
 
-        /* Running Light Audio Control Wrapper */
+        /* Running Border Button Container */
         .audio-wrapper {
             position: fixed;
             bottom: 24px;
             right: 24px;
             z-index: 100;
-            padding: 3px;
-            border-radius: 35px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 175px;
+            height: 48px;
+            border-radius: 30px;
+            padding: 2px;
             transition: transform 0.2s ease, box-shadow 0.3s ease;
         }
 
-        .audio-wrapper::before {
-            content: '';
+        /* SVG SVG Border Overlay */
+        .audio-wrapper .border-svg {
             position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background: conic-gradient(from 0deg, #ff007f, #00f0ff, #a855f7, #ff007f);
-            animation: rotateBorder 2.5s linear infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
         }
 
-        /* Muted State - Neon Pink/Cyan Pulse */
+        .audio-wrapper rect.border-path {
+            fill: none;
+            stroke-width: 3;
+            rx: 24px;
+            ry: 24px;
+            stroke-dasharray: 80 320;
+            animation: runAround 1.8s linear infinite;
+        }
+
+        /* Mode 1: Muted - Hot Pink / Cyan light running around border */
         .audio-wrapper.muted {
-            box-shadow: 0 0 18px rgba(255, 0, 127, 0.6);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
             animation: bouncePulse 1.2s infinite ease-in-out;
         }
 
-        .audio-wrapper.muted::before {
-            background: conic-gradient(from 0deg, #ff007f, #00f0ff, #ff0055, #a855f7, #ff007f);
-            animation: rotateBorder 1.8s linear infinite;
+        .audio-wrapper.muted rect.border-path {
+            stroke: url(#pinkCyanGradient);
+            filter: drop-shadow(0 0 6px #ff007f) drop-shadow(0 0 10px #00f0ff);
         }
 
-        /* Unmuted State - Vibrant Emerald/Cyan Flow */
+        /* Mode 2: Unmuted - Emerald / Cyan light running around border */
         .audio-wrapper.unmuted {
-            box-shadow: 0 0 20px rgba(0, 255, 170, 0.7);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.4);
         }
 
-        .audio-wrapper.unmuted::before {
-            background: conic-gradient(from 0deg, #00ffaa, #00f0ff, #3b82f6, #00ffaa);
-            animation: rotateBorder 3s linear infinite;
+        .audio-wrapper.unmuted rect.border-path {
+            stroke: url(#greenCyanGradient);
+            filter: drop-shadow(0 0 6px #00ffaa) drop-shadow(0 0 10px #00f0ff);
+            animation: runAround 2.6s linear infinite;
         }
 
         .audio-control {
             position: relative;
             z-index: 2;
-            background: #0d0c1c;
-            border: none;
+            background: rgba(13, 12, 28, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #ffffff;
-            padding: 12px 20px;
-            border-radius: 32px;
-            font-size: 0.9rem;
+            width: 100%;
+            height: 100%;
+            border-radius: 28px;
+            font-size: 0.85rem;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            letter-spacing: 0.5px;
-            width: 100%;
-            height: 100%;
+            backdrop-filter: blur(8px);
         }
 
-        @keyframes rotateBorder {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes runAround {
+            0% { stroke-dashoffset: 400; }
+            100% { stroke-dashoffset: 0; }
         }
 
         @keyframes bouncePulse {
@@ -314,6 +322,22 @@
 <body>
 
     <div class="audio-wrapper muted" id="audioWrapper">
+        <svg class="border-svg" width="100%" height="100%">
+            <defs>
+                <linearGradient id="pinkCyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ff007f" />
+                    <stop offset="50%" stop-color="#00f0ff" />
+                    <stop offset="100%" stop-color="#ff007f" />
+                </linearGradient>
+                <linearGradient id="greenCyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00ffaa" />
+                    <stop offset="50%" stop-color="#00f0ff" />
+                    <stop offset="100%" stop-color="#00ffaa" />
+                </linearGradient>
+            </defs>
+            <rect class="border-path" x="1.5" y="1.5" width="172" height="45" />
+        </svg>
+
         <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔇 Tap to Unmute</button>
     </div>
 
