@@ -32,66 +32,9 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            pointer-events: none; /* Allows clicks to pass through to buttons/cards */
         }
 
-        /* Top-Left Circular Logo Link with Neon Glow Pulse */
-        .profile-logo-link {
-            position: fixed;
-            top: 24px;
-            left: 24px;
-            z-index: 100;
-            width: 62px;
-            height: 62px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid #00f0ff;
-            box-shadow: 
-                0 0 10px #00f0ff,
-                0 0 20px #00f0ff,
-                0 0 35px rgba(0, 240, 255, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #ffffff;
-            animation: logoGlowPulse 2.5s infinite ease-in-out;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        @keyframes logoGlowPulse {
-            0%, 100% {
-                border-color: #00f0ff;
-                box-shadow: 
-                    0 0 12px #00f0ff,
-                    0 0 24px #00f0ff,
-                    0 0 40px rgba(0, 240, 255, 0.7);
-            }
-            50% {
-                border-color: #ff007f;
-                box-shadow: 
-                    0 0 16px #ff007f,
-                    0 0 32px #ff007f,
-                    0 0 50px rgba(255, 0, 127, 0.8);
-            }
-        }
-
-        .profile-logo-link:hover {
-            transform: scale(1.12);
-            animation-play-state: paused;
-            border-color: #00ffaa;
-            box-shadow: 0 0 25px #00ffaa, 0 0 45px #00ffaa;
-        }
-
-        .profile-logo-link img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        /* Running Border Sound Button */
+        /* Running Border Button Container */
         .audio-wrapper {
             position: fixed;
             bottom: 24px;
@@ -102,9 +45,9 @@
             border-radius: 30px;
             isolation: isolate;
             transition: transform 0.2s ease, box-shadow 0.3s ease;
-            cursor: pointer;
         }
 
+        /* Fixed SVG Overflow Clipping */
         .audio-wrapper .border-svg {
             position: absolute;
             top: 0;
@@ -125,6 +68,7 @@
             animation: runAround 1.8s linear infinite;
         }
 
+        /* Mode 1: Muted - Hot Pink / Cyan light running around border */
         .audio-wrapper.muted {
             box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
             animation: bouncePulse 1.2s infinite ease-in-out;
@@ -135,6 +79,7 @@
             filter: drop-shadow(0 0 4px #ff007f) drop-shadow(0 0 8px #00f0ff);
         }
 
+        /* Mode 2: Unmuted - Emerald / Cyan light running around border */
         .audio-wrapper.unmuted {
             box-shadow: 0 0 15px rgba(0, 255, 170, 0.4);
         }
@@ -161,6 +106,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            will-change: transform;
         }
 
         @keyframes runAround {
@@ -175,7 +121,7 @@
 
         .container {
             position: relative;
-            z-index: 10;
+            z-index: 2;
             width: 92%;
             max-width: 760px;
             text-align: center;
@@ -205,6 +151,7 @@
             width: 0.4em;
         }
 
+        /* Individual Letters */
         .title-line .char {
             display: inline-block;
             color: #ffffff;
@@ -269,7 +216,7 @@
             }
         }
 
-        /* Countdown Grid */
+        /* Countdown Cards Layout */
         .countdown {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -280,12 +227,6 @@
         @media (max-width: 600px) {
             .countdown {
                 grid-template-columns: repeat(2, 1fr);
-            }
-            .profile-logo-link {
-                top: 16px;
-                left: 16px;
-                width: 52px;
-                height: 52px;
             }
         }
 
@@ -325,7 +266,7 @@
             font-weight: 600;
         }
 
-        /* Quotes Container */
+        /* Quotes Styling */
         .quote-container {
             margin-top: 35px;
             min-height: 52px;
@@ -381,12 +322,6 @@
 </head>
 <body>
 
-    <!-- Glowing Top-Left Circular Logo -->
-    <a href="[https://www.youtube.com/@CryoneX_Space](https://www.youtube.com/@CryoneX_Space)" target="_blank" class="profile-logo-link" title="Visit CryoneX Space YouTube Channel">
-        <img src="channels4_profile.jpg" alt="CryoneX Space">
-    </a>
-
-    <!-- Audio Control Button -->
     <div class="audio-wrapper muted" id="audioWrapper">
         <svg class="border-svg" width="100%" height="100%">
             <defs>
@@ -407,10 +342,8 @@
         <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔇 Sound OFF</button>
     </div>
 
-    <!-- Starfield Particle Canvas -->
     <canvas id="starfieldCanvas"></canvas>
 
-    <!-- Main Content -->
     <div class="container">
         <div class="title-line" id="titleLine" onclick="triggerTitleAction(event)">2027 A/L COUNTDOWN</div>
 
@@ -439,7 +372,6 @@
     </div>
 
     <script>
-        // Setup Title Wave Animation
         const titleEl = document.getElementById('titleLine');
         const titleText = titleEl.textContent;
         titleEl.textContent = '';
@@ -456,7 +388,6 @@
             titleEl.appendChild(span);
         });
 
-        // Audio System
         const bgPlaylist = [
             "YTDown.com_YouTube_No-Copyright-Groove-Day-Hip-Hop-Beat-Gro_Media_7sUZbh_3m0Q_007_48k.m4a",
             "YTDown.com_YouTube_NNX-LXSY-KONOSOO-No-Copyright-Thanks-NNX_Media_MOsQFsa6ZzI_005_48k.m4a",
@@ -466,7 +397,7 @@
 
         let currentTrackIndex = Math.floor(Math.random() * bgPlaylist.length);
         const bgAudio = new Audio();
-        bgAudio.volume = 0.08;
+        bgAudio.volume = 0.06;
 
         function loadTrack(index) {
             bgAudio.src = bgPlaylist[index];
@@ -509,7 +440,7 @@
                     btn.innerHTML = "🔊 Sound ON";
                     wrapper.classList.remove('muted');
                     wrapper.classList.add('unmuted');
-                }).catch(err => console.log("Audio playback blocked:", err));
+                }).catch(err => console.log("Audio play blocked:", err));
             } else {
                 bgAudio.pause();
                 isPlaying = false;
@@ -542,24 +473,25 @@
         }
 
         window.addEventListener('click', (e) => {
-            if (e.target.closest('#audioWrapper') || e.target.closest('.profile-logo-link')) return;
+            if (e.target.closest('#audioWrapper')) return;
             playFx(soundBg);
             spawnInteraction(e.clientX, e.clientY);
         });
 
-        // Quotes List
         const quotes = [
-            "~ Time is an illusion ⏳ ✨ 🌌 ~",
-            "~ Lost time is never found again ⌛ 🪙 🔑 ~",
-            "~ The problem is, you think you have time 👁️ 🍃 ~",
-            "~ Time moves in one direction, memory in another 🧠 🕯️ ~",
-            "~ Time is the most valuable thing a man can spend 💎 ⚖️ ~",
-            "~ Time flies over us, but leaves its shadow behind 🕊️ ⛅ ~",
-            "~ Time is a storm in which we are all lost ⛈️ 🌪️ ~",
-            "~ How did it get so late so soon? 🌙 🦉 ~",
-            "~ The way we spend our time defines who we are ⏳ 🧭 ~",
-            "~ Past, Present, Future—all collide in this moment 💫 ⚡ ~",
-            "~ Chase the dream, not the clock 🏃 🌌 ~"
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊𝚗 𝚒𝚕𝚕𝚞𝚜𝚒𝚘𝚗 ⏳ ✨ 🌌 ~",
+            "~ 𝙻𝚘𝚜𝚝 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚗𝚎𝚟𝚎𝚛 𝚏𝚘𝚞𝚗𝚍 𝚊𝚐𝚊𝚒𝚗 ⌛ 🪙 🔑 ~",
+            "~ 𝚃𝚑𝚎 𝚙𝚛𝚘𝚋𝚕𝚎𝚖 𝚒𝚜, 𝚢𝚘𝚞 𝚝𝚑𝚒𝚗𝚔 𝚢𝚘𝚞 𝚑𝚊𝚟𝚎 𝚝𝚒𝚖𝚎 👁️ 🍃 ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚖𝚘𝚟𝚎𝚜 𝚒𝚗 𝚘𝚗𝚎 𝚍𝚒𝚛𝚎𝚌𝚝𝚒𝚘𝚗, 𝚖𝚎𝚖𝚘𝚛𝚢 𝚒𝚗 𝚊𝚗𝚘𝚝𝚑𝚎𝚛 🧠 🕯️ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚝𝚑𝚎 𝚖𝚘𝚜𝚝 𝚟𝚊𝚕𝚞𝚊𝚋𝚕𝚎 𝚝𝚑𝚒𝚗𝚐 𝚊 𝚖𝚊𝚗 𝚌𝚊𝚗 𝚜𝚙𝚎𝚗𝚍 💎 ⚖️ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚏𝚕𝚒𝚎𝚜 𝚘𝚟𝚎𝚛 𝚞𝚜, 𝚋𝚞𝚝 𝚕𝚎𝚊𝚟𝚎𝚜 𝚒𝚝𝚜 𝚜𝚑𝚊𝚍𝚘𝚠 𝚋𝚎𝚑𝚒𝚗𝚍 🕊️ ⛅ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝚠𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
+            "~ 𝙷𝚘𝚠 𝚍𝚒𝚍 𝚒𝚝 𝚐𝚎𝚝 𝚜𝚘 𝚕𝚊𝚝𝚎 𝚜𝚘 𝚜𝚘𝚘𝚗? 🌙 🦉 ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚍𝚛𝚎𝚜𝚜𝚖𝚊𝚔𝚎𝚛 𝚜𝚙𝚎𝚌𝚒𝚊𝚕𝚒𝚣𝚒𝚗𝚐 𝚒𝚗 𝚊𝚕𝚝𝚎𝚛𝚊𝚝𝚒𝚘𝚗𝚜 🪡 🧵 ~",
+            "~ 𝚃𝚒𝚖𝚎, 𝚠𝚑𝚒𝚌𝚑 𝚜𝚝𝚛𝚎𝚗𝚐𝚝𝚑𝚎𝚗𝚜 𝚏𝚛𝚒𝚎𝚗𝚍𝚜𝚑𝚒𝚙, 𝚠𝚎𝚊𝚔𝚎𝚗𝚜 𝚕𝚘𝚟𝚎 🤝 🥀 🖤 ~",
+            "~ 𝚈𝚘𝚞𝚛 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚕𝚒𝚖𝚒𝚝𝚎𝚍, 𝚜𝚘 𝚍𝚘𝚗'𝚝 𝚠𝚊𝚜𝚝𝚎 𝚒𝚝 𝚕𝚒𝚟𝚒𝚗𝚐 𝚜𝚘𝚖𝚎𝚘𝚗𝚎 𝚎𝚕𝚜𝚎'𝚜 𝚕𝚒𝚏𝚎 🚀 💡 🌟 ~",
+            "~ 𝚃𝚑𝚎𝚢 𝚊𝚕𝚠𝚊𝚢𝚜 𝚜𝚊𝚢 𝚝𝚒𝚖𝚎 𝚌𝚑𝚊𝚗𝚐𝚎𝚜 𝚝𝚑𝚒𝚗𝚐𝚜, 𝚋𝚞𝚝 𝚢𝚘𝚞 𝚊𝚌𝚝𝚞𝚊𝚕𝚕𝚢 𝚑𝚊𝚟𝚎 𝚝𝚘 𝚌𝚑𝚊𝚗𝚐𝚎 𝚝𝚑𝚎𝚖 𝚢𝚘𝚞𝚛𝚜𝚎𝚕𝚏 ⚡ 🎨 ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚌𝚛𝚎𝚊𝚝𝚎𝚍 𝚝𝚑𝚒𝚗𝚐. 𝚃𝚘 𝚜𝚊𝚢 '𝙸 𝚍𝚘𝚗'𝚝 have time' 𝚒𝚜 𝚕𝚒𝚔𝚎 𝚜𝚊𝚢𝚒𝚗𝚐 '𝙸 𝚍𝚘𝚗'𝚝 𝚠𝚊𝚗𝚝 𝚝𝚘' 🌱 ☀️ ~"
         ];
 
         let quoteIndex = 0;
@@ -570,18 +502,46 @@
             quoteEl.classList.add('glitch-out');
 
             setTimeout(() => {
-                quoteIndex = (quoteIndex + 1) % quotes.length;
                 quoteEl.textContent = quotes[quoteIndex];
+                quoteIndex = (quoteIndex + 1) % quotes.length;
                 quoteEl.classList.remove('glitch-out');
                 quoteEl.classList.add('glitch-in');
             }, 400);
         }
 
-        quoteEl.textContent = quotes[0];
-        quoteEl.classList.add('glitch-in');
+        updateQuote();
         setInterval(updateQuote, 7000);
 
-        // Starfield Canvas Setup
+        // Target Date: August 1, 2027
+        const targetDate = new Date('August 1, 2027 00:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference < 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = d < 10 ? '0' + d : d;
+            document.getElementById('hours').textContent = h < 10 ? '0' + h : h;
+            document.getElementById('minutes').textContent = m < 10 ? '0' + m : m;
+            document.getElementById('seconds').textContent = s < 10 ? '0' + s : s;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Interactive Canvas Starfield Background & 3D Forward Warp Effect
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -592,225 +552,162 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let stars = [];
-        const starCount = 130;
+        const numStars = 350;
+        const forwardStars = [];
 
-        class Star {
-            constructor() { this.reset(); }
-
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.4;
-                this.speedY = (Math.random() - 0.5) * 0.4;
-                this.color = ['#00f0ff', '#ff007f', '#a855f7', '#ffffff'][Math.floor(Math.random() * 4)];
-                this.alpha = Math.random() * 0.8 + 0.2;
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
+        function resetStar(star) {
+            star.x = (Math.random() - 0.5) * canvas.width * 2;
+            star.y = (Math.random() - 0.5) * canvas.height * 2;
+            star.z = canvas.width;
+            star.pz = canvas.width;
+            star.color = Math.random() > 0.8 ? (Math.random() > 0.5 ? '#00f0ff' : '#a855f7') : '#ffffff';
         }
 
-        for (let i = 0; i < starCount; i++) {
-            stars.push(new Star());
+        for (let i = 0; i < numStars; i++) {
+            const star = {};
+            resetStar(star);
+            star.z = Math.random() * canvas.width;
+            star.pz = star.z;
+            forwardStars.push(star);
         }
 
-        let particles = [];
-        class BurstParticle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.size = Math.random() * 4 + 2;
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 5 + 1.5;
-                this.vx = Math.cos(angle) * speed;
-                this.vy = Math.sin(angle) * speed;
-                this.alpha = 1;
-                this.decay = Math.random() * 0.02 + 0.015;
-                this.color = ['#00f0ff', '#ff007f', '#a855f7', '#00ffaa'][Math.floor(Math.random() * 4)];
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.alpha -= this.decay;
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, this.alpha);
-                ctx.fillStyle = this.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        let shockwaves = [];
-        class Shockwave {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.radius = 2;
-                this.maxRadius = 70 + Math.random() * 30;
-                this.alpha = 1;
-                this.color = ['#00f0ff', '#ff007f', '#a855f7'][Math.floor(Math.random() * 3)];
-            }
-
-            update() {
-                this.radius += 4;
-                this.alpha = 1 - (this.radius / this.maxRadius);
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, this.alpha);
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = 3;
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.stroke();
-                ctx.restore();
-            }
-        }
-
-        let eduItems = [];
-        const eduSymbols = ['📚', '✏️', '📐', '🔬', '🎓', '📝', '🧪', '💡', '📖', '💻'];
-
-        class EduItem {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.symbol = eduSymbols[Math.floor(Math.random() * eduSymbols.length)];
-                this.size = Math.random() * 16 + 18;
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 4 + 2;
-                this.vx = Math.cos(angle) * speed;
-                this.vy = Math.sin(angle) * speed - 1.5;
-                this.alpha = 1;
-                this.decay = Math.random() * 0.012 + 0.008;
-                this.rotation = Math.random() * Math.PI * 2;
-                this.rotSpeed = (Math.random() - 0.5) * 0.1;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.rotation += this.rotSpeed;
-                this.alpha -= this.decay;
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, this.alpha);
-                ctx.font = `${this.size}px sans-serif`;
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.rotation);
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(this.symbol, 0, 0);
-                ctx.restore();
-            }
-        }
+        const particles = [];
+        const eduItems = [];
+        const eduSymbols = ['📚', '✏️', '🎓', '🔬', '📐', '🧬', '⚡', '💡', '📖'];
 
         function spawnInteraction(x, y) {
-            shockwaves.push(new Shockwave(x, y));
             for (let i = 0; i < 20; i++) {
-                particles.push(new BurstParticle(x, y));
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 4 + 1;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    radius: Math.random() * 3 + 1,
+                    color: Math.random() > 0.5 ? '#00f0ff' : '#ff007f',
+                    life: 1,
+                    decay: Math.random() * 0.03 + 0.015
+                });
             }
         }
 
         function spawnEduItems(x, y) {
-            for (let i = 0; i < 15; i++) {
-                eduItems.push(new EduItem(x, y));
+            for (let i = 0; i < 12; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 2;
+                eduItems.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 1,
+                    symbol: eduSymbols[Math.floor(Math.random() * eduSymbols.length)],
+                    size: Math.random() * 12 + 18,
+                    life: 1,
+                    decay: Math.random() * 0.02 + 0.01,
+                    rot: Math.random() * Math.PI,
+                    vRot: (Math.random() - 0.5) * 0.1
+                });
             }
         }
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const speed = 2.5; // Speed of incoming particles
 
-            stars.forEach(star => {
-                star.update();
-                star.draw();
+        function animate() {
+            ctx.fillStyle = 'rgba(2, 2, 5, 0.4)'; // Slight trail for smooth motion blur
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            // Draw 3D Forward-Moving Particles
+            forwardStars.forEach(star => {
+                star.pz = star.z;
+                star.z -= speed;
+
+                if (star.z <= 0) {
+                    resetStar(star);
+                }
+
+                const k = 256 / star.z;
+                const px = star.x * k + cx;
+                const py = star.y * k + cy;
+
+                const pk = 256 / star.pz;
+                const ppx = star.x * pk + cx;
+                const ppy = star.y * pk + cy;
+
+                if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+                    const size = Math.max(0.1, (1 - star.z / canvas.width) * 3);
+                    const alpha = Math.min(1, (1 - star.z / canvas.width) * 1.5);
+
+                    ctx.beginPath();
+                    ctx.moveTo(ppx, ppy);
+                    ctx.lineTo(px, py);
+                    ctx.strokeStyle = star.color;
+                    ctx.globalAlpha = alpha;
+                    ctx.lineWidth = size;
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(px, py, size / 2, 0, Math.PI * 2);
+                    ctx.fillStyle = star.color;
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
             });
 
-            for (let i = shockwaves.length - 1; i >= 0; i--) {
-                shockwaves[i].update();
-                shockwaves[i].draw();
-                if (shockwaves[i].alpha <= 0 || shockwaves[i].radius >= shockwaves[i].maxRadius) {
-                    shockwaves.splice(i, 1);
-                }
-            }
-
+            // Draw Click Sparkle Particles
             for (let i = particles.length - 1; i >= 0; i--) {
-                particles[i].update();
-                particles[i].draw();
-                if (particles[i].alpha <= 0) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= p.decay;
+
+                if (p.life <= 0) {
                     particles.splice(i, 1);
+                    continue;
                 }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
             }
 
+            // Draw Floating Edu Icons
             for (let i = eduItems.length - 1; i >= 0; i--) {
-                eduItems[i].update();
-                eduItems[i].draw();
-                if (eduItems[i].alpha <= 0) {
+                const item = eduItems[i];
+                item.x += item.vx;
+                item.y += item.vy;
+                item.rot += item.vRot;
+                item.life -= item.decay;
+
+                if (item.life <= 0) {
                     eduItems.splice(i, 1);
+                    continue;
                 }
+
+                ctx.save();
+                ctx.translate(item.x, item.y);
+                ctx.rotate(item.rot);
+                ctx.font = `${item.size}px sans-serif`;
+                ctx.globalAlpha = item.life;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(item.symbol, 0, 0);
+                ctx.restore();
             }
 
             requestAnimationFrame(animate);
         }
+
         animate();
-
-        // Target Date Logic (August 1, 2027)
-        const targetDate = new Date("2027-08-01T00:00:00").getTime();
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
-
-            if (distance < 0) {
-                document.getElementById('days').textContent = "00";
-                document.getElementById('hours').textContent = "00";
-                document.getElementById('minutes').textContent = "00";
-                document.getElementById('seconds').textContent = "00";
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = String(days).padStart(2, '0');
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-        }
-
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
     </script>
 </body>
 </html>
