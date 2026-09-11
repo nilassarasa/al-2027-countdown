@@ -541,7 +541,7 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Interactive Canvas Starfield Background & Effects
+        // Interactive Canvas Starfield Background & 3D Forward Warp Effect
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -552,17 +552,23 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        const stars = [];
-        const numStars = 180;
+        const numStars = 350;
+        const forwardStars = [];
+
+        function resetStar(star) {
+            star.x = (Math.random() - 0.5) * canvas.width * 2;
+            star.y = (Math.random() - 0.5) * canvas.height * 2;
+            star.z = canvas.width;
+            star.pz = canvas.width;
+            star.color = Math.random() > 0.8 ? (Math.random() > 0.5 ? '#00f0ff' : '#a855f7') : '#ffffff';
+        }
 
         for (let i = 0; i < numStars; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5 + 0.5,
-                alpha: Math.random(),
-                speed: Math.random() * 0.02 + 0.005
-            });
+            const star = {};
+            resetStar(star);
+            star.z = Math.random() * canvas.width;
+            star.pz = star.z;
+            forwardStars.push(star);
         }
 
         const particles = [];
@@ -605,22 +611,53 @@
             }
         }
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const speed = 2.5; // Speed of incoming particles
 
-            // Draw Stars
-            stars.forEach(star => {
-                star.alpha += star.speed;
-                if (star.alpha > 1 || star.alpha < 0) {
-                    star.speed = -star.speed;
+        function animate() {
+            ctx.fillStyle = 'rgba(2, 2, 5, 0.4)'; // Slight trail for smooth motion blur
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            // Draw 3D Forward-Moving Particles
+            forwardStars.forEach(star => {
+                star.pz = star.z;
+                star.z -= speed;
+
+                if (star.z <= 0) {
+                    resetStar(star);
                 }
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha)})`;
-                ctx.fill();
+
+                const k = 256 / star.z;
+                const px = star.x * k + cx;
+                const py = star.y * k + cy;
+
+                const pk = 256 / star.pz;
+                const ppx = star.x * pk + cx;
+                const ppy = star.y * pk + cy;
+
+                if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+                    const size = Math.max(0.1, (1 - star.z / canvas.width) * 3);
+                    const alpha = Math.min(1, (1 - star.z / canvas.width) * 1.5);
+
+                    ctx.beginPath();
+                    ctx.moveTo(ppx, ppy);
+                    ctx.lineTo(px, py);
+                    ctx.strokeStyle = star.color;
+                    ctx.globalAlpha = alpha;
+                    ctx.lineWidth = size;
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(px, py, size / 2, 0, Math.PI * 2);
+                    ctx.fillStyle = star.color;
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
             });
 
-            // Draw Sparkle Particles
+            // Draw Click Sparkle Particles
             for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
                 p.x += p.vx;
