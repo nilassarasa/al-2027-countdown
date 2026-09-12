@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Fixes referrer context for YouTube API on custom domains -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>2027 A/L Countdown</title>
     <style>
         * {
@@ -367,7 +369,7 @@
         <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔇 Sound OFF</button>
     </div>
 
-    <!-- Hidden YouTube Player Container -->
+    <!-- Hidden YouTube Container -->
     <div id="youtube-player-container">
         <div id="yt-player"></div>
     </div>
@@ -424,7 +426,7 @@
             titleEl.appendChild(span);
         });
 
-        // YouTube Playlist
+        // Track list
         const ytPlaylist = [
             "3gb0Zg3p3Lk", "UP8x9QbTVno", "qYwYw6mLlPs", "_gzm2gRcYms",
             "VtthkQ7mLFk", "oSHzUD-uqKY", "-l-EvwhSWQU", "7sUZbh_3m0Q",
@@ -456,18 +458,21 @@
                     'disablekb': 1,
                     'fs': 0,
                     'modestbranding': 1,
-                    'playsinline': 1
+                    'playsinline': 1,
+                    'enablejsapi': 1,
+                    'origin': 'https://nilassarasa.xyz' // Explicit origin to prevent file:/// fallbacks
                 },
                 events: {
                     'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
                 }
             });
         }
 
         function onPlayerReady(event) {
             ytReady = true;
-            player.setVolume(30);
+            player.setVolume(50);
         }
 
         function onPlayerStateChange(event) {
@@ -476,10 +481,19 @@
             }
         }
 
+        function onPlayerError(event) {
+            console.warn("YouTube video embed restricted (Code: " + event.data + "). Advancing to next track...");
+            if (isPlaying) {
+                playRandomNextTrack();
+            }
+        }
+
         function playRandomNextTrack() {
             currentTrackIndex = getRandomTrackIndex();
             if (player && ytReady) {
                 player.loadVideoById(ytPlaylist[currentTrackIndex]);
+                player.unMute();
+                player.setVolume(50);
                 player.playVideo();
             }
         }
@@ -489,15 +503,19 @@
             const wrapper = document.getElementById('audioWrapper');
             
             if (!isPlaying) {
-                if (player && player.playVideo) {
+                if (player && typeof player.playVideo === 'function') {
+                    player.unMute();
+                    player.setVolume(50);
                     player.playVideo();
                     isPlaying = true;
                     btn.innerHTML = "🔊 Sound ON";
                     wrapper.classList.remove('muted');
                     wrapper.classList.add('unmuted');
+                } else {
+                    alert("Player loading, please click Sound ON again in 2 seconds.");
                 }
             } else {
-                if (player && player.pauseVideo) {
+                if (player && typeof player.pauseVideo === 'function') {
                     player.pauseVideo();
                     isPlaying = false;
                     btn.innerHTML = "🔇 Sound OFF";
@@ -507,7 +525,7 @@
             }
         }
 
-        // Sound FX Fallbacks
+        // Local Sound FX (Relative paths)
         const soundBg = new Audio("bg.mp3");
         const soundClick = new Audio("click.mp3");
         soundBg.volume = 0.05;
@@ -528,7 +546,7 @@
             playFx(soundBg);
         });
 
-        // Rotating Quotes
+        // Quotes Array
         const quotes = [
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊𝚗 𝚒𝚕𝚕𝚞𝚜𝚒𝚘𝚗 ⏳ ✨ 🌌 ~",
             "~ 𝙻𝚘𝚜𝚝 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚗𝚎𝚟𝚎𝚛 𝚏𝚘𝚞𝚗𝚍 𝚊𝚐𝚊𝚒𝚗 ⌛ 🪙 🔑 ~",
@@ -558,7 +576,7 @@
             }, 400);
         }, 6000);
 
-        // Countdown Timer Logic
+        // Countdown Logic
         const targetDate = new Date("August 1, 2027 00:00:00").getTime();
 
         function updateCountdown() {
@@ -587,7 +605,7 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Starfield Canvas Background Animation
+        // Canvas animation
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
         let width = canvas.width = window.innerWidth;
