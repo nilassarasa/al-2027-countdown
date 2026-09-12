@@ -519,7 +519,7 @@
         ];
 
         let currentTrackIndex = Math.floor(Math.random() * bgPlaylist.length);
-        const bgAudio = new Audio();
+        let bgAudio = new Audio();
         bgAudio.volume = 0.06;
 
         function loadTrack(index) {
@@ -534,7 +534,7 @@
             } while (nextIndex === currentTrackIndex && bgPlaylist.length > 1);
             currentTrackIndex = nextIndex;
             loadTrack(currentTrackIndex);
-            bgAudio.play();
+            bgAudio.play().catch(() => {});
         });
 
         loadTrack(currentTrackIndex);
@@ -551,29 +551,56 @@
         }
 
         let isPlaying = false;
+        let isTransitioning = false;
 
         function toggleAudio() {
+            if (isTransitioning) return; // Prevent spam-clicking locks
+            isTransitioning = true;
+
             const btn = document.getElementById('audioBtn');
             const wrapper = document.getElementById('audioWrapper');
             
             if (!isPlaying) {
-                bgAudio.play().then(() => {
-                    isPlaying = true;
-                    btn.innerHTML = "🔊 Sound ON";
-                    wrapper.classList.remove('muted');
-                    wrapper.classList.add('unmuted');
-                }).catch(err => {
-                    console.log("Audio play blocked or locked by browser:", err);
-                    loadTrack(currentTrackIndex);
+                const playPromise = bgAudio.play();
+                
+                // Watchdog timer: if the browser hangs on the promise for over 800ms, force recover
+                const watchdog = setTimeout(() => {
+                    isTransitioning = false;
+                    // Force re-initialize element if stuck
+                    bgAudio = new Audio(bgPlaylist[currentTrackIndex]);
+                    bgAudio.volume = 0.06;
                     bgAudio.play().then(() => {
                         isPlaying = true;
                         btn.innerHTML = "🔊 Sound ON";
                         wrapper.classList.remove('muted');
                         wrapper.classList.add('unmuted');
-                    }).catch(e => console.log("Fallback failed:", e));
-                });
+                    }).catch(() => {});
+                }, 800);
+
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        clearTimeout(watchdog);
+                        isTransitioning = false;
+                        isPlaying = true;
+                        btn.innerHTML = "🔊 Sound ON";
+                        wrapper.classList.remove('muted');
+                        wrapper.classList.add('unmuted');
+                    }).catch(err => {
+                        clearTimeout(watchdog);
+                        isTransitioning = false;
+                        console.log("Audio play blocked, refreshing state:", err);
+                        loadTrack(currentTrackIndex);
+                        bgAudio.play().then(() => {
+                            isPlaying = true;
+                            btn.innerHTML = "🔊 Sound ON";
+                            wrapper.classList.remove('muted');
+                            wrapper.classList.add('unmuted');
+                        }).catch(() => {});
+                    });
+                }
             } else {
                 bgAudio.pause();
+                isTransitioning = false;
                 isPlaying = false;
                 btn.innerHTML = "🔇 Sound OFF";
                 wrapper.classList.remove('unmuted');
