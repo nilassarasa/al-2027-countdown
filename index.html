@@ -175,7 +175,7 @@
             margin-bottom: 30px;
         }
 
-        /* Title Line with Slower, Clean Subdued Glitch */
+        /* Title Line with 3s Fast Glitch Cycle */
         .title-line {
             display: flex;
             justify-content: center;
@@ -187,7 +187,7 @@
             letter-spacing: 2px;
             width: 100%;
             position: relative;
-            animation: gentleGlitch 8s ease-in-out infinite;
+            animation: gentleGlitch 3s ease-in-out infinite;
             will-change: transform;
         }
 
@@ -198,23 +198,23 @@
         .title-line .char {
             display: inline-block;
             color: #ffffff;
-            animation: letterJumpSlow 8s ease-in-out infinite;
+            animation: letterJumpSlow 3s ease-in-out infinite;
             animation-delay: var(--delay);
             text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
         }
 
         @keyframes letterJumpSlow {
-            0%, 80%, 100% {
+            0%, 50%, 100% {
                 transform: translateY(0) scale(1);
                 color: #ffffff;
                 text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
             }
-            85% {
+            60% {
                 transform: translateY(-8px) scale(1.05);
                 color: #00f0ff;
                 text-shadow: 0 0 10px #00f0ff;
             }
-            90% {
+            70% {
                 transform: translateY(-4px) scale(1.02);
                 color: #ff007f;
                 text-shadow: 0 0 10px #ff007f;
@@ -222,15 +222,15 @@
         }
 
         @keyframes gentleGlitch {
-            0%, 85%, 100% {
+            0%, 50%, 100% {
                 transform: translate(0, 0) skewX(0deg);
                 filter: none;
             }
-            87% {
+            55% {
                 transform: translate(-3px, 1px) skewX(-3deg);
                 filter: drop-shadow(-2px 0 #ff007f);
             }
-            90% {
+            65% {
                 transform: translate(3px, -1px) skewX(3deg);
                 filter: drop-shadow(2px 0 #00f0ff);
             }
@@ -405,7 +405,7 @@
             } else {
                 span.className = 'char';
                 span.textContent = char;
-                span.style.setProperty('--delay', `${index * 0.08}s`);
+                span.style.setProperty('--delay', `${index * 0.05}s`);
             }
             titleEl.appendChild(span);
         });
@@ -493,10 +493,10 @@
             "~ 𝚃𝚒𝚖𝚎 𝚖𝚘𝚟𝚎𝚜 𝚒𝚗 𝚘𝚗𝚎 𝚍𝚒𝚛𝚎𝚌𝚝𝚒𝚘𝚗, 𝚖𝚎𝚖𝚘𝚛𝚢 𝚒𝚗 𝚊𝚗𝚘𝚝𝚑𝚎𝚛 🧠 🕯️ ~",
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚝𝚑𝚎 𝚖𝚘𝚜𝚝 𝚟𝚊𝚕𝚞𝚊𝚋𝚕𝚎 𝚝𝚑𝚒𝚗𝚐 𝚊 𝚖𝚊𝚗 𝚌𝚊𝚗 𝚜𝚙𝚎𝚗𝚍 💎 ⚖️ ~",
             "~ 𝚃𝚒𝚖𝚎 𝚏𝚕𝚒𝚎𝚜 𝚘𝚟𝚎𝚛 𝚞𝚜, 𝚋𝚞𝚝 𝚕𝚎𝚊𝚟𝚎𝚜 𝚒𝚝𝚜 𝚜𝚑𝚊𝚍𝚘𝚠 𝚋𝚎𝚑𝚒𝚗𝚍 🕊️ ⛅ ~",
-            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝚠𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝙿𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
             "~ 𝙷𝚘𝚠 𝚍𝚒𝚍 𝚒𝚝 𝚐𝚎𝚝 𝚜𝚘 𝚕𝚊𝚝𝚎 𝚜𝚘 𝚜𝚘𝚘𝚗? 🌙 🦉 ~",
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚍𝚛𝚎𝚜𝚜𝚖𝚊𝚔𝚎𝚛 𝚜𝚙𝚎𝚌𝚒𝚊𝚕𝚒𝚣𝚒𝚗𝚐 𝚒𝚗 𝚊𝚕𝚝𝚎𝚛𝚊𝚝𝚒𝚘𝚗𝚜 🪡 🧵 ~",
-            "~ 𝚃𝚒𝚖𝚎, 𝚠𝚑𝚒𝚌𝚑 𝚜𝚝𝚛𝚎𝚗𝚐𝚝𝚑𝚎𝚗𝚜 𝚏𝚛𝚒𝚎𝚗𝚍𝚜𝚑𝚒𝚙, 𝚠𝚎𝚊𝚔𝚎𝚗𝚜 𝚕𝚘𝚟𝚎 🤝 🥀 🖤 ~",
+            "~ 𝚃𝚒𝚖𝚎, 𝙬𝙝𝙞𝙘𝙝 𝙨𝙩𝙧𝙚𝙣𝙜𝙩𝙝𝙚𝙣𝙨 𝙛𝙧𝙞𝙚𝙣𝙙𝙨𝙝𝙞𝙥, 𝙬𝙚𝙖𝙠𝙚𝙣𝙨 𝙡𝙤𝙫𝙚 🤝 🥀 🖤 ~",
             "~ 𝚈𝚘𝚞𝚛 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚕𝚒𝚖𝚒𝚝𝚎𝚍, 𝚜𝚘 𝚍𝚘𝚗'𝚝 𝚠𝚊𝚜𝚝𝚎 𝚒𝚝 𝚕𝚒𝚟𝚒𝚗𝚐 𝚜𝚘𝚖𝚎𝚘𝚗𝚎 𝚎𝚕𝚜𝚎'𝚜 𝚕𝚒𝚏𝚎 🚀 💡 🌟 ~",
             "~ 𝚃𝚑𝚎𝚢 𝚊𝚕𝚠𝚊𝚢𝚜 𝚜𝚊𝚢 𝚝𝚒𝚖𝚎 𝚌𝚑𝚊𝚗𝚐𝚎𝚜 𝚝𝚑𝚒𝚗𝚐𝚜, 𝚋𝚞𝚝 𝚢𝚘𝚞 𝚊𝚌𝚝𝚞𝚊𝚕𝚕𝚢 𝚑𝚊𝚟𝚎 𝚝𝚘 𝚌𝚑𝚊𝚗𝚐𝚎 𝚝𝚑𝚎𝚖 𝚢𝚘𝚞𝚛𝚜𝚎𝚕𝚏 ⚡ 🎨 ~",
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚌𝚛𝚎𝚊𝚝𝚎𝚍 𝚝𝚑𝚒𝚗𝚐. 𝚃𝚘 𝚜𝚊𝚢 '𝙸 𝚍𝚘𝚗'𝚝 𝚑𝚊𝚟𝚎 𝚝𝚒𝚖𝚎' 𝚒𝚜 𝚕𝚒𝚔𝚎 𝚜𝚊𝚢𝚒𝚗𝚐 '𝙸 𝚍𝚘𝚗'𝚝 𝚠𝚊𝚗𝚝 𝚝𝚘' 🌱 ☀️ ~"
