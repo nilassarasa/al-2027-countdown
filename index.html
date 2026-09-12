@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Fixes referrer context for YouTube API on custom domains -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>2027 A/L Countdown</title>
     <style>
@@ -405,11 +404,9 @@
         </div>
     </div>
 
-    <!-- Load YouTube Iframe API -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // Title wave animation setup
         const titleEl = document.getElementById('titleLine');
         const titleText = titleEl.textContent;
         titleEl.textContent = '';
@@ -426,11 +423,19 @@
             titleEl.appendChild(span);
         });
 
-        // Track list
+        // Your Original Tracklist (11 Songs)
         const ytPlaylist = [
-            "3gb0Zg3p3Lk", "UP8x9QbTVno", "qYwYw6mLlPs", "_gzm2gRcYms",
-            "VtthkQ7mLFk", "oSHzUD-uqKY", "-l-EvwhSWQU", "7sUZbh_3m0Q",
-            "1fVQrSZV31k", "MOsQFsa6ZzI", "WleKBw7nYzk"
+            "3gb0Zg3p3Lk",
+            "UP8x9QbTVno",
+            "qYwYw6mLlPs",
+            "_gzm2gRcYms",
+            "VtthkQ7mLFk",
+            "oSHzUD-uqKY",
+            "-l-EvwhSWQU",
+            "7sUZbh_3m0Q",
+            "1fVQrSZV31k",
+            "MOsQFsa6ZzI",
+            "WleKBw7nYzk"
         ];
 
         let player;
@@ -460,7 +465,7 @@
                     'modestbranding': 1,
                     'playsinline': 1,
                     'enablejsapi': 1,
-                    'origin': 'https://nilassarasa.xyz' // Explicit origin to prevent file:/// fallbacks
+                    'origin': 'https://nilassarasa.xyz'
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -482,7 +487,7 @@
         }
 
         function onPlayerError(event) {
-            console.warn("YouTube video embed restricted (Code: " + event.data + "). Advancing to next track...");
+            console.warn("Song embed blocked by YouTube (Code: " + event.data + "). Advancing to next track...");
             if (isPlaying) {
                 playRandomNextTrack();
             }
@@ -512,7 +517,7 @@
                     wrapper.classList.remove('muted');
                     wrapper.classList.add('unmuted');
                 } else {
-                    alert("Player loading, please click Sound ON again in 2 seconds.");
+                    alert("Player loading, please click again in 2 seconds!");
                 }
             } else {
                 if (player && typeof player.pauseVideo === 'function') {
@@ -525,7 +530,6 @@
             }
         }
 
-        // Local Sound FX (Relative paths)
         const soundBg = new Audio("bg.mp3");
         const soundClick = new Audio("click.mp3");
         soundBg.volume = 0.05;
@@ -546,11 +550,571 @@
             playFx(soundBg);
         });
 
-        // Quotes Array
         const quotes = [
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊𝚗 𝚒𝚕𝚕𝚞𝚜𝚒𝚘𝚗 ⏳ ✨ 🌌 ~",
             "~ 𝙻𝚘𝚜𝚝 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚗𝚎𝚟𝚎𝚛 𝚏𝚘𝚞𝚗𝚍 𝚊𝚐𝚊𝚒𝚗 ⌛ 🪙 🔑 ~",
-            "~ 𝚃𝚑𝚎 𝚙𝚛𝚘𝚋𝚕𝚎𝚖 𝚒𝚜, 𝚢𝚘𝚞 𝚝𝚑𝚒𝚗𝚔 𝚢𝚘𝚞 𝚑𝚊𝚟𝚎 𝚝𝚒𝚖𝚎 👁️ 🍃 ~",
+            "~ 𝚃𝚑𝚎 𝚙𝚛𝚘𝚋𝚕𝚎𝚖 𝚒𝚜, 𝚢𝚘𝚞 𝚝𝚑𝚒𝚗𝚔 𝚢𝚘𝚞 සමාෙවන්න! මම කලින් ඔයාගේ Tracks ටික වෙනස් කරලා ඩෙමෝ එකක් දැම්මේ. 
+
+මෙන්න ඔයා දුන්න **Original Tracks 11 ම** (`3gb0Zg3p3Lk`, `UP8x9QbTVno`, `qYwYw6mLlPs`, `_gzm2gRcYms`, `VtthkQ7mLFk`, `oSHzUD-uqKY`, `-l-EvwhSWQU`, `7sUZbh_3m0Q`, `1fVQrSZV31k`, `MOsQFsa6ZzI`, `WleKBw7nYzk`) ඇතුළත් කරපු **සම්පූර්ණ Code එක**:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>2027 A/L Countdown</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #020205;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .top-left-profile {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 100;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: block;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+            perspective: 800px;
+        }
+
+        .top-left-profile img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ff007f;
+            box-shadow: 0 0 15px #ff007f, 0 0 30px #ff007f;
+            animation: pinkPulse 2s infinite ease-in-out, singleFlipPause 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+
+        .top-left-profile:hover {
+            transform: scale(1.15);
+        }
+
+        @keyframes singleFlipPause {
+            0% { transform: rotateY(0deg); }
+            30% { transform: rotateY(360deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        @keyframes pinkPulse {
+            0%, 100% { box-shadow: 0 0 15px #ff007f, 0 0 30px #ff007f; }
+            50% { box-shadow: 0 0 25px #ff007f, 0 0 50px #ff007f; }
+        }
+
+        .audio-wrapper {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            width: 175px;
+            height: 48px;
+            border-radius: 30px;
+            isolation: isolate;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .audio-wrapper .border-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            overflow: visible;
+        }
+
+        .audio-wrapper rect.border-path {
+            fill: none;
+            stroke-width: 3;
+            rx: 24px;
+            ry: 24px;
+            stroke-dasharray: 80 320;
+            animation: runAround 1.8s linear infinite;
+        }
+
+        .audio-wrapper.muted {
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+            animation: bouncePulse 1.2s infinite ease-in-out;
+        }
+
+        .audio-wrapper.muted rect.border-path {
+            stroke: url(#pinkCyanGradient);
+            filter: drop-shadow(0 0 4px #ff007f) drop-shadow(0 0 8px #00f0ff);
+        }
+
+        .audio-wrapper.unmuted {
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.4);
+        }
+
+        .audio-wrapper.unmuted rect.border-path {
+            stroke: url(#greenCyanGradient);
+            filter: drop-shadow(0 0 4px #00ffaa) drop-shadow(0 0 8px #00f0ff);
+            animation: runAround 2.6s linear infinite;
+        }
+
+        .audio-control {
+            position: relative;
+            z-index: 2;
+            background: #0d0c1c;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            width: 100%;
+            height: 100%;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            will-change: transform;
+        }
+
+        @keyframes runAround {
+            0% { stroke-dashoffset: 400; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        @keyframes bouncePulse {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.03); box-shadow: 0 0 25px rgba(255, 0, 127, 0.8); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 92%;
+            max-width: 760px;
+            text-align: center;
+            padding: 20px 10px 10px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .title-wrapper {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .title-line {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+            cursor: default;
+            font-size: clamp(1.2rem, 4.2vw, 2.2rem);
+            font-weight: 900;
+            letter-spacing: 2px;
+            width: 100%;
+            position: relative;
+            animation: fullTitleGlitchShake 8s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        .title-line .space {
+            width: 0.4em;
+        }
+
+        .title-line .char {
+            display: inline-block;
+            color: #ffffff;
+            animation: letterJumpWave 8s ease-in-out infinite;
+            animation-delay: var(--delay);
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes letterJumpWave {
+            0% {
+                transform: translateY(0) scale(1);
+                color: #ffffff;
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+            }
+            8% {
+                transform: translateY(-22px) scale(1.15);
+                color: #00f0ff;
+                text-shadow: 0 0 12px #00f0ff, 0 0 24px #ff007f, 0 0 36px #a855f7;
+            }
+            16%, 100% {
+                transform: translateY(0) scale(1);
+                color: #ffffff;
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        @keyframes fullTitleGlitchShake {
+            0%, 60% { transform: translate(0, 0) skewX(0deg); filter: none; }
+            61% { transform: translate(-8px, 1px) skewX(-4deg); filter: drop-shadow(-5px 0 #00f0ff) drop-shadow(5px 0 #ff007f); }
+            63% { transform: translate(8px, -2px) skewX(5deg); filter: drop-shadow(6px 0 #a855f7) drop-shadow(-6px 0 #00f0ff); }
+            65% { transform: translate(-4px, 1px) skewX(-2deg); filter: drop-shadow(-4px 0 #ff007f) drop-shadow(4px 0 #00f0ff); }
+            67% { transform: translate(5px, -1px) skewX(3deg); filter: drop-shadow(4px 0 #00f0ff) drop-shadow(-4px 0 #a855f7); }
+            69% { transform: translate(-6px, 2px) skewX(-3deg); filter: drop-shadow(-5px 0 #ff007f) drop-shadow(3px 0 #00f0ff); }
+            71% { transform: translate(3px, -1px) skewX(1deg); filter: drop-shadow(3px 0 #00f0ff); }
+            73%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; }
+        }
+
+        .countdown {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            width: 100%;
+        }
+
+        @media (max-width: 600px) {
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .box {
+            background: rgba(13, 12, 28, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            border-radius: 18px;
+            padding: 22px 8px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .box:active {
+            transform: scale(0.92);
+            border-color: #00f0ff;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+        }
+
+        .number {
+            font-size: clamp(2rem, 7.5vw, 3rem);
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+            line-height: 1;
+        }
+
+        .label {
+            font-size: clamp(0.65rem, 2.2vw, 0.8rem);
+            color: #a78bfa;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .quote-container {
+            margin-top: 35px;
+            min-height: 52px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .quote-text {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: clamp(0.75rem, 2.5vw, 0.95rem);
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.4;
+            background: linear-gradient(90deg, #00f0ff, #a855f7, #ff007f, #00f0ff);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: quoteShimmer 4s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5));
+        }
+
+        @keyframes quoteShimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .quote-text.glitch-out {
+            animation: quoteGlitchOut 0.4s forwards;
+        }
+
+        .quote-text.glitch-in {
+            animation: quoteGlitchIn 0.4s forwards, quoteShimmer 4s linear infinite;
+        }
+
+        @keyframes quoteGlitchOut {
+            0% { opacity: 1; transform: translate(0, 0) skewX(0deg); }
+            30% { opacity: 0.8; transform: translate(-5px, 2px) skewX(12deg); filter: drop-shadow(-4px 0 #ff007f) drop-shadow(4px 0 #00f0ff); }
+            60% { opacity: 0.4; transform: translate(5px, -2px) skewX(-12deg); filter: drop-shadow(4px 0 #00f0ff) drop-shadow(-4px 0 #a855f7); }
+            100% { opacity: 0; transform: translate(0, 0) skewX(0deg); }
+        }
+
+        @keyframes quoteGlitchIn {
+            0% { opacity: 0; transform: translate(0, 0) skewX(0deg); filter: drop-shadow(-4px 0 #00f0ff) drop-shadow(4px 0 #ff007f); }
+            40% { opacity: 0.6; transform: translate(4px, -2px) skewX(-10deg); }
+            80% { opacity: 0.9; transform: translate(-2px, 1px) skewX(5deg); }
+            100% { opacity: 1; transform: translate(0, 0) skewX(0deg); }
+        }
+
+        #youtube-player-container {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="[https://www.youtube.com/@CryoneX_Space](https://www.youtube.com/@CryoneX_Space)" target="_blank" rel="noopener noreferrer" class="top-left-profile">
+        <img src="channels4_profile.jpg" alt="CryoneX Space YouTube Channel">
+    </a>
+
+    <div class="audio-wrapper muted" id="audioWrapper">
+        <svg class="border-svg" width="100%" height="100%">
+            <defs>
+                <linearGradient id="pinkCyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ff007f" />
+                    <stop offset="50%" stop-color="#00f0ff" />
+                    <stop offset="100%" stop-color="#ff007f" />
+                </linearGradient>
+                <linearGradient id="greenCyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00ffaa" />
+                    <stop offset="50%" stop-color="#00f0ff" />
+                    <stop offset="100%" stop-color="#00ffaa" />
+                </linearGradient>
+            </defs>
+            <rect class="border-path" x="1.5" y="1.5" width="172" height="45" />
+        </svg>
+
+        <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔇 Sound OFF</button>
+    </div>
+
+    <!-- Hidden YouTube Container -->
+    <div id="youtube-player-container">
+        <div id="yt-player"></div>
+    </div>
+
+    <canvas id="starfieldCanvas"></canvas>
+
+    <div class="container">
+        <div class="title-wrapper">
+            <div class="title-line" id="titleLine">2027 A/L COUNTDOWN</div>
+        </div>
+
+        <div class="countdown">
+            <div class="box" onclick="triggerCardEffect(event)">
+                <div class="number" id="days">00</div>
+                <div class="label">Days</div>
+            </div>
+            <div class="box" onclick="triggerCardEffect(event)">
+                <div class="number" id="hours">00</div>
+                <div class="label">Hours</div>
+            </div>
+            <div class="box" onclick="triggerCardEffect(event)">
+                <div class="number" id="minutes">00</div>
+                <div class="label">Minutes</div>
+            </div>
+            <div class="box" onclick="triggerCardEffect(event)">
+                <div class="number" id="seconds">00</div>
+                <div class="label">Seconds</div>
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote-text" id="quoteDisplay"></div>
+        </div>
+    </div>
+
+    <script src="[https://www.youtube.com/iframe_api](https://www.youtube.com/iframe_api)"></script>
+
+    <script>
+        const titleEl = document.getElementById('titleLine');
+        const titleText = titleEl.textContent;
+        titleEl.textContent = '';
+
+        titleText.split('').forEach((char, index) => {
+            const span = document.createElement('span');
+            if (char === ' ') {
+                span.className = 'space';
+            } else {
+                span.className = 'char';
+                span.textContent = char;
+                span.style.setProperty('--delay', `${index * 0.08}s`);
+            }
+            titleEl.appendChild(span);
+        });
+
+        // Your Exact Playlist Array
+        const ytPlaylist = [
+            "3gb0Zg3p3Lk",
+            "UP8x9QbTVno",
+            "qYwYw6mLlPs",
+            "_gzm2gRcYms",
+            "VtthkQ7mLFk",
+            "oSHzUD-uqKY",
+            "-l-EvwhSWQU",
+            "7sUZbh_3m0Q",
+            "1fVQrSZV31k",
+            "MOsQFsa6ZzI",
+            "WleKBw7nYzk"
+        ];
+
+        let player;
+        let isPlaying = false;
+        let ytReady = false;
+        let currentTrackIndex = -1;
+
+        function getRandomTrackIndex() {
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * ytPlaylist.length);
+            } while (nextIndex === currentTrackIndex && ytPlaylist.length > 1);
+            return nextIndex;
+        }
+
+        function onYouTubeIframeAPIReady() {
+            currentTrackIndex = getRandomTrackIndex();
+            player = new YT.Player('yt-player', {
+                height: '1',
+                width: '1',
+                videoId: ytPlaylist[currentTrackIndex],
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'fs': 0,
+                    'modestbranding': 1,
+                    'playsinline': 1,
+                    'enablejsapi': 1,
+                    'origin': window.location.origin
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            ytReady = true;
+            player.setVolume(50);
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED && isPlaying) {
+                playRandomNextTrack();
+            }
+        }
+
+        function onPlayerError(event) {
+            console.warn("Restricted track skipped (Error Code: " + event.data + "). Trying next...");
+            if (isPlaying) {
+                playRandomNextTrack();
+            }
+        }
+
+        function playRandomNextTrack() {
+            currentTrackIndex = getRandomTrackIndex();
+            if (player && ytReady) {
+                player.loadVideoById(ytPlaylist[currentTrackIndex]);
+                player.unMute();
+                player.setVolume(50);
+                player.playVideo();
+            }
+        }
+
+        function toggleAudio() {
+            const btn = document.getElementById('audioBtn');
+            const wrapper = document.getElementById('audioWrapper');
+            
+            if (!isPlaying) {
+                if (player && typeof player.playVideo === 'function') {
+                    player.unMute();
+                    player.setVolume(50);
+                    player.playVideo();
+                    isPlaying = true;
+                    btn.innerHTML = "🔊 Sound ON";
+                    wrapper.classList.remove('muted');
+                    wrapper.classList.add('unmuted');
+                } else {
+                    alert("Player loading, please click again in a second.");
+                }
+            } else {
+                if (player && typeof player.pauseVideo === 'function') {
+                    player.pauseVideo();
+                    isPlaying = false;
+                    btn.innerHTML = "🔇 Sound OFF";
+                    wrapper.classList.remove('unmuted');
+                    wrapper.classList.add('muted');
+                }
+            }
+        }
+
+        const soundBg = new Audio("bg.mp3");
+        const soundClick = new Audio("click.mp3");
+        soundBg.volume = 0.05;
+        soundClick.volume = 0.05;
+
+        function playFx(audioObj) {
+            audioObj.currentTime = 0;
+            audioObj.play().catch(() => {});
+        }
+
+        function triggerCardEffect(e) {
+            e.stopPropagation();
+            playFx(soundClick);
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target.closest('#audioWrapper') || e.target.closest('.top-left-profile') || e.target.closest('#titleLine')) return;
+            playFx(soundBg);
+        });
+
+        const quotes = [
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊𝚗 𝚒𝚕𝚕𝚞𝚜𝚒𝚘𝚗 ⏳ ✨ 🌌 ~",
+            "~ 𝙻𝚘𝚜𝚝 𝚝𝚒𝚖𝚎 𝚒𝚜 𝚗𝚎𝚟𝚎𝚛 𝚏𝚘𝚞𝚗𝚍 𝚊𝚐𝚊𝚒𝚗 ⌛ 🪙 🔑 ~",
+            "~ 𝚃𝚑𝚎 𝚙𝚛𝚘𝚋𝚕𝚎𝚖 𝚒𝚜, 𝚢𝚘𝚞 𝚝𝚑𝚒𝚗𝚔 𝚢𝚘𝚞 ```html
+        ~ 𝙷𝚊𝚟𝚎 𝚝𝚒𝚖𝚎 👁️ 🍃 ~",
             "~ 𝚃𝚒𝚖𝚎 𝚖𝚘𝚟𝚎𝚜 𝚒𝚗 𝚘𝚗𝚎 𝚍𝚒𝚛𝚎𝚌𝚝𝚒𝚘𝚗, 𝚖𝚎𝚖𝚘𝚛𝚢 𝚒𝚗 𝚊𝚗𝚘𝚝𝚑𝚎𝚛 🧠 🕯️ ~",
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚝𝚑𝚎 𝚖𝚘𝚜𝚝 𝚟𝚊𝚕𝚞𝚊𝚋𝚕𝚎 𝚝𝚑𝚒𝚗𝚐 𝚊 𝚖𝚊𝚗 𝚌𝚊𝚗 𝚜𝚙𝚎𝚗𝚍 💎 ⚖️ ~",
             "~ 𝚃𝚒𝚖𝚎 𝚏𝚕𝚒𝚎𝚜 𝚘𝚟𝚎𝚛 𝚞𝚜, 𝚋𝚞𝚝 𝚕𝚎𝚊𝚟𝚎𝚜 𝚒𝚝𝚜 𝚜𝚑𝚊𝚍𝚘𝚠 𝚋𝚎𝚑𝚒𝚗𝚍 🕊️ ⛅ ~",
@@ -576,7 +1140,6 @@
             }, 400);
         }, 6000);
 
-        // Countdown Logic
         const targetDate = new Date("August 1, 2027 00:00:00").getTime();
 
         function updateCountdown() {
@@ -605,7 +1168,6 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Canvas animation
         const canvas = document.getElementById('starfieldCanvas');
         const ctx = canvas.getContext('2d');
         let width = canvas.width = window.innerWidth;
