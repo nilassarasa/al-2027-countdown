@@ -555,13 +555,23 @@
         function toggleAudio() {
             const btn = document.getElementById('audioBtn');
             const wrapper = document.getElementById('audioWrapper');
+            
             if (!isPlaying) {
                 bgAudio.play().then(() => {
                     isPlaying = true;
                     btn.innerHTML = "🔊 Sound ON";
                     wrapper.classList.remove('muted');
                     wrapper.classList.add('unmuted');
-                }).catch(err => console.log("Audio play blocked:", err));
+                }).catch(err => {
+                    console.log("Audio play blocked or locked by browser:", err);
+                    loadTrack(currentTrackIndex);
+                    bgAudio.play().then(() => {
+                        isPlaying = true;
+                        btn.innerHTML = "🔊 Sound ON";
+                        wrapper.classList.remove('muted');
+                        wrapper.classList.add('unmuted');
+                    }).catch(e => console.log("Fallback failed:", e));
+                });
             } else {
                 bgAudio.pause();
                 isPlaying = false;
@@ -594,7 +604,7 @@
             "~ 𝚃𝚒𝚖𝚎 𝚖𝚘𝚟𝚎𝚜 𝚒𝚗 𝚘𝚗𝚎 𝚍𝚒𝚛𝚎𝚌𝚝𝚒𝚘𝚗, 𝚖𝚎𝚖𝚘𝚛𝚢 𝚒𝚗 𝚊𝚗𝚘𝚝𝚑𝚎𝚛 🧠 🕯️ ~",
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚝𝚑𝚎 𝚖𝚘𝚜𝚝 𝚟𝚊𝚕𝚞𝚊𝚋𝚕𝚎 𝚝𝚑𝚒𝚗𝚐 𝚊 𝚖𝚊𝚗 𝚌𝚊𝚗 𝚜𝚙𝚎𝚗𝚍 💎 ⚖️ ~",
             "~ 𝚃𝚒𝚖𝚎 𝚏𝚕𝚒𝚎𝚜 𝚘𝚟𝚎𝚛 𝚞𝚜, 𝚋𝚞𝚝 𝚕𝚎𝚊𝚟𝚎𝚜 𝚒𝚝𝚜 𝚜𝚑𝚊𝚍𝚘𝚠 𝚋𝚎𝚑𝚒𝚗𝚍 🕊️ ⛅ ~",
-            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝚠𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝙬𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
             "~ 𝙷𝚘𝚠 𝚍𝚒𝚍 𝚒𝚝 𝚐𝚎𝚝 𝚜𝚘 𝚕𝚊𝚝𝚎 𝚜𝚘 𝚜𝚘𝚘𝚗? 🌙 🦉 ~",
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚍𝚛𝚎𝚜𝚜𝚖𝚊𝚔𝚎𝚛 𝚜𝚙𝚎𝚌𝚒𝚊𝚕𝚒𝚣𝚒𝚗𝚐 𝚒𝚗 𝚊𝚕𝚝𝚎𝚛𝚊𝚝𝚒𝚘𝚗𝚜 🪡 🧵 ~",
             "~ 𝚃𝚒𝚖𝚎, 𝚠𝚑𝚒𝚌𝚑 𝚜𝚝𝚛𝚎𝚗𝚐𝚝𝚑𝚎𝚗𝚜 𝚏𝚛𝚒𝚎𝚗𝚍𝚜𝚑𝚒𝚙, 𝚠𝚎𝚊𝚔𝚎𝚗𝚜 𝚕𝚘𝚟𝚎 🤝 🥀 🖤 ~",
