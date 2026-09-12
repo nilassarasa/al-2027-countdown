@@ -456,7 +456,8 @@
             <rect class="border-path" x="1.5" y="1.5" width="172" height="45" />
         </svg>
 
-        <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔇 Sound OFF</button>
+        <!-- Removed inline onclick to prevent event queue locking -->
+        <button class="audio-control" id="audioBtn">🔇 Sound OFF</button>
     </div>
 
     <canvas id="starfieldCanvas"></canvas>
@@ -554,7 +555,7 @@
         let isTransitioning = false;
 
         function toggleAudio() {
-            if (isTransitioning) return; // Prevent spam-clicking locks
+            if (isTransitioning) return;
             isTransitioning = true;
 
             const btn = document.getElementById('audioBtn');
@@ -563,10 +564,8 @@
             if (!isPlaying) {
                 const playPromise = bgAudio.play();
                 
-                // Watchdog timer: if the browser hangs on the promise for over 800ms, force recover
                 const watchdog = setTimeout(() => {
                     isTransitioning = false;
-                    // Force re-initialize element if stuck
                     bgAudio = new Audio(bgPlaylist[currentTrackIndex]);
                     bgAudio.volume = 0.06;
                     bgAudio.play().then(() => {
@@ -585,10 +584,9 @@
                         btn.innerHTML = "🔊 Sound ON";
                         wrapper.classList.remove('muted');
                         wrapper.classList.add('unmuted');
-                    }).catch(err => {
+                    }).catch(() => {
                         clearTimeout(watchdog);
                         isTransitioning = false;
-                        console.log("Audio play blocked, refreshing state:", err);
                         loadTrack(currentTrackIndex);
                         bgAudio.play().then(() => {
                             isPlaying = true;
@@ -607,6 +605,14 @@
                 wrapper.classList.add('muted');
             }
         }
+
+        // Attach event listener dynamically via JS to bypass browser UI hangs
+        document.addEventListener('DOMContentLoaded', () => {
+            const audioBtn = document.getElementById('audioBtn');
+            if (audioBtn) {
+                audioBtn.addEventListener('click', toggleAudio);
+            }
+        });
 
         function triggerCardEffect(e) {
             e.stopPropagation();
