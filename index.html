@@ -456,8 +456,7 @@
             <rect class="border-path" x="1.5" y="1.5" width="172" height="45" />
         </svg>
 
-        <!-- Removed inline onclick to prevent event queue locking -->
-        <button class="audio-control" id="audioBtn">🔇 Sound OFF</button>
+        <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔇 Sound OFF</button>
     </div>
 
     <canvas id="starfieldCanvas"></canvas>
@@ -520,7 +519,7 @@
         ];
 
         let currentTrackIndex = Math.floor(Math.random() * bgPlaylist.length);
-        let bgAudio = new Audio();
+        const bgAudio = new Audio();
         bgAudio.volume = 0.06;
 
         function loadTrack(index) {
@@ -535,7 +534,7 @@
             } while (nextIndex === currentTrackIndex && bgPlaylist.length > 1);
             currentTrackIndex = nextIndex;
             loadTrack(currentTrackIndex);
-            bgAudio.play().catch(() => {});
+            bgAudio.play();
         });
 
         loadTrack(currentTrackIndex);
@@ -552,67 +551,25 @@
         }
 
         let isPlaying = false;
-        let isTransitioning = false;
 
         function toggleAudio() {
-            if (isTransitioning) return;
-            isTransitioning = true;
-
             const btn = document.getElementById('audioBtn');
             const wrapper = document.getElementById('audioWrapper');
-            
             if (!isPlaying) {
-                const playPromise = bgAudio.play();
-                
-                const watchdog = setTimeout(() => {
-                    isTransitioning = false;
-                    bgAudio = new Audio(bgPlaylist[currentTrackIndex]);
-                    bgAudio.volume = 0.06;
-                    bgAudio.play().then(() => {
-                        isPlaying = true;
-                        btn.innerHTML = "🔊 Sound ON";
-                        wrapper.classList.remove('muted');
-                        wrapper.classList.add('unmuted');
-                    }).catch(() => {});
-                }, 800);
-
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        clearTimeout(watchdog);
-                        isTransitioning = false;
-                        isPlaying = true;
-                        btn.innerHTML = "🔊 Sound ON";
-                        wrapper.classList.remove('muted');
-                        wrapper.classList.add('unmuted');
-                    }).catch(() => {
-                        clearTimeout(watchdog);
-                        isTransitioning = false;
-                        loadTrack(currentTrackIndex);
-                        bgAudio.play().then(() => {
-                            isPlaying = true;
-                            btn.innerHTML = "🔊 Sound ON";
-                            wrapper.classList.remove('muted');
-                            wrapper.classList.add('unmuted');
-                        }).catch(() => {});
-                    });
-                }
+                bgAudio.play().then(() => {
+                    isPlaying = true;
+                    btn.innerHTML = "🔊 Sound ON";
+                    wrapper.classList.remove('muted');
+                    wrapper.classList.add('unmuted');
+                }).catch(err => console.log("Audio play blocked:", err));
             } else {
                 bgAudio.pause();
-                isTransitioning = false;
                 isPlaying = false;
                 btn.innerHTML = "🔇 Sound OFF";
                 wrapper.classList.remove('unmuted');
                 wrapper.classList.add('muted');
             }
         }
-
-        // Attach event listener dynamically via JS to bypass browser UI hangs
-        document.addEventListener('DOMContentLoaded', () => {
-            const audioBtn = document.getElementById('audioBtn');
-            if (audioBtn) {
-                audioBtn.addEventListener('click', toggleAudio);
-            }
-        });
 
         function triggerCardEffect(e) {
             e.stopPropagation();
@@ -637,7 +594,7 @@
             "~ 𝚃𝚒𝚖𝚎 𝚖𝚘𝚟𝚎𝚜 𝚒𝚗 𝚘𝚗𝚎 𝚍𝚒𝚛𝚎𝚌𝚝𝚒𝚘𝚗, 𝚖𝚎𝚖𝚘𝚛𝚢 𝚒𝚗 𝚊𝚗𝚘𝚝𝚑𝚎𝚛 🧠 🕯️ ~",
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚝𝚑𝚎 𝚖𝚘𝚜𝚝 𝚟𝚊𝚕𝚞𝚊𝚋𝚕𝚎 𝚝𝚑𝚒𝚗𝚐 𝚊 𝚖𝚊𝚗 𝚌𝚊𝚗 𝚜𝚙𝚎𝚗𝚍 💎 ⚖️ ~",
             "~ 𝚃𝚒𝚖𝚎 𝚏𝚕𝚒𝚎𝚜 𝚘𝚟𝚎𝚛 𝚞𝚜, 𝚋𝚞𝚝 𝚕𝚎𝚊𝚟𝚎𝚜 𝚒𝚝𝚜 𝚜𝚑𝚊𝚍𝚘𝚠 𝚋𝚎𝚑𝚒𝚗𝚍 🕊️ ⛅ ~",
-            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝙬𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝚠𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
             "~ 𝙷𝚘𝚠 𝚍𝚒𝚍 𝚒𝚝 𝚐𝚎𝚝 𝚜𝚘 𝚕𝚊𝚝𝚎 𝚜𝚘 𝚜𝚘𝚘𝚗? 🌙 🦉 ~",
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚍𝚛𝚎𝚜𝚜𝚖𝚊𝚔𝚎𝚛 𝚜𝚙𝚎𝚌𝚒𝚊𝚕𝚒𝚣𝚒𝚗𝚐 𝚒𝚗 𝚊𝚕𝚝𝚎𝚛𝚊𝚝𝚒𝚘𝚗𝚜 🪡 🧵 ~",
             "~ 𝚃𝚒𝚖𝚎, 𝚠𝚑𝚒𝚌𝚑 𝚜𝚝𝚛𝚎𝚗𝚐𝚝𝚑𝚎𝚗𝚜 𝚏𝚛𝚒𝚎𝚗𝚍𝚜𝚑𝚒𝚙, 𝚠𝚎𝚊𝚔𝚎𝚗𝚜 𝚕𝚘𝚟𝚎 🤝 🥀 🖤 ~",
