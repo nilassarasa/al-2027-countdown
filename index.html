@@ -493,7 +493,7 @@
                     const value = dataArray[index] || 10;
                     const targetScale = Math.max(0.15, value / 55);
                     // Smooth linear interpolation (lerp) for buttery-smooth movement without sticking
-                    currentScales[index] += (targetScale - currentScales[index]) * 0.25;
+                    currentScales[index] += (targetScale - currentScales[index]) * 0.6;
                     bar.style.transform = `scaleX(${currentScales[index]})`;
                 });
             } else {
