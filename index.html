@@ -135,7 +135,7 @@
         .music-player-content {
             position: relative;
             z-index: 2;
-            background: rgba(13, 12, 28, 0.2); /* 80% transparent background */
+            background: rgba(13, 12, 28, 0.2); /* 80% transparent background (20% opacity) */
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -177,12 +177,12 @@
 
         .eq-bar {
             height: 2px;
-            width: 15px; /* baseline inactive width */
+            width: 15px;
             background: linear-gradient(90deg, #00f0ff, #ff007f);
             border-radius: 2px;
             transform-origin: left;
-            transform: scaleX(1);
-            transition: transform 0.05s ease-out;
+            transform: scaleX(0.2);
+            will-change: transform;
         }
 
         @keyframes runAround {
@@ -388,7 +388,7 @@
         </svg>
 
         <div class="music-player-content">
-            <!-- Real Beat-Reactive Horizontal Equalizer Bars -->
+            <!-- Smooth Beat-Reactive Horizontal Equalizer Bars -->
             <div class="equalizer-container" id="equalizerContainer">
                 <div class="eq-bar"></div>
                 <div class="eq-bar"></div>
@@ -468,6 +468,7 @@
         let audioCtx, analyser, audioSrc, isAudioInitialized = false;
         const eqBars = document.querySelectorAll('.eq-bar');
         const dataArray = new Uint8Array(5);
+        let currentScales = [0.2, 0.2, 0.2, 0.2, 0.2];
 
         function initAudioContext() {
             if (isAudioInitialized) return;
@@ -490,12 +491,15 @@
                 analyser.getByteFrequencyData(dataArray);
                 eqBars.forEach((bar, index) => {
                     const value = dataArray[index] || 10;
-                    const scaleFactor = Math.max(0.2, value / 60);
-                    bar.style.transform = `scaleX(${scaleFactor})`;
+                    const targetScale = Math.max(0.15, value / 55);
+                    // Smooth linear interpolation (lerp) for buttery-smooth movement without sticking
+                    currentScales[index] += (targetScale - currentScales[index]) * 0.25;
+                    bar.style.transform = `scaleX(${currentScales[index]})`;
                 });
             } else {
-                eqBars.forEach(bar => {
-                    bar.style.transform = `scaleX(0.2)`;
+                eqBars.forEach((bar, index) => {
+                    currentScales[index] += (0.2 - currentScales[index]) * 0.2;
+                    bar.style.transform = `scaleX(${currentScales[index]})`;
                 });
             }
             requestAnimationFrame(updateEqualizer);
