@@ -89,7 +89,7 @@
             50% { box-shadow: 0 0 25px #ff007f, 0 0 50px #ff007f; }
         }
 
-        /* Fancy Bottom Central Music Progress Player Box (80% transparent background) */
+        /* Fancy Bottom Central Music Progress Player Box (Beat-reactive dynamic glow) */
         .music-player-wrapper {
             position: fixed;
             bottom: 24px;
@@ -101,35 +101,15 @@
             border-radius: 16px;
             isolation: isolate;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
-            transition: transform 0.2s ease, box-shadow 0.3s ease;
+            --glow-color: rgba(0, 240, 255, 0.15);
+            --glow-intensity: 20px;
+            box-shadow: 0 0 var(--glow-intensity) var(--glow-color);
+            transition: transform 0.2s ease;
         }
 
         .music-player-wrapper:hover {
             transform: translateX(-50%) translateY(-3px);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
-        }
-
-        .music-player-wrapper .border-svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 3;
-            overflow: visible;
-        }
-
-        .music-player-wrapper rect.border-path {
-            fill: none;
-            stroke: url(#musicPlayerGradient);
-            stroke-width: 2.5;
-            rx: 16px;
-            ry: 16px;
-            stroke-dasharray: 100 300;
-            filter: drop-shadow(0 0 4px #00f0ff);
-            animation: runAround 3s linear infinite;
+            --glow-intensity: 35px;
         }
 
         .music-player-content {
@@ -183,11 +163,6 @@
             transform-origin: left;
             transform: scaleX(0.2);
             will-change: transform;
-        }
-
-        @keyframes runAround {
-            0% { stroke-dashoffset: 400; }
-            100% { stroke-dashoffset: 0; }
         }
 
         .container {
@@ -376,8 +351,6 @@
 
     <!-- Fancy Central Music Player Box -->
     <div class="music-player-wrapper" id="musicPlayerWrapper" onclick="toggleAudio()">
-        
-
         <div class="music-player-content">
             <!-- Smooth Beat-Reactive Horizontal Equalizer Bars -->
             <div class="equalizer-container" id="equalizerContainer">
@@ -460,6 +433,8 @@
         const eqBars = document.querySelectorAll('.eq-bar');
         const dataArray = new Uint8Array(5);
         let currentScales = [0.2, 0.2, 0.2, 0.2, 0.2];
+        const musicWrapper = document.getElementById('musicPlayerWrapper');
+        let colorHue = 180;
 
         function initAudioContext() {
             if (isAudioInitialized) return;
@@ -480,18 +455,31 @@
         function updateEqualizer() {
             if (isPlaying && analyser) {
                 analyser.getByteFrequencyData(dataArray);
+                
+                let sum = 0;
                 eqBars.forEach((bar, index) => {
                     const value = dataArray[index] || 10;
+                    sum += value;
                     const targetScale = Math.max(0.15, value / 55);
-                    // Smooth linear interpolation (lerp) for buttery-smooth movement without sticking
                     currentScales[index] += (targetScale - currentScales[index]) * 1;
                     bar.style.transform = `scaleX(${currentScales[index]})`;
                 });
+
+                const average = sum / eqBars.length;
+                colorHue = (colorHue + average * 0.05) % 360;
+                
+                const glowAlpha = Math.min(0.8, Math.max(0.2, average / 150));
+                const glowSpread = 10 + (average * 0.35);
+                
+                musicWrapper.style.setProperty('--glow-color', `hsla(${colorHue}, 100%, 50%, ${glowAlpha})`);
+                musicWrapper.style.setProperty('--glow-intensity', `${glowSpread}px`);
             } else {
                 eqBars.forEach((bar, index) => {
                     currentScales[index] += (0.2 - currentScales[index]) * 0.2;
                     bar.style.transform = `scaleX(${currentScales[index]})`;
                 });
+                musicWrapper.style.setProperty('--glow-color', 'rgba(0, 240, 255, 0.15)');
+                musicWrapper.style.setProperty('--glow-intensity', '20px');
             }
             requestAnimationFrame(updateEqualizer);
         }
