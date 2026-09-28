@@ -89,7 +89,7 @@
             50% { box-shadow: 0 0 25px #ff007f, 0 0 50px #ff007f; }
         }
 
-        /* Fancy Bottom Central Music Progress Player Box */
+        /* Fancy Bottom Central Music Progress Player Box (80% transparent background) */
         .music-player-wrapper {
             position: fixed;
             bottom: 24px;
@@ -101,13 +101,13 @@
             border-radius: 16px;
             isolation: isolate;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
             transition: transform 0.2s ease, box-shadow 0.3s ease;
         }
 
         .music-player-wrapper:hover {
             transform: translateX(-50%) translateY(-3px);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
         }
 
         .music-player-wrapper .border-svg {
@@ -124,21 +124,21 @@
         .music-player-wrapper rect.border-path {
             fill: none;
             stroke: url(#musicPlayerGradient);
-            stroke-width: 3;
+            stroke-width: 2.5;
             rx: 16px;
             ry: 16px;
             stroke-dasharray: 100 300;
-            filter: drop-shadow(0 0 5px #00f0ff) drop-shadow(0 0 10px #a855f7);
+            filter: drop-shadow(0 0 4px #00f0ff);
             animation: runAround 3s linear infinite;
         }
 
         .music-player-content {
             position: relative;
             z-index: 2;
-            background: rgba(13, 12, 28, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(13, 12, 28, 0.2); /* 80% transparent background */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             width: 100%;
             height: 100%;
             border-radius: 16px;
@@ -147,6 +147,7 @@
             justify-content: center;
             padding: 8px 14px;
             gap: 6px;
+            overflow: hidden;
         }
 
         .music-info-row {
@@ -156,6 +157,8 @@
             font-size: 0.78rem;
             font-weight: 700;
             color: #a78bfa;
+            position: relative;
+            z-index: 2;
         }
 
         .music-status {
@@ -163,44 +166,57 @@
             align-items: center;
             gap: 6px;
             color: #00f0ff;
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
         }
 
-        /* Beat Horizontal Bars */
-        .beat-bars-container {
+        /* Horizontal Shaking Equalizer Bars Starting From Left Corner */
+        .equalizer-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
             display: flex;
             align-items: center;
-            gap: 3px;
-            height: 14px;
-            overflow: hidden;
-            width: 80px;
+            gap: 2.5px;
+            padding-left: 12px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.25; /* subtle backdrop effect so text stays readable */
         }
 
-        .beat-bar {
-            flex: 1;
-            height: 3px;
-            background: linear-gradient(90deg, #00f0ff, #ff007f);
+        .eq-bar {
+            width: 3px;
+            background: linear-gradient(180deg, #00f0ff, #ff007f);
             border-radius: 2px;
-            transform-origin: left;
-            animation: beatPulseHorizontal 1.2s ease-in-out infinite;
+            transform-origin: bottom;
+            animation: eqShakeHorizontal 0.8s ease-in-out infinite alternate;
         }
 
-        .beat-bar:nth-child(1) { animation-delay: 0.1s; }
-        .beat-bar:nth-child(2) { animation-delay: 0.4s; }
-        .beat-bar:nth-child(3) { animation-delay: 0.2s; }
-        .beat-bar:nth-child(4) { animation-delay: 0.5s; }
-        .beat-bar:nth-child(5) { animation-delay: 0.3s; }
+        /* Varying heights and delays to look like an organic equalizer */
+        .eq-bar:nth-child(1)  { height: 20px; animation-delay: 0.1s; }
+        .eq-bar:nth-child(2)  { height: 35px; animation-delay: 0.3s; }
+        .eq-bar:nth-child(3)  { height: 15px; animation-delay: 0.2s; }
+        .eq-bar:nth-child(4)  { height: 40px; animation-delay: 0.5s; }
+        .eq-bar:nth-child(5)  { height: 25px; animation-delay: 0.15s; }
+        .eq-bar:nth-child(6)  { height: 38px; animation-delay: 0.4s; }
+        .eq-bar:nth-child(7)  { height: 18px; animation-delay: 0.25s; }
+        .eq-bar:nth-child(8)  { height: 30px; animation-delay: 0.6s; }
+        .eq-bar:nth-child(9)  { height: 22px; animation-delay: 0.05s; }
+        .eq-bar:nth-child(10) { height: 32px; animation-delay: 0.35s; }
 
-        @keyframes beatPulseHorizontal {
-            0%, 100% { transform: scaleX(0.3); opacity: 0.4; }
-            50% { transform: scaleX(1); opacity: 1; }
+        @keyframes eqShakeHorizontal {
+            0% { transform: scaleY(0.3) skewX(-5deg); }
+            50% { transform: scaleY(1) skewX(5deg); }
+            100% { transform: scaleY(0.5) skewX(-3deg); }
         }
 
         /* Waving Progress Line for Song Percentage */
         .wave-progress-track {
             position: relative;
+            z-index: 2;
             width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.08);
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             overflow: hidden;
         }
@@ -213,7 +229,7 @@
             width: 0%;
             background: linear-gradient(90deg, #ff007f, #a855f7, #00f0ff);
             border-radius: 4px;
-            box-shadow: 0 0 10px #00f0ff;
+            box-shadow: 0 0 8px #00f0ff;
             transition: width 0.2s linear;
         }
 
@@ -228,7 +244,7 @@
             width: 92%;
             max-width: 760px;
             text-align: center;
-            padding: 20px 10px 70px 10px; /* added bottom padding so player doesn't overlap text on small screens */
+            padding: 20px 10px 70px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -420,15 +436,22 @@
         </svg>
 
         <div class="music-player-content">
+            <!-- Shaking Equalizer Bars Starting From Left Corner -->
+            <div class="equalizer-container">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+            </div>
+
             <div class="music-info-row">
                 <span class="music-status" id="musicStatusText">🔇 SOUND OFF</span>
-                <div class="beat-bars-container">
-                    <div class="beat-bar"></div>
-                    <div class="beat-bar"></div>
-                    <div class="beat-bar"></div>
-                    <div class="beat-bar"></div>
-                    <div class="beat-bar"></div>
-                </div>
             </div>
             <div class="wave-progress-track">
                 <div class="wave-progress-fill" id="waveProgressFill"></div>
@@ -516,7 +539,6 @@
 
         loadTrack(currentTrackIndex);
 
-        // Update progress bar track fill based on current playback time percentage
         bgAudio.addEventListener('timeupdate', () => {
             if (bgAudio.duration) {
                 const percent = (bgAudio.currentTime / bgAudio.duration) * 100;
@@ -574,7 +596,7 @@
             "~ 𝚃𝚒𝚖𝚎 𝚖𝚘𝚟𝚎𝚜 𝚒𝚗 𝚘𝚗𝚎 𝚍𝚒𝚛𝚎𝚌𝚝𝚒𝚘𝚗, 𝚖𝚎𝚖𝚘𝚛𝚢 𝚒𝚗 𝚊𝚗𝚘𝚝𝚑𝚎𝚛 🧠 🕯️ ~",
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚝𝚑𝚎 𝚖𝚘𝚜𝚝 𝚟𝚊𝚕𝚞𝚊𝚋𝚕𝚎 𝚝𝚑𝚒𝚗𝚐 𝚊 𝚖𝚊𝚗 𝚌𝚊𝚗 𝚜𝚙𝚎𝚗𝚍 💎 ⚖️ ~",
             "~ 𝚃𝚒𝚖𝚎 𝚏𝚕𝚒𝚎𝚜 𝚘𝚟𝚎𝚛 𝚞𝚜, 𝚋𝚞𝚝 𝚕𝚎𝚊𝚟𝚎𝚜 𝚒𝚝𝚜 𝚜𝚑𝚊𝚍𝚘𝚠 𝚋𝚎𝚑𝚒𝚗𝚍 🕊️ ⛅ ~",
-            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝚠𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
+            "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚜𝚝𝚘𝚛𝚖 𝚒𝚗 𝙿𝚑𝚒𝚌𝚑 𝚠𝚎 𝚊𝚛𝚎 𝚊𝚕𝚕 𝚕𝚘𝚜𝚝 ⛈️ 🌪️ ~",
             "~ 𝙷𝚘𝚠 𝚍𝚒𝚍 𝚒𝚝 𝚐𝚎𝚝 𝚜𝚘 𝚕𝚊𝚝𝚎 𝚜𝚘 𝚜𝚘𝚘𝚗? 🌙 🦉 ~",
             "~ 𝚃𝚒𝚖𝚎 𝚒𝚜 𝚊 𝚍𝚛𝚎𝚜𝚜𝚖𝚊𝚔𝚎𝚛 𝚜𝚙𝚎𝚌𝚒𝚊𝚕𝚒𝚣𝚒𝚗𝚐 𝚒𝚗 𝚊𝚕𝚝𝚎𝚛𝚊𝚝𝚒𝚘𝚗𝚜 🪡 🧵 ~",
             "~ 𝚃𝚒𝚖𝚎, 𝚠𝚑𝚒𝚌𝚑 𝚜𝚝𝚛𝚎𝚗𝚐𝚝𝚑𝚎𝚗𝚜 𝚏𝚛𝚒𝚎𝚗𝚍𝚜𝚑𝚒𝚙, 𝚠𝚎𝚊𝚔𝚎𝚗𝚜 𝚕𝚘𝚟𝚎 🤝 🥀 🖤 ~",
