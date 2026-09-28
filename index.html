@@ -161,40 +161,28 @@
             z-index: 2;
         }
 
-        /* Horizontal Shaking Wave Bars Starting From Left Corner */
+        /* Horizontal Equalizer Bars Starting From Left Corner */
         .equalizer-container {
             position: absolute;
             top: 10px;
             left: 14px;
             bottom: 10px;
-            width: 85px;
+            width: 90px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             pointer-events: none;
             z-index: 1;
-            opacity: 0.75;
         }
 
         .eq-bar {
             height: 2px;
+            width: 15px; /* baseline inactive width */
             background: linear-gradient(90deg, #00f0ff, #ff007f);
             border-radius: 2px;
             transform-origin: left;
-            animation: eqShakeHorizontal 0.5s ease-in-out infinite alternate;
-        }
-
-        /* Different widths and delay offsets to simulate horizontal sound waves */
-        .eq-bar:nth-child(1) { width: 30px; animation-delay: 0.05s; }
-        .eq-bar:nth-child(2) { width: 60px; animation-delay: 0.2s; }
-        .eq-bar:nth-child(3) { width: 40px; animation-delay: 0.1s; }
-        .eq-bar:nth-child(4) { width: 75px; animation-delay: 0.3s; }
-        .eq-bar:nth-child(5) { width: 50px; animation-delay: 0.15s; }
-
-        @keyframes eqShakeHorizontal {
-            0% { transform: scaleX(0.4) scaleY(1); }
-            50% { transform: scaleX(1.1) scaleY(1.3); }
-            100% { transform: scaleX(0.7) scaleY(0.9); }
+            transform: scaleX(1);
+            transition: transform 0.05s ease-out;
         }
 
         @keyframes runAround {
@@ -400,8 +388,8 @@
         </svg>
 
         <div class="music-player-content">
-            <!-- Horizontal Shaking Wave Bars Starting From Left Corner -->
-            <div class="equalizer-container">
+            <!-- Real Beat-Reactive Horizontal Equalizer Bars -->
+            <div class="equalizer-container" id="equalizerContainer">
                 <div class="eq-bar"></div>
                 <div class="eq-bar"></div>
                 <div class="eq-bar"></div>
@@ -409,7 +397,7 @@
                 <div class="eq-bar"></div>
             </div>
 
-            <!-- Sound Status Moved to Right Side -->
+            <!-- Sound Status on Right Side -->
             <span class="music-status" id="musicStatusText">🔇 SOUND OFF</span>
         </div>
     </div>
@@ -475,6 +463,44 @@
         let currentTrackIndex = Math.floor(Math.random() * bgPlaylist.length);
         const bgAudio = new Audio();
         bgAudio.volume = 0.06;
+        bgAudio.crossOrigin = "anonymous";
+
+        let audioCtx, analyser, audioSrc, isAudioInitialized = false;
+        const eqBars = document.querySelectorAll('.eq-bar');
+        const dataArray = new Uint8Array(5);
+
+        function initAudioContext() {
+            if (isAudioInitialized) return;
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+                analyser = audioCtx.createAnalyser();
+                audioSrc = audioCtx.createMediaElementSource(bgAudio);
+                audioSrc.connect(analyser);
+                analyser.connect(audioCtx.destination);
+                analyser.fftSize = 32;
+                isAudioInitialized = true;
+            } catch (e) {
+                console.log("Web Audio API not supported:", e);
+            }
+        }
+
+        function updateEqualizer() {
+            if (isPlaying && analyser) {
+                analyser.getByteFrequencyData(dataArray);
+                eqBars.forEach((bar, index) => {
+                    const value = dataArray[index] || 10;
+                    const scaleFactor = Math.max(0.2, value / 60);
+                    bar.style.transform = `scaleX(${scaleFactor})`;
+                });
+            } else {
+                eqBars.forEach(bar => {
+                    bar.style.transform = `scaleX(0.2)`;
+                });
+            }
+            requestAnimationFrame(updateEqualizer);
+        }
+        requestAnimationFrame(updateEqualizer);
 
         function loadTrack(index) {
             bgAudio.src = bgPlaylist[index];
@@ -488,7 +514,7 @@
             } while (nextIndex === currentTrackIndex && bgPlaylist.length > 1);
             currentTrackIndex = nextIndex;
             loadTrack(currentTrackIndex);
-            bgAudio.play();
+            if (isPlaying) bgAudio.play();
         });
 
         loadTrack(currentTrackIndex);
@@ -508,7 +534,12 @@
 
         function toggleAudio() {
             const statusText = document.getElementById('musicStatusText');
+            initAudioContext();
+
             if (!isPlaying) {
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
                 bgAudio.play().then(() => {
                     isPlaying = true;
                     statusText.innerHTML = "🔊 SOUND ON";
